@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 const _config = require('config');
 
 const _winstonDaily = require('winston-daily-rotate-file');
 const { createLogger, transports, format } = require('winston');
-const { combine, timestamp, simple, colorize, printf, label } = format;
+const { combine, timestamp, colorize, printf, label } = format;
 
 const log_dir = 'logs';
 
@@ -22,7 +22,7 @@ const printLogFormat = {
         timestamp({
             format: 'YYYY-MM-DD HH:mm:dd',
         }),
-        printFormat
+        printFormat,
     ),
 };
 
@@ -63,11 +63,8 @@ const logger = createLogger({
 if (_config.get('server.state') !== 'production') {
     logger.add(
         new transports.Console({
-            format: combine(
-                colorize({ all: true }),
-                printFormat
-            ),
-        })
+            format: combine(colorize({ all: true }), printFormat),
+        }),
     );
 }
 

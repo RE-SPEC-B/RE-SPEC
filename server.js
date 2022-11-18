@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // 모듈 선언
 const _express = require('express');
@@ -21,7 +21,7 @@ _app.use(_morgan('common', { stream: logger.stream }));
 
 // 라우팅
 const api_router = require('./src/routes');
-_app.use("/", api_router);
+_app.use('/', api_router);
 
 // 서버 연결
 _app.listen(_config.get('server.port'), () => {
