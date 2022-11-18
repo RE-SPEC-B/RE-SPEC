@@ -1,8 +1,8 @@
 "use strict";
 
-const express = require("express");
-const router = express.Router();
+const _express = require('express');
+const _router = _express.Router();
 
-const ctrl = require("./service");
+const ctrl = require('./service');
 
-module.exports = router;
+module.exports = _router;

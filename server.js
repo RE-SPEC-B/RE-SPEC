@@ -1,29 +1,29 @@
 "use strict";
 
 // 모듈 선언
-const express = require("express");
-const app = express();
+const _express = require('express');
+const _app = _express();
 
-const bodyParser = require("body-parser");
-const cors = require("cors");
+const _bodyParser = require('body-parser');
+const _cors = require('cors');
 
-const config = require("config");
+const _config = require('config');
 
-const morgan = require("morgan");
-const logger = require("./src/functions/winston");
+const _morgan = require('morgan');
+const logger = require('./src/functions/winston');
 
 // 웹세팅
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+_app.use(_bodyParser.json());
+_app.use(_bodyParser.urlencoded({ extended: true }));
+_app.use(_cors());
 
-app.use(morgan("common", { stream: logger.stream }));
+_app.use(_morgan('common', { stream: logger.stream }));
 
 // 라우팅
-const apiRouter = require("./src/routes");
-app.use("/", apiRouter);
+const api_router = require('./src/routes');
+_app.use("/", api_router);
 
 // 서버 연결
-app.listen(config.get("server.port"), () => {
-    logger.info(`Server Running on ${config.get("server.port")} Port!`);
+_app.listen(_config.get('server.port'), () => {
+    logger.info(`Server Running on ${_config.get('server.port')} Port!`);
 });
