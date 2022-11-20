@@ -7,6 +7,7 @@ const _app = _express();
 const _bodyParser = require('body-parser');
 const _cors = require('cors');
 
+const { sequelize } = require('./src/utils/connect');
 const _config = require('config');
 
 const _morgan = require('morgan');
@@ -27,3 +28,13 @@ _app.use('/', api_router);
 _app.listen(_config.get('server.port'), () => {
     logger.info(`Server Running on ${_config.get('server.port')} Port!`);
 });
+
+// DB 연결
+sequelize
+    .sync({ force: false })
+    .then(() => {
+        logger.info('Success Connecting DB!');
+    })
+    .catch((err) => {
+        console.error(err);
+    });
