@@ -8,15 +8,23 @@
 ## Contents
 
 - [Features](#Project-Features)
+- [ToDo](#Project-ToDo)
+- [Summary Note](#Project-Summary-Note)
+- [Module](#Dependency-Module)
 
 ## Project Features
 
-1.멘토 추천 부분 DB 설계 & 연동 (user, job, keyword, follow...) `계속 업데이트 예정`
+1. 멘토 추천 부분 DB 설계 & 연동 (user, job, keyword, follow...) `계속 업데이트 예정`
 
 ## Project ToDo
 
 1. 소셜 로그인 (카카오, 네이버, 구글, 로컬) & 로그아웃
 2. 멘토 찾기 & 검색 API 설계
+
+## Project Summary Note
+> Click Notion icon
+
+👉 [![Notion](https://img.shields.io/badge/Notion-000000.svg?style=flat&logo=Notion&logoColor=white)](https://quilt-tanker-16d.notion.site/RE-SPEC-1c8f389a7b924283a8c5401e07ff334a)
 
 ## Dependency Module
 
