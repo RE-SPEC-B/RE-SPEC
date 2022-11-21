@@ -1,11 +1,12 @@
 {
   "name": "re-spec",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "this RE:SPEC's backend project package",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "release": "standard-version"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +27,7 @@
     "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "standard-version": "^9.5.0"
   }
 }
