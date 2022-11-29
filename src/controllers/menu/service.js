@@ -11,16 +11,83 @@ const user_characteristic = model.sequelize.models.user_characteristic;
 const { Op } = require('sequelize');
 
 exports.searchMentoT = async (req, res) => {
+    let { word } = req.query;
+
+    let ids = [];
+    let id = await Job.findOne({
+        attributes: ['id'],
+        where: { job: word },
+    }).then(async (data) => {
+        if(data === null) return;
+
+        return await user_job.findAll({
+            attributes: ['UserId'],
+            where: { JobId: data.id },
+        }).catch((err) => {
+            return res.status(500).json({ err });
+        });
+    }).catch((err) => {
+        return res.status(500).json({ err });
+    });
+    
+    if(id) {
+        for(let x = 0; x < id.length; x++) {
+            ids.push(id[x].UserId);
+        }
+    }
+
+    id = await Characteristic.findOne({
+        attributes: ['id'],
+        where: { characteristic : word },
+    }).then(async (data) => {
+        if(data === null) return;
+
+        return await user_characteristic.findAll({
+            attributes: ['UserId'],
+            where: { CharacteristicId: data.id },
+        }).catch((err) => {
+            return res.status(500).json({ err });
+        });
+    }).catch((err) => {
+        return res.status(500).json({ err });
+    });
+
+    if(id) {
+        for(let x = 0; x < id.length; x++) {
+            ids.push(id[x].UserId);
+        }
+    }
+
+    id = await User.findAll({
+        attributes: ['id'],
+        where: { mbti: word },
+    }).catch((err) => {
+        return res.status(500).json({ err });
+    });
+
+    if(id) {
+        for(let x = 0; x < id.length; x++) {
+            ids.push(id[x].id);
+        }
+    }
+    
+    let set = new Set(ids);
+    ids = [...set];
+
+    console.log(ids);
+};
+
+exports.searchMentoB = async (req, res) => {
     let keywords = req.query; // job, characteristic, mbti
     let keys = Object.keys(keywords), keyword = [];
-
+    
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i];
         keyword.push(keywords[key].split(','));
     }
-
+    
     let id, ids = [];
-
+    
     if(req.query.job) {
         id = await Job.findAll({
             attributes: ['id'],
@@ -68,7 +135,7 @@ exports.searchMentoT = async (req, res) => {
         }).catch((err) => {
             return res.status(500).json({ err });
         });
-
+    
         for(let x = 0; x < id.length; x++) {
             ids.push(id[x].UserId);
         }
@@ -81,24 +148,25 @@ exports.searchMentoT = async (req, res) => {
         }).catch((err) => {
             return res.status(500).json({ err });
         });
-
+    
         for(let x = 0; x < id.length; x++) {
             ids.push(id[x].id);
         }
     }
-
+    
     let set = new Set(ids);
     ids = [...set];
-
-    User.findAll({
-        where: { id: {[Op.or]: ids}},
-        order: [['createdAt', 'DESC']],
-    }).then((data) => {
-        return res.status(200).json({ data: data });
-    }).catch((err) => {
-        return res.status(500).json({ err });
-    });
-};
-
-exports.searchMentoB = (req, res) => {
+    
+    if(ids.length === 0) {
+        return res.status(400).json({ message: "No data" });
+    } else {
+        User.findAll({
+            where: { id: {[Op.or]: ids}},
+            order: [['createdAt', 'DESC']],
+        }).then((data) => {
+            return res.status(200).json({ data: data });
+        }).catch((err) => {
+            return res.status(500).json({ err });
+        });
+    }
 }
