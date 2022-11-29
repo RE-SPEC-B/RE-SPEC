@@ -16,7 +16,7 @@ exports.searchMentoT = async (req, res) => {
     let ids = [];
     let id = await Job.findOne({
         attributes: ['id'],
-        where: { job: word },
+        where: { job: {[Op.like]: '%'+word+'%'} },
     }).then(async (data) => {
         if(data === null) return;
 
@@ -38,7 +38,7 @@ exports.searchMentoT = async (req, res) => {
 
     id = await Characteristic.findOne({
         attributes: ['id'],
-        where: { characteristic : word },
+        where: { characteristic : {[Op.like]: '%'+word+'%'} },
     }).then(async (data) => {
         if(data === null) return;
 
@@ -74,7 +74,21 @@ exports.searchMentoT = async (req, res) => {
     let set = new Set(ids);
     ids = [...set];
 
-    console.log(ids);
+    if(ids.length === 0) {
+        return res.status(400).json({ message: "No data" });
+    } else {
+        User.findAll({
+            where: {[Op.and]: [
+                { position: "mentoo" },
+                { id: {[Op.or]: ids} },
+            ]},
+            order: [['createdAt', 'DESC']],
+        }).then((data) => {
+            return res.status(200).json({ data: data });
+        }).catch((err) => {
+            return res.status(500).json({ err });
+        });
+    }
 };
 
 exports.searchMentoB = async (req, res) => {
