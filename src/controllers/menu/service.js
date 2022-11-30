@@ -1,8 +1,6 @@
 'use strict';
 
-const { User } = require('../../utils/connect');
-const { Job } = require('../../utils/connect');
-const { Characteristic } = require('../../utils/connect');
+const { User, Job, Characteristic, Education, Career } = require('../../utils/connect');
 
 const model = require('../../utils/connect');
 const user_job = model.sequelize.models.user_job;
@@ -29,6 +27,7 @@ exports.searchMentoT = async (req, res) => {
     }).catch((err) => {
         return res.status(500).json({ err });
     });
+
     
     if(id) {
         for(let x = 0; x < id.length; x++) {
@@ -70,7 +69,7 @@ exports.searchMentoT = async (req, res) => {
             ids.push(id[x].id);
         }
     }
-    
+
     let set = new Set(ids);
     ids = [...set];
 
@@ -92,14 +91,15 @@ exports.searchMentoT = async (req, res) => {
 };
 
 exports.searchMentoB = async (req, res) => {
-    let keywords = req.query; // job, characteristic, mbti
+    let keywords = req.query; // job, education, career, company
     let keys = Object.keys(keywords), keyword = [];
     
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i];
         keyword.push(keywords[key].split(','));
     }
-    
+
+    console.log(keyword);
     let id, ids = [];
     
     if(req.query.job) {
@@ -128,20 +128,25 @@ exports.searchMentoB = async (req, res) => {
             ids.push(id[x].UserId);
         }
     } 
-    if (req.query.characteristic) {
-        id = await Characteristic.findAll({
-            attributes: ['id'],
-            where: { characteristic : {[Op.or]: keyword[1]}},
+
+    if (req.query.education || req.query.university) {
+        id = await Education.findAll({
+            attributes: ['userkey'],
+            where: {[Op.or]: [
+                { education : {[Op.or]: keyword[1]}} ,
+                { university : keyword[4] },
+            ]},
             order: [['createdAt', 'DESC']],
         }).then(async (data) => {
-            let characteristic_id = [];
+            console.log(data);
+            let education_id = [];
             for(let x = 0; x < data.length; x++) {
-                characteristic_id.push(data[x].id);
+                education_id.push(data[x].userkey);
             }
-    
-            return await user_characteristic.findAll({
-                attributes: ['UserId'],
-                where: { CharacteristicId: {[Op.or]: characteristic_id}},
+
+            return await User.findAll({
+                attributes: ['id'],
+                where: { id : {[Op.or]: education_id}},
                 order: [['createdAt', 'DESC']],
             }).catch((err) => {
                 return res.status(500).json({ err });
@@ -149,20 +154,37 @@ exports.searchMentoB = async (req, res) => {
         }).catch((err) => {
             return res.status(500).json({ err });
         });
-    
+
         for(let x = 0; x < id.length; x++) {
-            ids.push(id[x].UserId);
+            ids.push(id[x].id);
         }
     }
-    if (req.query.mbti) {
-        id = await User.findAll({
-            attributes: ['id'],
-            where: { mbti: {[Op.or]: keyword[2]}},
+
+    if (req.query.career || req.query.company) {
+        id = await Career.findAll({
+            attributes: ['userkey'],
+            where: {[Op.or]: [
+                { career : {[Op.or]: keyword[2]}},
+                { company : {[Op.or]: keyword[3]}}
+            ]},
             order: [['createdAt', 'DESC']],
+        }).then(async (data) => {
+            let career_id = [];
+            for(let x = 0; x < data.length; x++) {
+                career_id.push(data[x].userkey);
+            }
+
+            return await User.findAll({
+                attributes: ['id'],
+                where: { id : {[Op.or]: career_id}},
+                order: [['createdAt', 'DESC']],
+            }).catch((err) => {
+                return res.status(500).json({ err });
+            });
         }).catch((err) => {
             return res.status(500).json({ err });
         });
-    
+
         for(let x = 0; x < id.length; x++) {
             ids.push(id[x].id);
         }
@@ -175,7 +197,10 @@ exports.searchMentoB = async (req, res) => {
         return res.status(400).json({ message: "No data" });
     } else {
         User.findAll({
-            where: { id: {[Op.or]: ids}},
+            where: {[Op.and]: [
+                { position: "mentoo" },
+                { id: {[Op.or]: ids} },
+            ]},
             order: [['createdAt', 'DESC']],
         }).then((data) => {
             return res.status(200).json({ data: data });
