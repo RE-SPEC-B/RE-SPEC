@@ -68,7 +68,7 @@ module.exports = class User extends _sequelize.Model {
         db.User.belongsToMany(db.User, { through: 'follow', as: 'Follower', foreignKey: 'followerid' });
         db.User.belongsToMany(db.User, { through: 'follow', as: 'Following', foreignKey: 'followingid' });
         db.User.belongsToMany(db.Job, { through: 'user_job' });
-        db.User.belongsToMany(db.Character, { through: 'user_character' });
+        db.User.belongsToMany(db.Characteristic, { through: 'user_characteristic' });
         db.User.hasOne(db.Career, { foreignKey: 'userkey', sourceKey: 'id' });
         db.User.hasOne(db.Education, { foreignKey: 'userkey', sourceKey: 'id' });
     }

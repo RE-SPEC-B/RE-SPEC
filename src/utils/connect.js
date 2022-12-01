@@ -6,7 +6,7 @@ const _config = require('config');
 const User = require('../models/user');
 const Jobcategory = require('../models/job_category');
 const Job = require('../models/job');
-const Character = require('../models/character');
+const Characteristic = require('../models/characteristic');
 const Education = require('../models/education');
 const Career = require('../models/career');
 
@@ -28,21 +28,21 @@ db.sequelize = sequelize;
 db.User = User;
 db.Jobcategory = Jobcategory;
 db.Job = Job;
-db.Character = Character;
+db.Characteristic = Characteristic;
 db.Education = Education;
 db.Career = Career;
 
 User.init(sequelize);
 Jobcategory.init(sequelize);
 Job.init(sequelize);
-Character.init(sequelize);
+Characteristic.init(sequelize);
 Education.init(sequelize);
 Career.init(sequelize);
 
 User.associate(db);
 Jobcategory.associate(db);
 Job.associate(db);
-Character.associate(db);
+Characteristic.associate(db);
 Education.associate(db);
 Career.associate(db);
 
