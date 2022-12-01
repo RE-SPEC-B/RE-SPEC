@@ -3,9 +3,9 @@
 const _express = require('express');
 const _router = _express.Router();
 
-const auth_route = require('../controllers/auth/route');
-const user_route = require('../controllers/user/route');
-const menu_route = require('../controllers/menu/route');
+const auth_route = require('./auth');
+const user_route = require('./user');
+const menu_route = require('./menu');
 
 _router.use('/auth', auth_route);
 _router.use('/user', user_route);

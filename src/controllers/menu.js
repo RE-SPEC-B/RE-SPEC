@@ -1,8 +1,8 @@
 'use strict';
 
-const { User, Job, Characteristic, Education, Career } = require('../../utils/connect');
+const { User, Job, Characteristic, Education, Career } = require('../utils/connect');
 
-const model = require('../../utils/connect');
+const model = require('../utils/connect');
 const user_job = model.sequelize.models.user_job;
 const user_characteristic = model.sequelize.models.user_characteristic;
 
