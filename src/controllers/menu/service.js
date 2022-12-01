@@ -91,7 +91,7 @@ exports.searchMentoT = async (req, res) => {
 };
 
 exports.searchMentoB = async (req, res) => {
-    let keywords = req.query; // job, education, career, company
+    let keywords = req.query; // job, education, career, company, university
     let keys = Object.keys(keywords), keyword = [];
     
     for (let i = 0; i < keys.length; i++) {
@@ -99,7 +99,6 @@ exports.searchMentoB = async (req, res) => {
         keyword.push(keywords[key].split(','));
     }
 
-    console.log(keyword);
     let id, ids = [];
     
     if(req.query.job) {
@@ -129,16 +128,20 @@ exports.searchMentoB = async (req, res) => {
         }
     } 
 
-    if (req.query.education || req.query.university) {
+    console.log(ids);
+
+    if (ids.length !== 0 && (req.query.education || req.query.university)) {
         id = await Education.findAll({
             attributes: ['userkey'],
-            where: {[Op.or]: [
-                { education : {[Op.or]: keyword[1]}} ,
-                { university : keyword[4] },
+            where: {[Op.and]: [
+                { userkey: {[Op.or]: ids}},
+                { education : {[Op.or]: keyword[1]}},
+                { university : {[Op.or]: keyword[4]} },
             ]},
             order: [['createdAt', 'DESC']],
         }).then(async (data) => {
-            console.log(data);
+            if(data.length === 0) return;
+
             let education_id = [];
             for(let x = 0; x < data.length; x++) {
                 education_id.push(data[x].userkey);
@@ -155,20 +158,30 @@ exports.searchMentoB = async (req, res) => {
             return res.status(500).json({ err });
         });
 
-        for(let x = 0; x < id.length; x++) {
-            ids.push(id[x].id);
+        if(id !== undefined) {
+            ids = [];
+            for(let x = 0; x < id.length; x++) {
+                ids.push(id[x].id);
+            }
+        } else {
+            ids = [];
         }
     }
 
-    if (req.query.career || req.query.company) {
+    console.log(ids);
+
+    if (ids.length !== 0 && (req.query.career || req.query.company)) {
         id = await Career.findAll({
             attributes: ['userkey'],
-            where: {[Op.or]: [
+            where: {[Op.and]: [
+                { userkey: {[Op.or]: ids}},
                 { career : {[Op.or]: keyword[2]}},
                 { company : {[Op.or]: keyword[3]}}
             ]},
             order: [['createdAt', 'DESC']],
         }).then(async (data) => {
+            if(data.length === 0) return;
+
             let career_id = [];
             for(let x = 0; x < data.length; x++) {
                 career_id.push(data[x].userkey);
@@ -185,11 +198,18 @@ exports.searchMentoB = async (req, res) => {
             return res.status(500).json({ err });
         });
 
-        for(let x = 0; x < id.length; x++) {
-            ids.push(id[x].id);
+        if(id !== undefined) {
+            ids = [];
+            for(let x = 0; x < id.length; x++) {
+                ids.push(id[x].id);
+            }
+        } else {
+            ids = [];
         }
     }
-    
+
+    console.log(ids);
+
     let set = new Set(ids);
     ids = [...set];
     
