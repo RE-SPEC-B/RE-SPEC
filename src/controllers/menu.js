@@ -1,81 +1,35 @@
 'use strict';
 
-const { User, Job, Characteristic, Education, Career } = require('../utils/connect');
-
-const model = require('../utils/connect');
-const user_job = model.sequelize.models.user_job;
-const user_characteristic = model.sequelize.models.user_characteristic;
-
 const service = require('../services/menu');
-const { keySelectWhere, parseValue, parseIds, jobUserFind, educationUserFind, careerUserFind, userMentoFilter } = service;
-
-const { Op } = require('sequelize');
+const { 
+    keySelectWhere, 
+    parseValue, 
+    parseIds,
+    jobUserFindT,
+    jobUserFindB,
+    characteristicUserFind,
+    mbtiUserFind,
+    educationUserFind, 
+    careerUserFind, 
+    userMentoFilter 
+} = service;
 
 exports.searchMentoT = async (req, res) => {
     let { word } = req.query;
 
     let ids = [];
-    let id = await Job.findOne({
-        attributes: ['id'],
-        where: { job: {[Op.like]: '%'+word+'%'} },
-    }).then(async (data) => {
-        if(data === null) return;
+    let id = await jobUserFindT(word);
+    if(id) for(let x = 0; x < id.length; x++) ids.push(id[x].UserId);
 
-        return await user_job.findAll({
-            attributes: ['UserId'],
-            where: { JobId: data.id },
-        }).catch((err) => {
-            return res.status(500).json({ err });
-        });
-    }).catch((err) => {
-        return res.status(500).json({ err });
-    });
+    id = await characteristicUserFind(word);
+    if(id) for(let x = 0; x < id.length; x++) ids.push(id[x].UserId);
 
-    
-    if(id) {
-        for(let x = 0; x < id.length; x++) {
-            ids.push(id[x].UserId);
-        }
-    }
-
-    id = await Characteristic.findOne({
-        attributes: ['id'],
-        where: { characteristic : {[Op.like]: '%'+word+'%'} },
-    }).then(async (data) => {
-        if(data === null) return;
-
-        return await user_characteristic.findAll({
-            attributes: ['UserId'],
-            where: { CharacteristicId: data.id },
-        }).catch((err) => {
-            return res.status(500).json({ err });
-        });
-    }).catch((err) => {
-        return res.status(500).json({ err });
-    });
-
-    if(id) {
-        for(let x = 0; x < id.length; x++) {
-            ids.push(id[x].UserId);
-        }
-    }
-
-    id = await User.findAll({
-        attributes: ['id'],
-        where: { mbti: word },
-    }).catch((err) => {
-        return res.status(500).json({ err });
-    });
-
-    if(id) {
-        for(let x = 0; x < id.length; x++) {
-            ids.push(id[x].id);
-        }
-    }
+    id = await mbtiUserFind(word);
+    if(id) for(let x = 0; x < id.length; x++) ids.push(id[x].id);
 
     let set = new Set(ids);
     ids = [...set];
-
+    
     if(ids.length === 0) return res.status(400).json({ message: "No data" });
     else userMentoFilter(ids).then((data) => {
         return res.status(200).json({ data: data });
@@ -94,7 +48,7 @@ exports.searchMentoB = async (req, res) => {
     let where_education, where_career = null;
     
     if(job) {
-        id = await jobUserFind(value, keys);
+        id = await jobUserFindB(value, keys);
         for(let idx = 0; idx < id.length; idx++) ids.push(id[idx].UserId);
     } 
 

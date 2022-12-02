@@ -58,13 +58,38 @@ exports.parseIds = (id) => {
 }
 
 /**
+ * 상단 메뉴에서 검색어를 입력받아, 검색어와 유사한 직업 이름을 가져와
+ * 그중, 그 직업을 가지는 유저들 출력
+ *
+ * @param {*} word 상단 메뉴의 단일 검색어
+ * @returns 
+ */
+exports.jobUserFindT = async (word) => {
+    return await Job.findOne({
+        attributes: ['id'],
+        where: { job: {[Op.like]: '%'+word+'%'} },
+    }).then(async (data) => {
+        if(data === null) return;
+
+        return await user_job.findAll({
+            attributes: ['UserId'],
+            where: { JobId: data.id },
+        }).catch((err) => {
+            return res.status(500).json({ err });
+        });
+    }).catch((err) => {
+        return res.status(500).json({ err });
+    });
+}
+
+/**
  * 해당하는 job을 가지는 user id를 리턴하는 함수
  * 
  * @param {*} value 사용자로부터 입력받은 key들의 value 값들
  * @param {*} keys 사용자로부터 입력받은 key 값들
  * @returns 
  */
-exports.jobUserFind = async (value, keys) => {
+exports.jobUserFindB = async (value, keys) => {
     return await Job.findAll({
         attributes: ['id'],
         where: { job: {[Op.or]: value[keys.indexOf('job')]}},
@@ -78,6 +103,47 @@ exports.jobUserFind = async (value, keys) => {
         }).catch((err) => {
             return res.status(500).json({ err });
         });
+    }).catch((err) => {
+        return res.status(500).json({ err });
+    });
+}
+
+/**
+ * 상단 메뉴에서 검색어를 입력받아, 검색어와 유사한 characteristic을 가져와
+ * 그중, 그 characteristic을 가지는 유저들 출력
+ * 
+ * @param {*} word 상단 메뉴의 단일 검색어
+ * @returns 
+ */
+exports.characteristicUserFind = async (word) => {
+    return await Characteristic.findOne({
+        attributes: ['id'],
+        where: { characteristic : {[Op.like]: '%'+word+'%'} },
+    }).then(async (data) => {
+        if(data === null) return;
+
+        return await user_characteristic.findAll({
+            attributes: ['UserId'],
+            where: { CharacteristicId: data.id },
+        }).catch((err) => {
+            return res.status(500).json({ err });
+        });
+    }).catch((err) => {
+        return res.status(500).json({ err });
+    });
+}
+
+/**
+ * 상단 메뉴에서 검색어를 입력받아, 검색어와 유사한 MBTI를 가져와
+ * 그중, 그 MBTI를 가지는 유저들 출력
+ * 
+ * @param {*} word 상단 메뉴의 단일 검색어
+ * @returns 
+ */
+exports.mbtiUserFind = async (word) => {
+    return await User.findAll({
+        attributes: ['id'],
+        where: { mbti: word },
     }).catch((err) => {
         return res.status(500).json({ err });
     });
