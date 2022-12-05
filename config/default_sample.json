@@ -1,7 +1,7 @@
 {
     "server": {
         "domain": "http://127.0.0.1:portnumber/",
-        "port": 'port_number'
+        "port": "port_number",
         "state": "dev"
     },
     "mysql_local": {
@@ -16,7 +16,7 @@
         "kakao_id": "kakao_api_id",
         "kakao_callback": "kakao_callback",
 
-        "google_id": ""google_api_id",",
+        "google_id": "google_api_id",
         "google_secret": "google_api_password",
         "google_callback": "google_callback",
 
