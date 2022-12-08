@@ -7,9 +7,9 @@ const User = require('../models/user');
 
 module.exports = () => {
     _passport.use(new GoogleStrategy({
-        clientID: "71831102496-rgnklisblre3ktjibhhq7nggom1tdqvm.apps.googleusercontent.com",
-        clientSecret: "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",
-        callbackURL: "http://localhost:3000/auth/google/callback"
+        clientID: _config.get('passport_client_Id.google_id'),
+        clientSecret: _config.get('passport_client_Id.google_secret'),
+        callbackURL: _config.get('passport_client_Id.google_callback'),
     },
     async(accessToken, refreshToken, profile, done) => {
         logger.info(`Google User Profile : ${profile}`);
