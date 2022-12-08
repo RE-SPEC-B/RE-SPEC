@@ -10,17 +10,17 @@ const { isLoggedIn, isNotLoggedIn } = require('../middlewares/auth');
 const ctrl = require('../controllers/auth');
 
 // Local Login
-_router.post('/register', isNotLoggedIn, ctrl.signUp);
-_router.post('/local', _passport.authenticate('local', { failureRedirect: '/'}), ctrl.localLogin);
-_router.post('/logout', isLoggedIn, ctrl.logout);
+_router.post('/register', isNotLoggedIn, ctrl.localRegister);
+_router.post('/login', isNotLoggedIn, ctrl.localLogin);
+_router.get('/logout', isLoggedIn, ctrl.logout);
 
-_router.get('/kakao', _passport.authenticate('kakao'), ctrl.kakaoLogin);
-_router.get('/kakao/callback', _passport.authenticate('kakao', { failureRedirect: '/'}), ctrl.kakaoLoginCallback);
+_router.get('/login/kakao', _passport.authenticate('kakao'), ctrl.kakaoLogin);
+_router.get('/login/kakao/callback', ctrl.kakaoLoginCallback);
 
-_router.get('/google', _passport.authenticate('google', { score: ['profile', 'email'] }), ctrl.googleLogin);
-_router.get('/google/callback', _passport.authenticate('google', { failureRedirect: '/'}), ctrl.googleLoginCallback);
+_router.get('/login/google', _passport.authenticate('google', { scope: ['profile', 'email'] }), ctrl.googleLogin);
+_router.get('/login/google/callback', ctrl.googleLoginCallback);
 
-_router.get('/naver', _passport.authenticate('naver'), ctrl.naverLogin);
-_router.get('/naver/callback', _passport.authenticate('naver', { failureRedirect: '/'}), ctrl.naverLoginCallback);
+_router.get('/login/naver', _passport.authenticate('naver'), ctrl.naverLogin);
+_router.get('/login/naver/callback', ctrl.naverLoginCallback);
 
 module.exports = _router;

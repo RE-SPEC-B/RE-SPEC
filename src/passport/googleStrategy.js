@@ -4,6 +4,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const _config = require('config');
 
 const User = require('../models/user');
+const logger = require('../functions/winston');
 
 module.exports = () => {
     _passport.use(new GoogleStrategy({

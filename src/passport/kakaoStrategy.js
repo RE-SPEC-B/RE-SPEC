@@ -23,7 +23,7 @@ module.exports = () => {
             });
 
             if(isUser) {
-                logger.info(`is User ${profile}`);
+                logger.info(`is User ${profile.displayName}`);
                 done(null, isUser);
             }
             else {

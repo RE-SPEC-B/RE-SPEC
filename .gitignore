@@ -5,3 +5,4 @@ logs
 .eslintrc.json
 .prettierrc.json
 CHANGELOG.md
+index.html
