@@ -23,12 +23,12 @@ module.exports = () => {
             });
 
             if(isUser) {
-                logger.info(`is User ${profile}`);
+                logger.info(`is User ${profile.displayName}`);
                 done(null, isUser);
             }
             else {
                 const newUser = await User.create({
-                    email: profile._json.kakao_account.email,
+                    email: "KAKAO" + profile._json.kakao_account.email,
                     username: profile.displayName,
                     snsId: profile.id,
                     provider: 'kakao',

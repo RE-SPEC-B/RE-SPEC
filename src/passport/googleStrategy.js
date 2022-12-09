@@ -4,6 +4,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const _config = require('config');
 
 const User = require('../models/user');
+const logger = require('../functions/winston');
 
 module.exports = () => {
     _passport.use(new GoogleStrategy({
@@ -28,7 +29,7 @@ module.exports = () => {
 
             else {
                 const newUser = await User.create({
-                    email: profile._json.email,
+                    email: "GOOGLE" + profile._json.email,
                     username: profile.displayName,
                     snsId: profile.id,
                     provider: 'google',

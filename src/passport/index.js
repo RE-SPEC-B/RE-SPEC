@@ -12,10 +12,14 @@ module.exports = () => {
         done(null, user.id);
     });
 
-    _passport.deserializeUser((id, done) => {
+    _passport.deserializeUser((req, id, done) => {
         User.findOne({ where: { id }})
-            .then(user => done(null, user))
-            .catch(err => done(err));
+            .then((user) => {
+                req.session.sid = user.username;
+                console.log("Session Check :" + req.session.sid); // dev 단계 남겨놓음
+                done(null, user);
+            })
+            .catch((err) => done(err));
     });
 
     local();

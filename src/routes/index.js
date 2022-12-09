@@ -12,8 +12,6 @@ _router.use('/user', user_route);
 _router.use('/menu', menu_route);
 
 // Test
-_router.get('/', (req, res) => {
-    res.render('index', { title: 'Express' });
-});
+_router.get('/', (req, res) => { res.render('index', { title: 'Express' }); });
 
 module.exports = _router;
