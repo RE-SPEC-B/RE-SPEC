@@ -1,10 +1,9 @@
 'use strict';
 
 const _passport = require('passport');
-const _bcrypt = require('bcrypt');
 
-const User = require('../models/user');
-const { Op } = require('sequelize');
+const service = require('../services/auth')
+const { register, userFind } = service;
 
 const { success, fail } = require('../functions/responseStatus');
 
@@ -12,17 +11,10 @@ exports.localRegister = async (req, res) => {
     const { username, email, password } = req.body;
 
     try {
-        const isUser = await User.findOne({ where: { [Op.or]: [{ email: email }, { username: username }] } });
-
+        const isUser = await userFind(username, email);
         if (isUser) return fail(res, 403, 'Exist email or username.'); // 가입된 유저
 
-        const hash_password = await _bcrypt.hash(password, 12);
-        await User.create({
-            username: username,
-            email: email,
-            password: hash_password,
-            provider: 'local',
-        })
+        await register(username, email, password, 'local')
             .then(() => { return success(res, 200, 'Register success.'); })
             .catch((err) => { return fail(res, 500, `${err}`); });
     } catch (error) { return fail(res, 500, `${error}`); }
