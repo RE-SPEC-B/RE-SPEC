@@ -14,6 +14,8 @@ const {
     userMentoFilter,
 } = service;
 
+const { success, fail } = require('../functions/responseStatus');
+
 exports.searchMentoT = async (req, res) => {
     let { word } = req.query;
 
@@ -30,14 +32,14 @@ exports.searchMentoT = async (req, res) => {
     let set = new Set(ids);
     ids = [...set];
 
-    if (ids.length === 0) return res.status(400).json({ message: 'No data.' });
+    if (ids.length === 0) return fail(res, 400, 'No data.');
     else
         userMentoFilter(ids)
             .then((data) => {
-                return res.status(200).json({ data: data });
+                return success(res, 200, 'Search mento data by keyword success.', data);
             })
             .catch((err) => {
-                return res.status(500).json({ err });
+                return fail(res, 500, err);
             });
 };
 
@@ -72,13 +74,13 @@ exports.searchMentoB = async (req, res) => {
     let set = new Set(ids); // 중복 제거
     ids = [...set];
 
-    if (ids.length === 0) return res.status(400).json({ message: 'No data.' });
+    if (ids.length === 0) return fail(res, 400, 'No data.');
     else
         userMentoFilter(ids)
             .then((data) => {
-                return res.status(200).json({ data: data });
+                return success(res, 200, 'Search mento data by filter success.', data);
             })
             .catch((err) => {
-                return res.status(500).json({ err });
+                return fail(res, 500, err);
             });
 };
