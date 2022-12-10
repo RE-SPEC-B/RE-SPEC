@@ -13,15 +13,12 @@ const _config = require('config');
 const _morgan = require('morgan');
 const logger = require('./src/functions/winston');
 
-const passportConfig = require('./src/passport');
 const _session = require('express-session');
 const _passport = require('passport');
 
-_app.use(_session({ secret: "secret", resave: false, saveUninitialized: false }));
+_app.use(_session({ secret: 'secret', resave: false, saveUninitialized: false }));
 _app.use(_passport.initialize());
 _app.use(_passport.session());
-
-passportConfig();
 
 // 테스트용 nunjucks
 const nunjucks = require('nunjucks');
@@ -35,6 +32,9 @@ _app.use(_bodyParser.urlencoded({ extended: true }));
 _app.use(_cors());
 
 _app.use(_morgan('common', { stream: logger.stream }));
+
+const passportConfig = require('./src/passport');
+passportConfig();
 
 // 라우팅
 const api_router = require('./src/routes');

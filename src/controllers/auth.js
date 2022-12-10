@@ -1,161 +1,127 @@
 'use strict';
 
 const _passport = require('passport');
-
 const _bcrypt = require('bcrypt');
 
 const User = require('../models/user');
-const logger = require('../functions/winston');
-
 const { Op } = require('sequelize');
 
-exports.localRegister = async (req, res, next) => {
-    const { username, email, password, position, interested } = req.body;
+const logger = require('../functions/winston');
+
+exports.localRegister = async (req, res) => {
+    const { username, email, password } = req.body;
 
     try {
-        const isUser = await User.findOne({ where: {[Op.or]: [
-            { email: email },
-            { username: username }
-        ]}});
-        // 가입된 유저
-        if(isUser) {
-            logger.info(`Registered User`);
-            return res.status(405).json({
-                message : "Exist email or username.",
-            });
+        const isUser = await User.findOne({ where: { [Op.or]: [{ email: email }, { username: username }] } });
+
+        if (isUser) {
+            // 가입된 유저
+            logger.warn(`Exist email or username.`);
+            return res.status(403).json({ message: 'Exist email or username.' });
         }
 
-        const hashPassword = await _bcrypt.hash(password, 12);
-        const newUser = await User.create({
+        const hash_password = await _bcrypt.hash(password, 12);
+        await User.create({
             username: username,
             email: email,
-            password: hashPassword,
+            password: hash_password,
             provider: 'local',
-        }).then(() => {
-            return res.status(200).json({
-                message: "Register success.",
-            });
         })
-        .catch((err) => {
-            return res.status(500).json({ err });
-        });
-        
-    } catch(error) {
-        console.error(error);
+            .then(() => {
+                logger.info(`Register success.`);
+                return res.status(200).json({ message: 'Register success.' });
+            })
+            .catch((err) => {
+                logger.error(`${err}`);
+                return res.status(500).json({ message: `${err}` });
+            });
+    } catch (error) {
+        logger.error(`${error}`);
+        return res.status(500).json({ message: `${error}` });
     }
-}
+};
 
-exports.localLogin = (req, res, next) => {
+exports.localLogin = (req, res) => {
     _passport.authenticate('local', (authError, user, info) => {
-        if(authError) {
-            logger.error(`Local Login Error!`);
-            
-            return next(authError);
+        if (authError) {
+            logger.error(`${authError}`);
+            return res.status(500).json({ message: `${authError}` });
         }
 
-        if(!user) {
-            // 로컬 로그인 시 가입한 유저가 아닐 경우
-            logger.warn(`is Not User ${user}`);
-
-            return res.status(403).json({
-                message: "Not User",
-            });
+        if (!user) {
+            // 로컬 로그인후, 정상 오류시
+            logger.warn(`${info.message}`);
+            return res.status(403).json({ message: info.message });
         }
 
         return req.login(user, (loginError) => {
-            if(loginError) {
-                console.error(loginError);
-                return next(loginError);
+            if (loginError) {
+                logger.error(`${loginError}`);
+                return res.status(500).json({ message: `${loginError}` });
             }
 
-            return res.status(200).json({
-                message: "Local login success",
-            });
+            return res.status(200).json({ message: 'Local login success.' });
         });
-    }) (req, res, next);
+    })(req, res);
 };
 
 exports.logout = (req, res) => {
-    logger.info(`logout`);
-
     req.logout((err) => {
         if (err) {
-            return next(err);
+            logger.error(`${err}`);
+            return res.status(500).json({ message: `${err}` });
         }
-        return res.status(200).json({
-            message: "Logout success.",
-            code: 200,
-        });
+
+        logger.info(`Logout success.`);
+        return res.status(200).json({ message: 'Logout success.' });
     });
 };
 
-exports.kakaoLogin = (req, res) => {
-    logger.info(`Kakao Login`);
-};
-
 exports.kakaoLoginCallback = (req, res) => {
-    _passport.authenticate('kakao', (err, user) => {
-        logger.info(`Kakao Login Callback`);
-
-        if(!user) {
-            return res.status(403).json({
-                message: "Kakao user not found",
-            });
+    _passport.authenticate('kakao', (authError, user) => {
+        if (!user) {
+            logger.warn(`Kakao user not found.`);
+            return res.status(403).json({ message: 'Kakao user not found.' });
         }
 
         req.logIn(user, (err) => {
+            logger.info(`Kakao login success.`);
             return res.status(200).json({
-                message: "Kakao login success",
+                message: 'Kakao login success.',
                 user: user,
             });
         });
     })(req, res);
-};
-
-exports.googleLogin = (req, res) => {
-    logger.info(`Google Login`);
 };
 
 exports.googleLoginCallback = (req, res) => {
-    _passport.authenticate('google', (err, user) => {
-        logger.info(`Google Login Callback`);
-
-        if(err) {
-            console.error(err);
-        }
-
-        if(!user) {
-            return res.status(403).json({
-                message: "Google user not found",
-            });
+    _passport.authenticate('google', (authError, user) => {
+        if (!user) {
+            logger.warn(`Google user not found.`);
+            return res.status(403).json({ message: 'Google user not found.' });
         }
 
         req.logIn(user, (err) => {
+            logger.info(`Google login success.`);
             return res.status(200).json({
-                message: "Google login success",
+                message: 'Google login success.',
                 user: user,
             });
         });
     })(req, res);
 };
 
-exports.naverLogin = (req, res) => {
-    logger.info(`Naver Login`);
-};
-
 exports.naverLoginCallback = (req, res) => {
-    _passport.authenticate('naver', (err, user) => {
-        logger.info(`Naver Login Callback`);
-
-        if(!user) {
-            return res.status(403).json({
-                message: "Naver user not found",
-            });
+    _passport.authenticate('naver', (authError, user) => {
+        if (!user) {
+            logger.warn(`Naver user not found.`);
+            return res.status(403).json({ message: 'Naver user not found.' });
         }
 
         req.logIn(user, (err) => {
+            logger.info(`Naver login success.`);
             return res.status(200).json({
-                message: "Naver login success",
+                message: 'Naver login success.',
                 user: user,
             });
         });
