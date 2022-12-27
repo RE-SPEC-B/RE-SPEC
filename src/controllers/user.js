@@ -1,12 +1,10 @@
 'use strict';
 
-// const service = require('../services/menu');
-// const { } = service;
-
-const { User, Job ,Career, Education } = require('../utils/connect');
-
-const model = require('../utils/connect');
-const user_job = model.sequelize.models.user_job;
+const service = require('../services/user');
+const {
+    userFindAndUpdate,
+    jobFindAndInfoCreate,
+} = service;
 
 const { success, fail } = require('../functions/responseStatus');
 
@@ -14,38 +12,13 @@ exports.mentorRegistration = async (req, res) => {
     let { job, company, career, university, education } = req.body;
     let username = req.session.sid;
 
-    let user_data = await User.findOne({
-        attributes: ['id', 'position'],
-        where: { username: username },
-    })
-    if(user_data.position === 'mentor') {
-        return fail(res, 403, "You are already mentor.");
-    } 
-    await User.update({ position: 'mentor' }, {
-        where: { id: user_data.id },
-    });
+    let user_id = await userFindAndUpdate(username);
+    if(user_id === 0) return fail(res, 403, "You are already mentor.");
 
-    let job_data = await Job.findOne({
-        attributes: ['id'],
-        where: { job: job },
-    })
-    
-    user_job.create({
-        UserId: user_data.id,
-        JobId: job_data.id,
-    }).then(() => {
-        Career.create({
-            career: career,
-            company: company,
-            userkey: user_data.id,
-        })
-
-        Education.create({
-            university: university,
-            education: education,
-            userkey: user_data.id,
-        }).then(() => { return success(res, 200, 'success.'); })
-    }).catch(err => {
-        return fail(res, 500, err);
-    });
+    let result = await jobFindAndInfoCreate(job, user_id, career, company, university, education);
+    if(result === 'success.') {
+        return success(res, 200, 'Mentor register success.');
+    } else {
+        return fail(res, 500, result);
+    }
 }
