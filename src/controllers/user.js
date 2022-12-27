@@ -15,9 +15,12 @@ exports.mentorRegistration = async (req, res) => {
     let username = req.session.sid;
 
     let user_data = await User.findOne({
-        attributes: ['id'],
+        attributes: ['id', 'position'],
         where: { username: username },
     })
+    if(user_data.position === 'mentor') {
+        return fail(res, 403, "You are already mentor.");
+    } 
     await User.update({ position: 'mentor' }, {
         where: { id: user_data.id },
     });
