@@ -230,7 +230,7 @@ exports.careerUserFind = async (where_career) => {
  */
 exports.userMentoFilter = (ids) => {
     return User.findAll({
-        where: { [Op.and]: [{ position: 'mentoo' }, { id: { [Op.or]: ids } }] },
+        where: { [Op.and]: [{ position: 'mentor' }, { id: { [Op.or]: ids } }] },
         order: [['createdAt', 'DESC']],
     });
 };

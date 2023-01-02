@@ -1,7 +1,5 @@
 node_modules
 default.json
 logs
-.eslintrc.json
-.prettierrc.json
 CHANGELOG.md
 index.html
