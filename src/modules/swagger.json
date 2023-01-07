@@ -14,6 +14,9 @@
         "/auth/register": {
             "post": {
                 "description": "",
+                "tags": [
+                    "Auth"
+                ],
                 "parameters": [
                     {
                         "name": "body",
@@ -40,6 +43,9 @@
         "/auth/login": {
             "post": {
                 "description": "",
+                "tags": [
+                    "Auth"
+                ],
                 "parameters": [],
                 "responses": {}
             }
@@ -47,6 +53,9 @@
         "/auth/logout": {
             "get": {
                 "description": "",
+                "tags": [
+                    "Auth"
+                ],
                 "parameters": [],
                 "responses": {}
             }
@@ -54,6 +63,9 @@
         "/auth/login/kakao": {
             "get": {
                 "description": "",
+                "tags": [
+                    "Auth"
+                ],
                 "parameters": [],
                 "responses": {}
             }
@@ -61,6 +73,9 @@
         "/auth/login/google": {
             "get": {
                 "description": "",
+                "tags": [
+                    "Auth"
+                ],
                 "parameters": [],
                 "responses": {}
             }
@@ -68,6 +83,9 @@
         "/auth/login/naver": {
             "get": {
                 "description": "",
+                "tags": [
+                    "Auth"
+                ],
                 "parameters": [],
                 "responses": {}
             }
@@ -75,6 +93,9 @@
         "/user/register/mentor": {
             "post": {
                 "description": "",
+                "tags": [
+                    "User"
+                ],
                 "parameters": [
                     {
                         "name": "body",
@@ -110,6 +131,9 @@
         "/menu/top/search/mentor": {
             "get": {
                 "description": "",
+                "tags": [
+                    "Menu"
+                ],
                 "parameters": [
                     {
                         "name": "word",
@@ -123,6 +147,9 @@
         "/menu/bottom/search/mentor": {
             "get": {
                 "description": "",
+                "tags": [
+                    "Menu"
+                ],
                 "parameters": [
                     {
                         "name": "job",
