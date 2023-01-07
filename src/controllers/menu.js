@@ -44,7 +44,7 @@ exports.searchMentoT = async (req, res) => {
 };
 
 exports.searchMentoB = async (req, res) => {
-    let { job, university, education, company, career } = req.query;
+    let { job, university, education, companysize, career } = req.query;
     let keywords = req.query;
     let keys = Object.keys(keywords);
     let value = parseValue(keywords, keys);
@@ -65,8 +65,8 @@ exports.searchMentoB = async (req, res) => {
         ids = parseIds(id);
     }
 
-    where_career = keySelectWhere('career', 'company', ids, value, keys);
-    if (ids.length !== 0 && (career || company)) {
+    where_career = keySelectWhere('career', 'companysize', ids, value, keys);
+    if (ids.length !== 0 && (career || companysize)) {
         id = await careerUserFind(where_career);
         ids = parseIds(id);
     }

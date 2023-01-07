@@ -32,12 +32,13 @@ exports.userFindAndUpdate = (username) => {
  * @param {*} job 생성할 해당 유저의 직업
  * @param {*} user_id 멘토로 갱신되는 멘티의 유저 ID
  * @param {*} career 생성할 해당 유저의 경력
- * @param {*} company 생성할 해당 유저의 기업 규모
+ * @param {*} company 생성할 해당 유저의 기업 이름
+ * @param {*} companysize 생성할 해당 유저의 기업 규모
  * @param {*} university 생성할 해당 유저의 대학교
  * @param {*} education 생성할 해당 유저의 학력
  * @returns 
  */
-exports.jobFindAndInfoCreate = async (job, user_id, career, company, university, education) => {
+exports.jobFindAndInfoCreate = async (job, user_id, career, company, companysize, university, education) => {
     let job_data = await Job.findOne({
         attributes: ['id'],
         where: { job: job },
@@ -50,6 +51,7 @@ exports.jobFindAndInfoCreate = async (job, user_id, career, company, university,
         Career.create({
             career: career,
             company: company,
+            companysize: companysize,
             userkey: user_id,
         })
 

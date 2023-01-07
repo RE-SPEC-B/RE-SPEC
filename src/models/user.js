@@ -18,6 +18,10 @@ module.exports = class User extends _sequelize.Model {
                     type: _sequelize.STRING(30),
                     allowNull: false,
                 },
+                profile: {
+                    type: _sequelize.STRING(100),
+                    allowNull: true,
+                },
                 email: {
                     type: _sequelize.STRING(30),
                     allowNull: true,
@@ -27,15 +31,18 @@ module.exports = class User extends _sequelize.Model {
                     type: _sequelize.STRING(100),
                     allowNull: true,
                 },
+                introduction: {
+                    type: _sequelize.STRING(100),
+                    allowNull: true,
+                },
+                phonenum: {
+                    type: _sequelize.STRING(20),
+                    allowNull: true,
+                },
                 position: {
                     type: _sequelize.STRING(10),
                     allowNull: false,
                     defaultValue: 'mentee',
-                },
-                score: {
-                    type: _sequelize.INTEGER,
-                    allowNull: false,
-                    defaultValue: 0,
                 },
                 mbti: {
                     type: _sequelize.STRING(10),
@@ -71,5 +78,6 @@ module.exports = class User extends _sequelize.Model {
         db.User.belongsToMany(db.Characteristic, { through: 'user_characteristic' });
         db.User.hasOne(db.Career, { foreignKey: 'userkey', sourceKey: 'id' });
         db.User.hasOne(db.Education, { foreignKey: 'userkey', sourceKey: 'id' });
+        db.User.hasOne(db.Mentorinfo, { foreignKey: 'userkey', sourceKey: 'id' });
     }
 };

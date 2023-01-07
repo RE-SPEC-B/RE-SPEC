@@ -1,6 +1,6 @@
 'use strict';
 
-const { User, Job, Characteristic, Education, Career } = require('../utils/connect');
+const { User, Job, Characteristic, Education, Career, Mentorinfo, Mentorreview } = require('../utils/connect');
 
 const model = require('../utils/connect');
 const user_job = model.sequelize.models.user_job;
@@ -229,8 +229,35 @@ exports.careerUserFind = async (where_career) => {
  * @returns
  */
 exports.userMentoFilter = (ids) => {
-    return User.findAll({
+    return User.findAndCountAll({
+        include: [
+            {
+                model: Career,
+                required: false,
+                attributes: ['company', 'career'],
+            },
+            {
+                model: Characteristic,
+                attributes: ['characteristic'],
+                required: false,
+                through: { attributes: [] }
+            },
+            {
+                model: Job,
+                attributes: ['job'],
+                required: false,
+                through: { attributes: [] }
+            },
+            {
+                model: Mentorinfo,
+                attributes: ['introduction'],
+                //order: [['satisfaction', 'DESC']],
+                required: false,
+            },
+        ],
+        attributes: ['id', 'username', 'profile'],
         where: { [Op.and]: [{ position: 'mentor' }, { id: { [Op.or]: ids } }] },
-        order: [['createdAt', 'DESC']],
-    });
+        //order: [['createdAt', 'DESC']],
+        order: [[{ model : Mentorinfo },'satisfaction', 'DESC']]
+    })
 };
