@@ -1,0 +1,157 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "RE:SPEC's APIs",
+        "version": "1.0.0",
+        "description": "Test the APIs!"
+    },
+    "host": "localhost:5000",
+    "basePath": "/",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/auth/register": {
+            "post": {
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "username": {
+                                    "example": "any"
+                                },
+                                "email": {
+                                    "example": "any"
+                                },
+                                "password": {
+                                    "example": "any"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "description": "",
+                "parameters": [],
+                "responses": {}
+            }
+        },
+        "/auth/logout": {
+            "get": {
+                "description": "",
+                "parameters": [],
+                "responses": {}
+            }
+        },
+        "/auth/login/kakao": {
+            "get": {
+                "description": "",
+                "parameters": [],
+                "responses": {}
+            }
+        },
+        "/auth/login/google": {
+            "get": {
+                "description": "",
+                "parameters": [],
+                "responses": {}
+            }
+        },
+        "/auth/login/naver": {
+            "get": {
+                "description": "",
+                "parameters": [],
+                "responses": {}
+            }
+        },
+        "/user/register/mentor": {
+            "post": {
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "job": {
+                                    "example": "any"
+                                },
+                                "company": {
+                                    "example": "any"
+                                },
+                                "companysize": {
+                                    "example": "any"
+                                },
+                                "career": {
+                                    "example": "any"
+                                },
+                                "university": {
+                                    "example": "any"
+                                },
+                                "education": {
+                                    "example": "any"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/menu/top/search/mentor": {
+            "get": {
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "word",
+                        "in": "query",
+                        "type": "string"
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/menu/bottom/search/mentor": {
+            "get": {
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "job",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "university",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "education",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "companysize",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "career",
+                        "in": "query",
+                        "type": "string"
+                    }
+                ],
+                "responses": {}
+            }
+        }
+    }
+}

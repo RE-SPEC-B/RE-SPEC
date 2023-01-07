@@ -38,6 +38,9 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
-    "standard-version": "^9.5.0"
+    "standard-version": "^9.5.0",
+    "swagger-autogen": "^2.22.0",
+    "swagger-jsdoc": "^6.2.7",
+    "swagger-ui-express": "^4.6.0"
   }
 }

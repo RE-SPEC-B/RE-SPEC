@@ -20,6 +20,9 @@ _app.use(_session({ secret: 'secret', resave: false, saveUninitialized: false })
 _app.use(_passport.initialize());
 _app.use(_passport.session());
 
+const { _swaggerUi } = require('./src/modules/swagger');
+const swaggerFile = require('./src/modules/swagger.json');
+
 // 테스트용 nunjucks
 const nunjucks = require('nunjucks');
 
@@ -38,6 +41,8 @@ passportConfig();
 
 // 라우팅
 const api_router = require('./src/routes');
+
+_app.use("/api-docs", _swaggerUi.serve, _swaggerUi.setup(swaggerFile));
 _app.use('/', api_router);
 
 // 서버 연결
