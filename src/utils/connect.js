@@ -20,7 +20,7 @@ const sequelize = new _sequelize(
     {
         host: _config.get('mysql_local.host'),
         dialect: _config.get('mysql_local.dialect'),
-        logging: _config.get('server.state') === 'dev' ? console.log : false
+        logging: _config.get('server.state') === 'production' ? false : console.log
     },
 );
 

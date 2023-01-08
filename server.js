@@ -34,7 +34,7 @@ _app.use(_bodyParser.json());
 _app.use(_bodyParser.urlencoded({ extended: true }));
 _app.use(_cors());
 
-_app.use(_morgan('common', { stream: logger.stream }));
+_app.use(_morgan(':method ":url HTTP/:http-version" :status :response-time ms', { stream: logger.stream }));
 
 const passportConfig = require('./src/passport');
 passportConfig();
