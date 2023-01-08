@@ -25,7 +25,13 @@ exports.localLogin = (req, res) => {
         if (authError) return fail(res, 500, `${authError}`);
 
         // 로컬 로그인후, 정상 오류시
-        if (!user) return fail(res, 403, info.message)
+        if (!user) { 
+            if (info.message === "Invalid password.") {
+                return fail(res, 403, info.message)
+            } else {
+                return fail(res, 404, info.message)
+            }
+        }
 
         return req.login(user, (loginError) => {
             if (loginError) return fail(res, 500, `${loginError}`);
@@ -43,21 +49,21 @@ exports.logout = (req, res) => {
 
 exports.kakaoLoginCallback = (req, res) => {
     _passport.authenticate('kakao', (authError, user) => {
-        if (!user) return fail(res, 403, 'Kakao user not found.');
+        if (!user) return fail(res, 404, 'Kakao user not found.');
         req.logIn(user, (err) => { return success(res, 200, 'Kakao login success.', user); });
     })(req, res);
 };
 
 exports.googleLoginCallback = (req, res) => {
     _passport.authenticate('google', (authError, user) => {
-        if (!user) return fail(res, 403, 'Google user not found.');
+        if (!user) return fail(res, 404, 'Google user not found.');
         req.logIn(user, (err) => { return success(res, 200, 'Google login success.', user); });
     })(req, res);
 };
 
 exports.naverLoginCallback = (req, res) => {
     _passport.authenticate('naver', (authError, user) => {
-        if (!user) return fail(res, 403, 'Naver user not found.');
+        if (!user) return fail(res, 404, 'Naver user not found.');
         req.logIn(user, (err) => { return success(res, 200, 'Naver login success.', user); });
     })(req, res);
 };

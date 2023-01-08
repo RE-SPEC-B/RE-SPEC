@@ -32,7 +32,7 @@ exports.searchMentoT = async (req, res) => {
     let set = new Set(ids);
     ids = [...set];
 
-    if (ids.length === 0) return fail(res, 400, 'No data.');
+    if (ids.length === 0) return fail(res, 404, 'No data.');
     else
         userMentoFilter(ids)
             .then((data) => {
@@ -74,7 +74,7 @@ exports.searchMentoB = async (req, res) => {
     let set = new Set(ids); // 중복 제거
     ids = [...set];
 
-    if (ids.length === 0) return fail(res, 400, 'No data.');
+    if (ids.length === 0) return fail(res, 404, 'No data.');
     else
         userMentoFilter(ids)
             .then((data) => {
