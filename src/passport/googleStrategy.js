@@ -17,6 +17,14 @@ module.exports = () => {
             async (accessToken, refreshToken, profile, done) => {
                 try {
                     const isUser = await User.findOne({
+                        attributes: ['id', 
+                        'profile', 
+                        'username', 
+                        'email', 
+                        'password', 
+                        'introduction', 
+                        'phonenum', 
+                        'position'],
                         where: { snsId: profile.id, provider: 'google' },
                     });
 
