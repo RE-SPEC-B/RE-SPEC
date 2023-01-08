@@ -23,12 +23,6 @@ _app.use(_passport.session());
 const { _swaggerUi } = require('./src/modules/swagger');
 const swaggerFile = require('./src/modules/swagger.json');
 
-// 테스트용 nunjucks
-const nunjucks = require('nunjucks');
-
-_app.set('view engine', 'html');
-nunjucks.configure('./src/views', { express: _app, watch: true });
-
 // 웹세팅
 _app.use(_bodyParser.json());
 _app.use(_bodyParser.urlencoded({ extended: true }));
