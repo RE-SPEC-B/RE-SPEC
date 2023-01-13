@@ -921,6 +921,14 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "description": "정렬기준(최신순, 인기순, 후기순)",
+                        "name": "order",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -933,9 +941,6 @@
                                         "message": {
                                             "type": "string"
                                         },
-                                        "count": {
-                                            "type": "integer"
-                                        },
                                         "id": {
                                             "type": "integer"
                                         },
@@ -944,6 +949,10 @@
                                         },
                                         "profile": {
                                             "type": "string"
+                                        },
+                                        "reviews": {
+                                            "description": "해당 멘토의 후기 개수",
+                                            "type": "integer"
                                         },
                                         "company": {
                                             "type": "string"
@@ -959,17 +968,21 @@
                                         },
                                         "Mentorinfo": {
                                             "type": "string"
+                                        },
+                                        "count": {
+                                            "description": "검색된 총 멘토 수",
+                                            "type": "integer"
                                         }
                                     },
                                     "example": {
                                         "message": "Search mento data by filter success.",
                                         "data": {
-                                            "count": 1,
                                             "rows": [
                                                 {
                                                     "id": 1,
                                                     "username": "RESPEC001",
                                                     "profile": null,
+                                                    "reviews": 4,
                                                     "Career": {
                                                         "company": "당근",
                                                         "career": "5~8년차"
@@ -990,6 +1003,9 @@
                                                     "Mentorinfo": {
                                                         "introduction": "안녕하세요!"
                                                     }
+                                                },
+                                                {
+                                                    "count": 1
                                                 }
                                             ]
                                         }
