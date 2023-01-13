@@ -8,6 +8,7 @@ const {
     jobUserFindT,
     jobUserFindB,
     characteristicUserFind,
+    companyUserFind,
     mbtiUserFind,
     educationUserFind,
     careerUserFind,
@@ -17,7 +18,7 @@ const {
 const { success, fail } = require('../functions/responseStatus');
 
 exports.searchMentoT = async (req, res) => {
-    let { word } = req.query;
+    let { word, order } = req.query;
 
     let ids = [];
     let id = await jobUserFindT(word);
@@ -26,16 +27,21 @@ exports.searchMentoT = async (req, res) => {
     id = await characteristicUserFind(word);
     if (id) for (let x = 0; x < id.length; x++) ids.push(id[x].UserId);
 
-    id = await mbtiUserFind(word);
-    if (id) for (let x = 0; x < id.length; x++) ids.push(id[x].id);
+    id = await companyUserFind(word);
+    if (id) for (let x = 0; x < id.length; x++) ids.push(id[x].userkey);
+
+    // id = await mbtiUserFind(word);
+    // if (id) for (let x = 0; x < id.length; x++) ids.push(id[x].id);
+    // 잠시 Keep
 
     let set = new Set(ids);
     ids = [...set];
 
     if (ids.length === 0) return fail(res, 404, 'No data.');
     else
-        userMentoFilter(ids)
+        userMentoFilter(ids, order)
             .then((data) => {
+                data.push({"count": data.length});
                 return success(res, 200, 'Search mento data by keyword success.', data);
             })
             .catch((err) => {

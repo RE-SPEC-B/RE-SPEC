@@ -119,6 +119,22 @@ exports.jobUserFindB = async (value, keys) => {
 };
 
 /**
+ * 상단 메뉴에서 검색어를 입력받아, 검색어와 유사한 company를 가져와
+ * 그중, 그 company를 가지는 유저들 출력
+ *
+ * @param {*} word 상단 메뉴의 단일 검색어
+ * @returns
+ */
+exports.companyUserFind = async (word) => {
+    return await Career.findAll({
+        attributes: ['userkey'],
+        where: { company: { [Op.like]: '%' + word + '%' } },
+    }).catch((err) => {
+        return res.status(500).json({ err });
+    });
+};
+
+/**
  * 상단 메뉴에서 검색어를 입력받아, 검색어와 유사한 characteristic을 가져와
  * 그중, 그 characteristic을 가지는 유저들 출력
  *
