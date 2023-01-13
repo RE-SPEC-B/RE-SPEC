@@ -6,7 +6,7 @@ const model = require('../utils/connect');
 const user_job = model.sequelize.models.user_job;
 const user_characteristic = model.sequelize.models.user_characteristic;
 
-const { Op } = require('sequelize');
+const { Op, fn, col } = require('sequelize');
 
 /**
  * 사용자로부터 입력받은 쿼리 속 키들의 값들을 리턴하는 함수
@@ -226,10 +226,20 @@ exports.careerUserFind = async (where_career) => {
  * 그중 멘토인 유저를 출력하는 함수
  *
  * @param {*} ids 중복 요소가 제거된 필터링 후 유저 id들
+ * @param {*} order 정렬기준
  * @returns
  */
-exports.userMentoFilter = (ids) => {
-    return User.findAndCountAll({
+exports.userMentoFilter = (ids, order) => {
+    let order_option = null;
+    if(order === "최신순") {
+        order_option = [['createdAt', 'DESC']];
+    } else if (order === "인기순") {
+        order_option = [[{ model : Mentorinfo },'satisfaction', 'DESC']];
+    } else if (order === "후기순") {
+        order_option = [['reviews', 'DESC']];
+    }
+
+    return User.findAll({
         include: [
             {
                 model: Career,
@@ -251,13 +261,19 @@ exports.userMentoFilter = (ids) => {
             {
                 model: Mentorinfo,
                 attributes: ['introduction'],
-                //order: [['satisfaction', 'DESC']],
                 required: false,
+                include: [{
+                    model: Mentorreview,
+                    attributes: [],
+                }],
             },
         ],
-        attributes: ['id', 'username', 'profile'],
+        attributes: [
+            'id', 'username', 'profile',
+            [fn('COUNT', col('Mentorinfo.Mentorreviews.id')), 'reviews']
+        ],
         where: { [Op.and]: [{ position: 'mentor' }, { id: { [Op.or]: ids } }] },
-        //order: [['createdAt', 'DESC']],
-        order: [[{ model : Mentorinfo },'satisfaction', 'DESC']]
+        order: order_option,
+        group: ['User.id', 'Career.id', 'Characteristics.id', 'Jobs.id', 'Mentorinfo.id'],
     })
 };

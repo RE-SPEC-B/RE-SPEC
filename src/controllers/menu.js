@@ -44,7 +44,7 @@ exports.searchMentoT = async (req, res) => {
 };
 
 exports.searchMentoB = async (req, res) => {
-    let { job, university, education, companysize, career } = req.query;
+    let { job, university, education, companysize, career, order } = req.query;
     let keywords = req.query;
     let keys = Object.keys(keywords);
     let value = parseValue(keywords, keys);
@@ -76,8 +76,9 @@ exports.searchMentoB = async (req, res) => {
 
     if (ids.length === 0) return fail(res, 404, 'No data.');
     else
-        userMentoFilter(ids)
+        userMentoFilter(ids, order)
             .then((data) => {
+                data.push({"count": data.length});
                 return success(res, 200, 'Search mento data by filter success.', data);
             })
             .catch((err) => {
