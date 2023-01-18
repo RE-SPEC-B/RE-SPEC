@@ -1,9 +1,11 @@
 'use strict';
 
-const { User, Job ,Career, Education } = require('../utils/connect');
+const { User, Job, Characteristic, Education, Career, Mentorinfo, Mentorreview, Mentorcareer, Mentorstrength, Portfolio, Portfoliopreview, Portfoliorecommendation, Portfolioprogress } = require('../utils/connect');
 
 const model = require('../utils/connect');
 const user_job = model.sequelize.models.user_job;
+
+const { Op, fn, col } = require('sequelize');
 
 /**
  * 유저명을 통하여, 해당 유저 포지션 변경 & 유저 ID를 반환합니다.
@@ -65,4 +67,85 @@ exports.jobFindAndInfoCreate = async (job, user_id, career, company, companysize
     });
     
     return 'success.';
+}
+
+/**
+ * 
+ * @param {*} id 멘토인 해당 유저의 id
+ * @returns 
+ */
+exports.mentorInfoGet = (id) => {
+    return User.findAll({
+        include: [
+            {
+                model: Career,
+                required: false,
+                attributes: ['company', 'career'],
+            },
+            {
+                model: Characteristic,
+                attributes: ['characteristic'],
+                required: false,
+                through: { attributes: [] }
+            },
+            {
+                model: Job,
+                attributes: ['job'],
+                required: false,
+                through: { attributes: [] }
+            },
+            {
+                model: Mentorinfo,
+                attributes: ['introduction', 'mentoring', 'correcting', 'satisfaction', 'video', 'title'],
+                required: false,
+                include: [
+                    {
+                        model: Mentorreview,
+                        attributes: [],
+                    },
+                    {
+                        model: Portfolio,
+                        attributes: ['url', 'announcement'],
+                        include: [
+                            {
+                                model: Portfoliopreview,
+                                attributes: ['preview'],
+                            },
+                            {
+                                model: Portfoliorecommendation,
+                                attributes: ['recommendation'],
+                            },
+                            {
+                                model: Portfolioprogress,
+                                attributes: ['progress'],
+                            }
+                        ],
+                    },
+                    {
+                        model: Mentorcareer,
+                        attributes: ['companyname', 'company', 'job', 'start', 'end'],
+                    },
+                    {
+                        model: Mentorstrength,
+                        attributes: ['strength'],
+                    }
+                ],
+            },
+        ],
+        attributes: ['id', 'username', 'profile'],
+        where: { [Op.and]: [{ position: 'mentor' }, { id: id }] },
+    })
+}
+
+/**
+ * 
+ * @param {*} username 현재 로그인중인 사용자의 유저명
+ * @returns 
+ */
+exports.userInfoPut = (username, profile) => {
+    return User.update({
+        profile: profile,
+    }, {
+        where: { username: username },
+    });
 }

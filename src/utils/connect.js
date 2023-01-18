@@ -11,6 +11,14 @@ const Education = require('../models/education');
 const Career = require('../models/career');
 const Mentorinfo = require('../models/mentor_info');
 const Mentorreview = require('../models/mentor_review');
+const Mentorproduct = require('../models/mentor_product');
+const Mentorevaluation = require('../models/mentor_evaluation');
+const Mentorcareer = require('../models/mentor_career');
+const Mentorstrength = require('../models/mentor_strength');
+const Portfolio = require('../models/portfolio');
+const Portfoliopreview = require('../models/portfolio_preview');
+const Portfoliorecommendation = require('../models/portfolio_recommendation');
+const Portfolioprogress = require('../models/portfolio_progress');
 
 // new Sequelize를 통해 MySQL 연결 객체를 생성한다.
 const sequelize = new _sequelize(
@@ -36,6 +44,14 @@ db.Education = Education;
 db.Career = Career;
 db.Mentorinfo = Mentorinfo;
 db.Mentorreview = Mentorreview;
+db.Mentorproduct = Mentorproduct;
+db.Mentorevaluation = Mentorevaluation;
+db.Mentorcareer = Mentorcareer;
+db.Mentorstrength = Mentorstrength;
+db.Portfolio = Portfolio;
+db.Portfoliopreview = Portfoliopreview;
+db.Portfoliorecommendation = Portfoliorecommendation;
+db.Portfolioprogress = Portfolioprogress;
 
 User.init(sequelize);
 Jobcategory.init(sequelize);
@@ -45,6 +61,14 @@ Education.init(sequelize);
 Career.init(sequelize);
 Mentorinfo.init(sequelize);
 Mentorreview.init(sequelize);
+Mentorproduct.init(sequelize);
+Mentorevaluation.init(sequelize);
+Mentorcareer.init(sequelize);
+Mentorstrength.init(sequelize);
+Portfolio.init(sequelize);
+Portfoliopreview.init(sequelize);
+Portfoliorecommendation.init(sequelize);
+Portfolioprogress.init(sequelize);
 
 User.associate(db);
 Jobcategory.associate(db);
@@ -54,5 +78,13 @@ Education.associate(db);
 Career.associate(db);
 Mentorinfo.associate(db);
 Mentorreview.associate(db);
+Mentorproduct.associate(db);
+Mentorevaluation.associate(db);
+Mentorcareer.associate(db);
+Mentorstrength.associate(db);
+Portfolio.associate(db);
+Portfoliopreview.associate(db);
+Portfoliorecommendation.associate(db);
+Portfolioprogress.associate(db);
 
 module.exports = db;

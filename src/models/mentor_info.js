@@ -14,7 +14,15 @@ module.exports = class Mentorinfo extends _sequelize.Model {
                     unique: true, // 중복 X
                     primaryKey: true,
                 },
+                title: {
+                    type: _sequelize.STRING(50),
+                    allowNull: true,
+                },
                 introduction: {
+                    type: _sequelize.STRING(100),
+                    allowNull: true,
+                },
+                video: {
                     type: _sequelize.STRING(100),
                     allowNull: true,
                 },
@@ -49,6 +57,9 @@ module.exports = class Mentorinfo extends _sequelize.Model {
     // 다른 모델과의 관계
     static associate(db) {
         db.Mentorinfo.belongsTo(db.User, { foreignKey: 'userkey', targetKey: 'id' });
+        db.Mentorinfo.hasOne(db.Portfolio, { foreignKey: 'mentorkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
         db.Mentorinfo.hasMany(db.Mentorreview, { foreignKey: 'mentorkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorinfo.hasMany(db.Mentorcareer, { foreignKey: 'mentorkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorinfo.hasMany(db.Mentorstrength, { foreignKey: 'mentorkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

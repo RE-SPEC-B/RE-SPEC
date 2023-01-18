@@ -4,6 +4,8 @@ const service = require('../services/user');
 const {
     userFindAndUpdate,
     jobFindAndInfoCreate,
+    mentorInfoGet,
+    userInfoPut
 } = service;
 
 const { success, fail } = require('../functions/responseStatus');
@@ -28,4 +30,35 @@ exports.mentorRegistration = async (req, res) => {
     } else {
         return fail(res, 500, result);
     }
+}
+
+/**
+ * 멘토정보를 가져오는 API입니다.
+ */
+exports.mentorInfo = async (req, res) => {
+    const { id } = req.params;
+
+    mentorInfoGet(id)
+        .then((data) => {
+            return success(res, 200, 'get mentor info', data);
+        })
+        .catch((err) => {
+            return fail(res, 500, err);
+        });
+}
+
+/**
+ * 멘토정보를 가져오는 API입니다.
+ */
+exports.userInfo = async (req, res) => {
+    let username = req.session.sid, profile;
+    if(req.file) profile = req.file.location;
+
+    userInfoPut(username, profile)
+        .then((data) => {
+            return success(res, 200, 'success update',data);
+        })
+        .catch((err) => {
+            return fail(res, 500, err);
+        });
 }

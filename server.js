@@ -45,6 +45,7 @@ _app.listen(_config.get('server.port'), () => {
 });
 
 // DB 연결
+// alter : true -> 기존데이터 유지하며, 테이블 업데이트
 sequelize
     .sync({ force: false })
     .then(() => {
