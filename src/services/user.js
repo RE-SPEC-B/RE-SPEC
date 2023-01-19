@@ -1,6 +1,21 @@
 'use strict';
 
-const { User, Job, Characteristic, Education, Career, Mentorinfo, Mentorreview, Mentorcareer, Mentorstrength, Portfolio, Portfoliopreview, Portfoliorecommendation, Portfolioprogress } = require('../utils/connect');
+const { 
+    User, 
+    Job, 
+    Characteristic, 
+    Education, 
+    Career, 
+    Mentorinfo, 
+    Mentorreview, 
+    Mentorcareer, 
+    Mentorstrength, 
+    Mentorproduct,
+    Portfolio, 
+    Portfoliopreview, 
+    Portfoliorecommendation, 
+    Portfolioprogress, 
+    Mentorevaluation} = require('../utils/connect');
 
 const model = require('../utils/connect');
 const user_job = model.sequelize.models.user_job;
@@ -145,6 +160,78 @@ exports.mentorInfoGet = async (id) => {
     return user_data;
 }
 
+exports.mentorReviewsGet = async (id) => {
+    let mentor = await Mentorinfo.findOne({ where: {'userkey': id} })
+
+    let review_count = await Mentorreview.count({ where: {'mentorkey': mentor.id} })
+    let score_sum = await Mentorreview.sum('score', { where: {'mentorkey': mentor.id} })
+    let review_info = await Mentorreview.findAll({ where: {'mentorkey': mentor.id} })
+
+    let count = Array(5).fill(0);
+    review_info.forEach((data) => count[data.evaluationkey]++);
+    let max = Math.max(...count);
+
+    let evaluationkey = [], index = 1;
+    while(1) {
+        index = count.indexOf(max, index);
+        if(index === -1) { 
+            max--;
+            index = 0;
+            if(max === 0) break;
+        } else {
+            evaluationkey.push(index);
+            if(evaluationkey.length === 3) break;
+        }
+        index++;
+    }
+
+    let evaluation = [];
+    let evaluation_info = await Mentorevaluation.findAll({ where: { 'id': {[Op.or]: evaluationkey} }})
+    evaluationkey.forEach((key) => {
+        for(let i = 0; i < evaluation_info.length; i++) {
+            if(evaluation_info[i].id === key) evaluation.push(evaluation_info[i].evaluation);
+        }
+    })
+
+    let mentor_data = await Mentorreview.findAll({
+        include: [
+            {
+                model: User,
+                attributes: ['username'],
+            },
+            {
+                model: Mentorproduct,
+                attributes: ['product'],
+            }
+        ],
+        attributes: ['id', 'content', 'score', 'createdAt'],
+        where: {'mentorkey': mentor.id},
+    })
+
+    mentor_data.push({
+        "reviews": review_count,
+        "average": Number((score_sum / review_count).toFixed(1)),
+        "evaluations" : [
+            {
+                "evaluations": evaluation[0],
+                "percentage": (count[evaluationkey[0]] / review_count).toFixed(2) * 100,
+                "count": count[evaluationkey[0]]
+            },
+            {
+                "evaluations": evaluation[1],
+                "percentage": (count[evaluationkey[1]] / review_count).toFixed(2) * 100,
+                "count": count[evaluationkey[1]]
+            },
+            {
+                "evaluations": evaluation[2],
+                "percentage": (count[evaluationkey[2]] / review_count).toFixed(2) * 100,
+                "count": count[evaluationkey[2]]
+            }
+        ]
+    });
+
+    return mentor_data;
+}
 
 // username 현재 로그인중인 사용자의 유저명
 // exports.userInfoPut = (username, profile) => {

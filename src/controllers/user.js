@@ -5,6 +5,7 @@ const {
     userFindAndUpdate,
     jobFindAndInfoCreate,
     mentorInfoGet,
+    mentorReviewsGet,
     userInfoPut
 } = service;
 
@@ -41,6 +42,18 @@ exports.mentorInfo = async (req, res) => {
     mentorInfoGet(userid)
         .then((data) => {
             return success(res, 200, 'get mentor info', data);
+        })
+        .catch((err) => {
+            return fail(res, 500, err);
+        });
+}
+
+exports.mentorReviews = async (req, res) => {
+    const { userid } = req.params;
+
+    mentorReviewsGet(userid)        
+        .then((data) => {
+            return success(res, 200, 'get success.', data);
         })
         .catch((err) => {
             return fail(res, 500, err);
