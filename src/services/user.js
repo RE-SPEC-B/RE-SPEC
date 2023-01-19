@@ -74,8 +74,13 @@ exports.jobFindAndInfoCreate = async (job, user_id, career, company, companysize
  * @param {*} id 멘토인 해당 유저의 id
  * @returns 
  */
-exports.mentorInfoGet = (id) => {
-    return User.findAll({
+exports.mentorInfoGet = async (id) => {
+    let review_count = await Mentorinfo.findOne({ where: {'userkey': id} })
+    .then((mentor) => {
+        return Mentorreview.count({ where: {'mentorkey': mentor.id} })
+    });
+
+    let user_data = await User.findAll({
         include: [
             {
                 model: Career,
@@ -135,17 +140,17 @@ exports.mentorInfoGet = (id) => {
         attributes: ['id', 'username', 'profile'],
         where: { [Op.and]: [{ position: 'mentor' }, { id: id }] },
     })
+
+    user_data.push({"reviews": review_count});
+    return user_data;
 }
 
-/**
- * 
- * @param {*} username 현재 로그인중인 사용자의 유저명
- * @returns 
- */
-exports.userInfoPut = (username, profile) => {
-    return User.update({
-        profile: profile,
-    }, {
-        where: { username: username },
-    });
-}
+
+// username 현재 로그인중인 사용자의 유저명
+// exports.userInfoPut = (username, profile) => {
+//     return User.update({
+//         profile: profile,
+//     }, {
+//         where: { username: username },
+//     });
+// }

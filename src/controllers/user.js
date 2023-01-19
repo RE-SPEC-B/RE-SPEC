@@ -33,12 +33,12 @@ exports.mentorRegistration = async (req, res) => {
 }
 
 /**
- * 멘토정보를 가져오는 API입니다.
+ * 유저id를 받고, 멘토정보를 가져오는 API입니다.
  */
 exports.mentorInfo = async (req, res) => {
-    const { id } = req.params;
+    const { userid } = req.params;
 
-    mentorInfoGet(id)
+    mentorInfoGet(userid)
         .then((data) => {
             return success(res, 200, 'get mentor info', data);
         })
@@ -47,18 +47,15 @@ exports.mentorInfo = async (req, res) => {
         });
 }
 
-/**
- * 멘토정보를 가져오는 API입니다.
- */
-exports.userInfo = async (req, res) => {
-    let username = req.session.sid, profile;
-    if(req.file) profile = req.file.location;
+// exports.userInfo = async (req, res) => {
+//     let username = req.session.sid, profile;
+//     if(req.file) profile = req.file.location;
 
-    userInfoPut(username, profile)
-        .then((data) => {
-            return success(res, 200, 'success update',data);
-        })
-        .catch((err) => {
-            return fail(res, 500, err);
-        });
-}
+//     userInfoPut(username, profile)
+//         .then((data) => {
+//             return success(res, 200, 'success update',data);
+//         })
+//         .catch((err) => {
+//             return fail(res, 500, err);
+//         });
+// }
