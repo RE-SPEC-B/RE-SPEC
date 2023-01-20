@@ -15,7 +15,8 @@ const {
     Portfoliopreview, 
     Portfoliorecommendation, 
     Portfolioprogress, 
-    Mentorevaluation} = require('../utils/connect');
+    Mentorevaluation
+} = require('../utils/connect');
 
 const model = require('../utils/connect');
 const user_job = model.sequelize.models.user_job;
@@ -160,6 +161,11 @@ exports.mentorInfoGet = async (id) => {
     return user_data;
 }
 
+/**
+ * 
+ * @param {*} id 멘토인 해당 유저의 id
+ * @returns 
+ */
 exports.mentorReviewsGet = async (id) => {
     let mentor = await Mentorinfo.findOne({ where: {'userkey': id} })
 
@@ -167,10 +173,11 @@ exports.mentorReviewsGet = async (id) => {
     let score_sum = await Mentorreview.sum('score', { where: {'mentorkey': mentor.id} })
     let review_info = await Mentorreview.findAll({ where: {'mentorkey': mentor.id} })
 
-    let count = Array(5).fill(0);
+    let count = Array(10).fill(0);
     review_info.forEach((data) => count[data.evaluationkey]++);
     let max = Math.max(...count);
 
+    // 상위 3항목
     let evaluationkey = [], index = 1;
     while(1) {
         index = count.indexOf(max, index);
@@ -185,6 +192,7 @@ exports.mentorReviewsGet = async (id) => {
         index++;
     }
 
+    // 품목 정렬 (높은 평가 항목 순대로)
     let evaluation = [];
     let evaluation_info = await Mentorevaluation.findAll({ where: { 'id': {[Op.or]: evaluationkey} }})
     evaluationkey.forEach((key) => {

@@ -41,19 +41,22 @@ exports.mentorInfo = async (req, res) => {
 
     mentorInfoGet(userid)
         .then((data) => {
-            return success(res, 200, 'get mentor info', data);
+            return success(res, 200, 'Get mentor info success.', data);
         })
         .catch((err) => {
             return fail(res, 500, err);
         });
 }
 
+/**
+ * 유저id를 받고, 멘토 리뷰들을 가져오는 API입니다.
+ */
 exports.mentorReviews = async (req, res) => {
     const { userid } = req.params;
 
     mentorReviewsGet(userid)        
         .then((data) => {
-            return success(res, 200, 'get success.', data);
+            return success(res, 200, 'Get mentor reviews success.', data);
         })
         .catch((err) => {
             return fail(res, 500, err);
