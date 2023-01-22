@@ -221,17 +221,17 @@ exports.mentorReviewsGet = async (id) => {
         "average": Number((score_sum / review_count).toFixed(1)),
         "evaluations" : [
             {
-                "evaluations": evaluation[0],
+                "evaluation": evaluation[0],
                 "percentage": (count[evaluationkey[0]] / review_count).toFixed(2) * 100,
                 "count": count[evaluationkey[0]]
             },
             {
-                "evaluations": evaluation[1],
+                "evaluation": evaluation[1],
                 "percentage": (count[evaluationkey[1]] / review_count).toFixed(2) * 100,
                 "count": count[evaluationkey[1]]
             },
             {
-                "evaluations": evaluation[2],
+                "evaluation": evaluation[2],
                 "percentage": (count[evaluationkey[2]] / review_count).toFixed(2) * 100,
                 "count": count[evaluationkey[2]]
             }

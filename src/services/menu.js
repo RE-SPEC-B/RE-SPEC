@@ -276,7 +276,7 @@ exports.userMentoFilter = (ids, order) => {
             },
             {
                 model: Mentorinfo,
-                attributes: ['introduction'],
+                attributes: ['title'],
                 required: false,
                 include: [{
                     model: Mentorreview,

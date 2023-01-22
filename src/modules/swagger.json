@@ -10,14 +10,6 @@
     "schemes": [
         "http"
     ],
-    "components": {
-        "schemas": {
-            "Auth": {
-                "schema01": {},
-                "schema02": {}
-            }
-        }
-    },
     "paths": {
         "/auth/register": {
             "post": {
@@ -640,7 +632,7 @@
         },
         "/user/register/mentor": {
             "post": {
-                "summary": "멘토 등록",
+                "summary": "멘토 등록 (개발중)",
                 "description": "멘티인 상태인 사람만 등록할 수 있습니다.",
                 "tags": [
                     "User"
@@ -757,6 +749,380 @@
                 }
             }
         },
+        "/user/mentor/{userid}/info": {
+            "get": {
+                "summary": "멘토 상세 정보",
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "description": "멘토 검색 시, 그 데이터들 속 id (유저 id)",
+                        "name": "userid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "멘토 상세정보 가져오기 성공.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "id": {
+                                            "description": "멘토의 유저 아이디",
+                                            "type": "integer"
+                                        },
+                                        "username": {
+                                            "type": "string"
+                                        },
+                                        "profile": {
+                                            "description": "프로필 사진",
+                                            "type": "string"
+                                        },
+                                        "Career/company": {
+                                            "description": "회사명",
+                                            "type": "string"
+                                        },
+                                        "Career/career": {
+                                            "description": "경력년차",
+                                            "type": "string"
+                                        },
+                                        "Characteristics/Characteristic": {
+                                            "description": "유저 키워드",
+                                            "type": "string"
+                                        },
+                                        "Jobs/job": {
+                                            "description": "직업명",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/introduction": {
+                                            "description": "멘토소개글",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/mentoring": {
+                                            "description": "멘토링 횟수",
+                                            "type": "integer"
+                                        },
+                                        "Mentorinfo/correcting": {
+                                            "description": "포트폴리오 첨삭 횟수",
+                                            "type": "integer"
+                                        },
+                                        "Mentorinfo/satisfaction": {
+                                            "description": "멘토 만족도",
+                                            "type": "float"
+                                        },
+                                        "Mentorinfo/video": {
+                                            "description": "자기소개 영상",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/title": {
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Portfolio/url": {
+                                            "description": "포트폴리오 url",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Portfolio/announcement": {
+                                            "description": "포트폴리오 필독",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Portfolio/Portfoliopreviews/preview": {
+                                            "description": "포트폴리오 미리보기 사진",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Portfolio/recommendations/recommendation": {
+                                            "description": "이런 분들이 신청하면 좋아요! 목록",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Portfolio/progresses/progress": {
+                                            "description": "포트폴리오 리뷰는 이렇게 진행돼요! 목록",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Mentorcareers/companyname": {
+                                            "description": "경력목록/회사명",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Mentorcareers/company": {
+                                            "description": "경력목록/회사",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Mentorcareers/job": {
+                                            "description": "경력목록/직업",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Mentorcareers/start": {
+                                            "type": "date"
+                                        },
+                                        "Mentorinfo/Mentorcareers/end": {
+                                            "type": "date"
+                                        },
+                                        "Mentorinfo/Mentorstrengths/strength": {
+                                            "description": "멘토강점",
+                                            "type": "string"
+                                        },
+                                        "reviews": {
+                                            "description": "리뷰 개수",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "example": {
+                                        "message": "Get mentor info success.",
+                                        "data": [
+                                            {
+                                                "id": 3,
+                                                "username": "RESPEC003",
+                                                "profile": "https://sonb-test-bucket.s3.ap-northeast-2.amazonaws.com/1691669898025364.png",
+                                                "Career": {
+                                                    "company": "네이버",
+                                                    "career": "5~8년차"
+                                                },
+                                                "Characteristics": [
+                                                    {
+                                                        "characteristic": "쾌활한"
+                                                    },
+                                                    {
+                                                        "characteristic": "전문적인"
+                                                    }
+                                                ],
+                                                "Jobs": [
+                                                    {
+                                                        "job": "사업기획"
+                                                    }
+                                                ],
+                                                "Mentorinfo": {
+                                                    "introduction": "눈에 띄는 스펙없이도 눈에 띄는 코칭이 가능해요! 전 주변 지인들의...",
+                                                    "mentoring": 4,
+                                                    "correcting": 8,
+                                                    "satisfaction": 3.2,
+                                                    "video": "https://sonb-test-bucket.s3.ap-northeast-2.amazonaws.com/9191674380674747.mp4",
+                                                    "title": "네이버 현직자가 알려주는 비전공자 취업이야기",
+                                                    "Portfolio": {
+                                                        "url": "https://~",
+                                                        "announcement": "신입이나 커리어 전환하시려는 분들은 현재 나의 결과물과 기업을 매칭해서...",
+                                                        "Portfoliopreviews": [
+                                                            {
+                                                                "preview": "사진주소1"
+                                                            },
+                                                            {
+                                                                "preview": "사진주소2"
+                                                            },
+                                                            {
+                                                                "preview": "사진주소3"
+                                                            }
+                                                        ],
+                                                        "Portfoliorecommendations": [
+                                                            {
+                                                                "recommendation": "추천1"
+                                                            }
+                                                        ],
+                                                        "Portfolioprogresses": [
+                                                            {
+                                                                "progress": "과정1"
+                                                            },
+                                                            {
+                                                                "progress": "과정2"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "Mentorcareers": [
+                                                        {
+                                                            "companyname": "LG",
+                                                            "company": "LG 서비스",
+                                                            "job": "상품기획",
+                                                            "start": "2013-04-00",
+                                                            "end": "2014-05-00"
+                                                        },
+                                                        {
+                                                            "companyname": "NAVER",
+                                                            "company": "네이버 서비스",
+                                                            "job": "사업기획",
+                                                            "start": "2015-04-00",
+                                                            "end": "2016-05-00"
+                                                        }
+                                                    ],
+                                                    "Mentorstrengths": [
+                                                        {
+                                                            "strength": "대기업 이직 포트폴리오 피드백"
+                                                        },
+                                                        {
+                                                            "strength": "커리어 방향성에 대한 상세한 조언"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "reviews": 8
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/mentor/{userid}/reviews": {
+            "get": {
+                "summary": "멘토 리뷰 정보들",
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "description": "멘토 검색 시, 그 데이터들 속 id (유저 id)",
+                        "name": "userid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "멘토 리뷰정보 가져오기 성공.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "id": {
+                                            "description": "리뷰 id",
+                                            "type": "integer"
+                                        },
+                                        "content": {
+                                            "description": "리뷰 내용",
+                                            "type": "string"
+                                        },
+                                        "score": {
+                                            "description": "별점 0.5단위 0 ~ 5",
+                                            "type": "float"
+                                        },
+                                        "createdAt": {
+                                            "description": "생성일",
+                                            "type": "date"
+                                        },
+                                        "User/username": {
+                                            "description": "유저 닉네임",
+                                            "type": "string"
+                                        },
+                                        "Mentorproduct/product": {
+                                            "description": "구매한 상품",
+                                            "type": "string"
+                                        },
+                                        "reviews": {
+                                            "description": "리뷰 개수",
+                                            "type": "integer"
+                                        },
+                                        "average": {
+                                            "description": "리뷰 점수 평균",
+                                            "type": "float"
+                                        },
+                                        "evaluations/evaluation": {
+                                            "description": "멘토 상위 3개 평가 항목",
+                                            "type": "string"
+                                        },
+                                        "evaluations/percentage": {
+                                            "description": "전체 / 해당 평가 항목수 (Percent)",
+                                            "type": "float"
+                                        },
+                                        "evaluations/count": {
+                                            "description": "해당 평가 항목수",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "example": {
+                                        "message": "Get mentor reviews success.",
+                                        "data": [
+                                            {
+                                                "id": 2,
+                                                "content": "현직자와 이야기 나눌 수 있는 기회가 잘 없었는데...",
+                                                "score": 3,
+                                                "createdAt": "2022-11-23T11:26:12.000Z",
+                                                "User": {
+                                                    "username": "RESPEC001"
+                                                },
+                                                "Mentorproduct": {
+                                                    "product": "멘토링 1시간"
+                                                }
+                                            },
+                                            {
+                                                "id": 3,
+                                                "content": "뜻깊은 대화를 할 수 있어 좋은 기회였습니다!",
+                                                "score": 2.5,
+                                                "createdAt": "2022-11-23T11:26:12.000Z",
+                                                "User": {
+                                                    "username": "RESPEC004"
+                                                },
+                                                "Mentorproduct": {
+                                                    "product": "멘토링 40분"
+                                                }
+                                            },
+                                            {
+                                                "id": 5,
+                                                "content": "현직자와 이야기 나눌 수 있는 기회가 잘 없었는데...",
+                                                "score": 4.5,
+                                                "createdAt": "2022-11-23T11:26:12.000Z",
+                                                "User": {
+                                                    "username": "RESPEC005"
+                                                },
+                                                "Mentorproduct": {
+                                                    "product": "포트폴리오 첨삭 30분"
+                                                }
+                                            },
+                                            {
+                                                "id": 8,
+                                                "content": "뜻깊은 대화를 할 수 있어 좋은 기회였습니다!",
+                                                "score": 4,
+                                                "createdAt": "2022-11-23T11:26:12.000Z",
+                                                "User": {
+                                                    "username": "RESPEC007"
+                                                },
+                                                "Mentorproduct": {
+                                                    "product": "포트폴리오 첨삭 45분"
+                                                }
+                                            },
+                                            {
+                                                "reviews": 4,
+                                                "average": 3.5,
+                                                "evaluations": [
+                                                    {
+                                                        "evaluation": "친절하게 설명해 주셨어요.",
+                                                        "percentage": 50,
+                                                        "count": 2
+                                                    },
+                                                    {
+                                                        "evaluation": "명확한 피드백을 주셨어요.",
+                                                        "percentage": 25,
+                                                        "count": 1
+                                                    },
+                                                    {
+                                                        "evaluation": "전문성이 느껴졌어요.",
+                                                        "percentage": 25,
+                                                        "count": 1
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/menu/top/search/mentor": {
             "get": {
                 "summary": "키워드를 통한 멘토 검색",
@@ -805,19 +1171,22 @@
                                             "description": "해당 멘토의 후기 개수",
                                             "type": "integer"
                                         },
-                                        "company": {
+                                        "Career/company": {
+                                            "description": "회사명",
                                             "type": "string"
                                         },
-                                        "career": {
+                                        "Career/career": {
+                                            "description": "경력년차",
                                             "type": "string"
                                         },
-                                        "characteristic": {
+                                        "Characteristics/characteristic": {
+                                            "description": "유저 키워드",
                                             "type": "string"
                                         },
-                                        "job": {
+                                        "Jobs/job": {
                                             "type": "string"
                                         },
-                                        "Mentorinfo": {
+                                        "Mentorinfo/title": {
                                             "type": "string"
                                         },
                                         "count": {
@@ -826,13 +1195,13 @@
                                         }
                                     },
                                     "example": {
-                                        "message": "Search mento data by keyword success.",
+                                        "message": "Search mentor data by keyword success.",
                                         "data": {
                                             "rows": [
                                                 {
                                                     "id": 1,
                                                     "username": "RESPEC001",
-                                                    "profile": null,
+                                                    "profile": "https://sonb-test-bucket.s3.ap-northeast-2.amazonaws.com/1691669898025364.png",
                                                     "reviews": 4,
                                                     "Career": {
                                                         "company": "당근",
@@ -852,7 +1221,7 @@
                                                         }
                                                     ],
                                                     "Mentorinfo": {
-                                                        "introduction": "안녕하세요!"
+                                                        "title": "당근 현직자가 알려주는 비전공자 취업이야기"
                                                     }
                                                 },
                                                 {
@@ -970,19 +1339,22 @@
                                             "description": "해당 멘토의 후기 개수",
                                             "type": "integer"
                                         },
-                                        "company": {
+                                        "Career/company": {
+                                            "description": "회사명",
                                             "type": "string"
                                         },
-                                        "career": {
+                                        "Career/career": {
+                                            "description": "경력년차",
                                             "type": "string"
                                         },
-                                        "characteristic": {
+                                        "Characteristics/characteristic": {
+                                            "description": "유저 키워드",
                                             "type": "string"
                                         },
-                                        "job": {
+                                        "Jobs/job": {
                                             "type": "string"
                                         },
-                                        "Mentorinfo": {
+                                        "Mentorinfo/title": {
                                             "type": "string"
                                         },
                                         "count": {
@@ -991,13 +1363,13 @@
                                         }
                                     },
                                     "example": {
-                                        "message": "Search mento data by filter success.",
+                                        "message": "Search mentor data by filter success.",
                                         "data": {
                                             "rows": [
                                                 {
                                                     "id": 1,
                                                     "username": "RESPEC001",
-                                                    "profile": null,
+                                                    "profile": "https://sonb-test-bucket.s3.ap-northeast-2.amazonaws.com/1691669898025364.png",
                                                     "reviews": 4,
                                                     "Career": {
                                                         "company": "당근",
@@ -1017,11 +1389,34 @@
                                                         }
                                                     ],
                                                     "Mentorinfo": {
-                                                        "introduction": "안녕하세요!"
+                                                        "title": "당근 현직자가 알려주는 비전공자 취업이야기"
                                                     }
                                                 },
                                                 {
-                                                    "count": 1
+                                                    "id": 1,
+                                                    "username": "RESPEC002",
+                                                    "profile": "https://sonb-test-bucket.s3.ap-northeast-2.amazonaws.com/1691669898025364.png",
+                                                    "reviews": 7,
+                                                    "Career": {
+                                                        "company": "네이버",
+                                                        "career": "5~8년차"
+                                                    },
+                                                    "Characteristics": [
+                                                        {
+                                                            "characteristic": "논리적인"
+                                                        }
+                                                    ],
+                                                    "Jobs": [
+                                                        {
+                                                            "job": "DBA"
+                                                        }
+                                                    ],
+                                                    "Mentorinfo": {
+                                                        "title": "네이버 현직자가 알려주는 비전공자 취업이야기"
+                                                    }
+                                                },
+                                                {
+                                                    "count": 2
                                                 }
                                             ]
                                         }
