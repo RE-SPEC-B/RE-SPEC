@@ -1284,7 +1284,7 @@
                         }
                     },
                     {
-                        "description": "학력(대학교(4년제), 석사...)",
+                        "description": "학력(대학교 4년제, 대학교 (2~3년제), 석사...)",
                         "name": "education",
                         "in": "query",
                         "schema": {
