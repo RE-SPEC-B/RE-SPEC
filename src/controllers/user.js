@@ -36,7 +36,7 @@ exports.mentorRegistration = async (req, res) => {
 /**
  * 유저id를 받고, 멘토정보를 가져오는 API입니다.
  */
-exports.mentorInfo = async (req, res) => {
+exports.mentorInfo = (req, res) => {
     const { userid } = req.params;
 
     mentorInfoGet(userid)
@@ -51,7 +51,7 @@ exports.mentorInfo = async (req, res) => {
 /**
  * 유저id를 받고, 멘토 리뷰들을 가져오는 API입니다.
  */
-exports.mentorReviews = async (req, res) => {
+exports.mentorReviews = (req, res) => {
     const { userid } = req.params;
 
     mentorReviewsGet(userid)        
