@@ -44,7 +44,7 @@ exports.mentorInfo = (req, res) => {
             return success(res, 200, 'Get mentor info success.', data);
         })
         .catch((err) => {
-            return fail(res, 500, err);
+            return fail(res, 500, err.message);
         });
 }
 

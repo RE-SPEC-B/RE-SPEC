@@ -91,10 +91,10 @@ exports.jobFindAndInfoCreate = async (job, user_id, career, company, companysize
  * @returns 
  */
 exports.mentorInfoGet = async (id) => {
-    let review_count = await Mentorinfo.findOne({ where: {'userkey': id} })
-    .then((mentor) => {
-        return Mentorreview.count({ where: {'mentorkey': mentor.id} })
-    });
+    let mentor = await Mentorinfo.findOne({ where: {'userkey': id} })
+    if(mentor === null) throw new Error("There is no data.");
+
+    let review_count = await Mentorreview.count({ where: {'mentorkey': mentor.id} })
 
     let user_data = await User.findAll({
         include: [
