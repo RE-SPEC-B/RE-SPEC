@@ -9,7 +9,6 @@
 
 - [Features](#-Features)
 - [ToDo](#-ToDo)
-- [API Reference](#-API-Reference)
 - [Database ERD](#-Database-ERD)
 - [Summary Notes](#-Summary-Notes)
 - [Module](#-Dependency-Module)
@@ -27,15 +26,14 @@
 1. 멘토 전환 API
 2. 멘토 예약 기능
 
-## 📝 API Reference
-
 ## ⛓ Database ERD
-<img src="./readme/ERD.png" width="600" height="600">
+![ERD](./readme/erd.png)
 
 ## 📓 Summary Notes
-> Click Notion icon
+> Click the icons!
 
 #### 협업 워크스페이션: [![Notion](https://img.shields.io/badge/Notion-000000.svg?style=flat&logo=Notion&logoColor=white)](https://quilt-tanker-16d.notion.site/RE-SPEC-1c8f389a7b924283a8c5401e07ff334a)
+#### API 명세서: [![Swagger](https://img.shields.io/badge/Swagger-85EA2D.svg?style=flat&logo=Swagger&logoColor=white)](http://13.125.159.223:3000/api-docs/)
 
 ## 🛠 Dependency Module
 
