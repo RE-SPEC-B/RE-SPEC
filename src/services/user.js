@@ -101,17 +101,17 @@ exports.mentorInfoGet = async (id) => {
             {
                 model: Career,
                 required: false,
-                attributes: ['company', 'careerenum'],
+                attributes: ['company', ['careerenum', 'enum']],
             },
             {
                 model: Characteristic,
-                attributes: ['characteristicenum'],
+                attributes: [['characteristicenum', 'enum']],
                 required: false,
                 through: { attributes: [] }
             },
             {
                 model: Job,
-                attributes: ['jobenum'],
+                attributes: [['jobenum', 'enum']],
                 required: false,
                 through: { attributes: [] }
             },
