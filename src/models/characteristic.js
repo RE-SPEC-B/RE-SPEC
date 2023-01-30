@@ -18,6 +18,10 @@ module.exports = class Characteristic extends _sequelize.Model {
                     type: _sequelize.STRING(20),
                     allowNull: false,
                 },
+                characteristicenum: {
+                    type: _sequelize.STRING(30),
+                    allowNull: false,
+                },
             },
             {
                 // 테이블 자체에 대한 설정

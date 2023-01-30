@@ -18,6 +18,10 @@ module.exports = class Job extends _sequelize.Model {
                     type: _sequelize.STRING(20),
                     allowNull: false,
                 },
+                jobenum: {
+                    type: _sequelize.STRING(30),
+                    allowNull: false,
+                },
                 popularity: {
                     type: _sequelize.INTEGER,
                     allowNull: false,

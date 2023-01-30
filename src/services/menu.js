@@ -98,7 +98,7 @@ exports.jobUserFindT = async (word) => {
 exports.jobUserFindB = async (value, keys) => {
     return await Job.findAll({
         attributes: ['id'],
-        where: { job: { [Op.or]: value[keys.indexOf('job')] } },
+        where: { jobenum: { [Op.or]: value[keys.indexOf('jobenum')] } },
     })
         .then(async (data) => {
             let job_id = [];
@@ -264,13 +264,13 @@ exports.userMentoFilter = (ids, order) => {
             },
             {
                 model: Characteristic,
-                attributes: ['characteristic'],
+                attributes: ['characteristicenum'],
                 required: false,
                 through: { attributes: [] }
             },
             {
                 model: Job,
-                attributes: ['job'],
+                attributes: ['jobenum'],
                 required: false,
                 through: { attributes: [] }
             },

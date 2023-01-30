@@ -50,7 +50,7 @@ exports.searchMentoT = async (req, res) => {
 };
 
 exports.searchMentoB = async (req, res) => {
-    let { job, university, educationenum, companysizeenum, careerenum, order } = req.query;
+    let { jobenum, university, educationenum, companysizeenum, careerenum, order } = req.query;
     let keywords = req.query;
     let keys = Object.keys(keywords);
     let value = parseValue(keywords, keys);
@@ -60,7 +60,7 @@ exports.searchMentoB = async (req, res) => {
     let where_education,
         where_career = null;
 
-    if (job) {
+    if (jobenum) {
         id = await jobUserFindB(value, keys);
         for (let idx = 0; idx < id.length; idx++) ids.push(id[idx].UserId);
     }
