@@ -119,6 +119,13 @@ exports.jobUserFindB = async (value, keys) => {
 };
 
 /**
+ * jobenum 쿼리를 받지 못했을 경우, 모든 유저의 user id를 리턴하는 함수
+ */
+exports.AllUserFindB =  () => {
+    return User.findAll({ attributes: ['id'] });
+};
+
+/**
  * 상단 메뉴에서 검색어를 입력받아, 검색어와 유사한 company를 가져와
  * 그중, 그 company를 가지는 유저들 출력
  *

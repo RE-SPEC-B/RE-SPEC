@@ -7,6 +7,7 @@ const {
     parseIds,
     jobUserFindT,
     jobUserFindB,
+    AllUserFindB,
     characteristicUserFind,
     companyUserFind,
     mbtiUserFind,
@@ -63,6 +64,9 @@ exports.searchMentoB = async (req, res) => {
     if (jobenum) {
         id = await jobUserFindB(value, keys);
         for (let idx = 0; idx < id.length; idx++) ids.push(id[idx].UserId);
+    } else {
+        id = await AllUserFindB();
+        for (let idx = 0; idx < id.length; idx++) ids.push(id[idx].id);
     }
 
     where_education = keySelectWhere('educationenum', 'university', ids, value, keys);
