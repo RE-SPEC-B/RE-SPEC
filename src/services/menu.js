@@ -247,11 +247,11 @@ exports.careerUserFind = async (where_career) => {
  */
 exports.userMentoFilter = (ids, order) => {
     let order_option = null;
-    if(order === "최신순") {
+    if(order === "recent") {
         order_option = [['createdAt', 'DESC']];
-    } else if (order === "인기순") {
+    } else if (order === "popularity") {
         order_option = [[{ model : Mentorinfo },'satisfaction', 'DESC']];
-    } else if (order === "후기순") {
+    } else if (order === "review") {
         order_option = [['reviews', 'DESC']];
     }
 
@@ -260,7 +260,7 @@ exports.userMentoFilter = (ids, order) => {
             {
                 model: Career,
                 required: false,
-                attributes: ['company', 'career'],
+                attributes: ['company', 'careerenum'],
             },
             {
                 model: Characteristic,
