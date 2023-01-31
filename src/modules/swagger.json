@@ -791,16 +791,16 @@
                                             "description": "회사명",
                                             "type": "string"
                                         },
-                                        "Career/career": {
-                                            "description": "경력년차",
+                                        "Career/enum": {
+                                            "description": "경력년차 ENUM값",
                                             "type": "string"
                                         },
-                                        "Characteristics/Characteristic": {
-                                            "description": "유저 키워드",
+                                        "Characteristics/enum": {
+                                            "description": "유저 키워드 ENUM값",
                                             "type": "string"
                                         },
-                                        "Jobs/job": {
-                                            "description": "직업명",
+                                        "Jobs/enum": {
+                                            "description": "직업 ENUM값",
                                             "type": "string"
                                         },
                                         "Mentorinfo/introduction": {
@@ -882,19 +882,19 @@
                                                 "profile": "https://sonb-test-bucket.s3.ap-northeast-2.amazonaws.com/1691669898025364.png",
                                                 "Career": {
                                                     "company": "네이버",
-                                                    "career": "5~8년차"
+                                                    "enum": "career_level_2"
                                                 },
                                                 "Characteristics": [
                                                     {
-                                                        "characteristic": "쾌활한"
+                                                        "enum": "characteristic_num_3"
                                                     },
                                                     {
-                                                        "characteristic": "전문적인"
+                                                        "enum": "characteristic_num_6"
                                                     }
                                                 ],
                                                 "Jobs": [
                                                     {
-                                                        "job": "사업기획"
+                                                        "enum": "job_num_3"
                                                     }
                                                 ],
                                                 "Mentorinfo": {
@@ -1123,7 +1123,7 @@
                 }
             }
         },
-        "/menu/top/search/mentor": {
+        "/menu/search/mentor": {
             "get": {
                 "summary": "키워드를 통한 멘토 검색",
                 "tags": [
@@ -1140,7 +1140,7 @@
                         }
                     },
                     {
-                        "description": "정렬기준(최신순, 인기순, 후기순)",
+                        "description": "정렬기준(최신순: recent, 인기순: popularity, 후기순: review)",
                         "name": "order",
                         "in": "query",
                         "schema": {
@@ -1175,15 +1175,16 @@
                                             "description": "회사명",
                                             "type": "string"
                                         },
-                                        "Career/career": {
-                                            "description": "경력년차",
+                                        "Career/enum": {
+                                            "description": "경력년차 ENUM값",
                                             "type": "string"
                                         },
-                                        "Characteristics/characteristic": {
-                                            "description": "유저 키워드",
+                                        "Characteristics/enum": {
+                                            "description": "유저 키워드 ENUM값",
                                             "type": "string"
                                         },
-                                        "Jobs/job": {
+                                        "Jobs/enum": {
+                                            "description": "직업 ENUM값",
                                             "type": "string"
                                         },
                                         "Mentorinfo/title": {
@@ -1205,19 +1206,19 @@
                                                     "reviews": 4,
                                                     "Career": {
                                                         "company": "당근",
-                                                        "career": "5~8년차"
+                                                        "enum": "career_level_2"
                                                     },
                                                     "Characteristics": [
                                                         {
-                                                            "characteristic": "논리적인"
+                                                            "enum": "characteristic_num_2"
                                                         },
                                                         {
-                                                            "characteristic": "쾌활한"
+                                                            "enum": "characteristic_num_3"
                                                         }
                                                     ],
                                                     "Jobs": [
                                                         {
-                                                            "job": "인프라/보안"
+                                                            "enum": "job_num_4"
                                                         }
                                                     ],
                                                     "Mentorinfo": {
@@ -1259,7 +1260,7 @@
                 }
             }
         },
-        "/menu/bottom/search/mentor": {
+        "/menu/search/filter/mentor": {
             "get": {
                 "summary": "필터를 통한 멘토 검색",
                 "tags": [
@@ -1267,16 +1268,15 @@
                 ],
                 "parameters": [
                     {
-                        "description": "직업명 (입력예시 -> QA,DBA,클라우드)",
-                        "name": "job",
+                        "description": "직업명 (입력예시 -> job_num_2,job_num_3,job_num_4)",
+                        "name": "jobenum",
                         "in": "query",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "재학 or 졸업한 대학명",
+                        "description": "재학 or 졸업한 대학명 (입력예시 -> 서울대학교)",
                         "name": "university",
                         "in": "query",
                         "schema": {
@@ -1284,31 +1284,31 @@
                         }
                     },
                     {
-                        "description": "학력(대학교 4년제, 대학교 (2~3년제), 석사...)",
-                        "name": "education",
+                        "description": "학력 (입력예시 -> education_level_2,education_level_4)",
+                        "name": "educationenum",
                         "in": "query",
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "회사규모(대기업, 중견기업...)",
-                        "name": "companysize",
+                        "description": "회사규모 (입력예시 -> company_size_1,company_size_2)",
+                        "name": "companysizeenum",
                         "in": "query",
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "경력(1~4년차, 5~8년차...)",
-                        "name": "career",
+                        "description": "경력 (입력예시 -> career_level_2,career_level_3)",
+                        "name": "careerenum",
                         "in": "query",
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "정렬기준(최신순, 인기순, 후기순)",
+                        "description": "정렬기준(최신순: recent, 인기순: popularity, 후기순: review)",
                         "name": "order",
                         "in": "query",
                         "schema": {
@@ -1343,15 +1343,16 @@
                                             "description": "회사명",
                                             "type": "string"
                                         },
-                                        "Career/career": {
-                                            "description": "경력년차",
+                                        "Career/enum": {
+                                            "description": "경력년차 ENUM값",
                                             "type": "string"
                                         },
-                                        "Characteristics/characteristic": {
-                                            "description": "유저 키워드",
+                                        "Characteristics/enum": {
+                                            "description": "유저 키워드 ENUM값",
                                             "type": "string"
                                         },
-                                        "Jobs/job": {
+                                        "Jobs/enum": {
+                                            "description": "직업 ENUM값",
                                             "type": "string"
                                         },
                                         "Mentorinfo/title": {
@@ -1373,19 +1374,19 @@
                                                     "reviews": 4,
                                                     "Career": {
                                                         "company": "당근",
-                                                        "career": "5~8년차"
+                                                        "enum": "career_level_2"
                                                     },
                                                     "Characteristics": [
                                                         {
-                                                            "characteristic": "논리적인"
+                                                            "enum": "characteristic_num_2"
                                                         },
                                                         {
-                                                            "characteristic": "쾌활한"
+                                                            "enum": "characteristic_num_3"
                                                         }
                                                     ],
                                                     "Jobs": [
                                                         {
-                                                            "job": "인프라/보안"
+                                                            "enum": "job_num_4"
                                                         }
                                                     ],
                                                     "Mentorinfo": {
@@ -1399,16 +1400,16 @@
                                                     "reviews": 7,
                                                     "Career": {
                                                         "company": "네이버",
-                                                        "career": "5~8년차"
+                                                        "enum": "career_level_2"
                                                     },
                                                     "Characteristics": [
                                                         {
-                                                            "characteristic": "논리적인"
+                                                            "enum": "characteristic_num_2"
                                                         }
                                                     ],
                                                     "Jobs": [
                                                         {
-                                                            "job": "DBA"
+                                                            "enum": "job_num_6"
                                                         }
                                                     ],
                                                     "Mentorinfo": {
@@ -1442,6 +1443,166 @@
                                     "example": {
                                         "message": "No data.",
                                         "detail": "No detail."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/data/enum": {
+            "get": {
+                "summary": "ENUM값 목록",
+                "tags": [
+                    "Data"
+                ],
+                "requestBody": {},
+                "responses": {
+                    "200": {
+                        "description": "검색 성공.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Career": {
+                                            "description": "Career ENUM값들"
+                                        },
+                                        "Education": {
+                                            "description": "Education ENUM값들"
+                                        },
+                                        "Company": {
+                                            "description": "Company ENUM값들"
+                                        },
+                                        "Job": {
+                                            "description": "Job ENUM값들"
+                                        },
+                                        "Characteristic": {
+                                            "description": "Characteristic ENUM값들"
+                                        }
+                                    },
+                                    "example": {
+                                        "message": "Get enum data success.",
+                                        "data": {
+                                            "Career": [
+                                                {
+                                                    "enum": "career_level_1",
+                                                    "value": "1~4년차"
+                                                },
+                                                {
+                                                    "enum": "career_level_2",
+                                                    "value": "5~8년차"
+                                                },
+                                                {
+                                                    "enum": "career_level_3",
+                                                    "value": "9~12년차"
+                                                },
+                                                {
+                                                    "enum": "career_level_4",
+                                                    "value": "13년차 이상"
+                                                }
+                                            ],
+                                            "Education": [
+                                                {
+                                                    "enum": "education_level_1",
+                                                    "value": "고등학교"
+                                                },
+                                                {
+                                                    "enum": "education_level_2",
+                                                    "value": "대학교 (2, 3년제)"
+                                                },
+                                                {
+                                                    "enum": "education_level_3",
+                                                    "value": "대학교 4년제"
+                                                },
+                                                {
+                                                    "enum": "education_level_4",
+                                                    "value": "석사"
+                                                },
+                                                {
+                                                    "enum": "education_level_5",
+                                                    "value": "박사"
+                                                },
+                                                {
+                                                    "enum": "education_level_6",
+                                                    "value": "동문"
+                                                }
+                                            ],
+                                            "Company": [
+                                                {
+                                                    "enum": "company_size_1",
+                                                    "value": "대기업"
+                                                },
+                                                {
+                                                    "enum": "company_size_2",
+                                                    "value": "중견기업"
+                                                },
+                                                {
+                                                    "enum": "company_size_3",
+                                                    "value": "스타트업"
+                                                },
+                                                {
+                                                    "enum": "company_size_4",
+                                                    "value": "개인사업자"
+                                                },
+                                                {
+                                                    "enum": "company_size_5",
+                                                    "value": "외국계"
+                                                },
+                                                {
+                                                    "enum": "company_size_6",
+                                                    "value": "공기업"
+                                                }
+                                            ],
+                                            "Job": [
+                                                {
+                                                    "enum": "job_num_1",
+                                                    "value": "그래픽 디자인"
+                                                },
+                                                {
+                                                    "enum": "job_num_2",
+                                                    "value": "QA"
+                                                },
+                                                {
+                                                    "enum": "job_num_3",
+                                                    "value": "사업기획"
+                                                },
+                                                {
+                                                    "enum": "job_num_4",
+                                                    "value": "인프라/보안"
+                                                },
+                                                {
+                                                    "enum": "job_num_5",
+                                                    "value": "클라우드"
+                                                },
+                                                {
+                                                    "enum": "job_num_6",
+                                                    "value": "DBA"
+                                                }
+                                            ],
+                                            "Characteristic": [
+                                                {
+                                                    "enum": "characteristic_num_1",
+                                                    "value": "꼰대같은"
+                                                },
+                                                {
+                                                    "enum": "characteristic_num_2",
+                                                    "value": "논리적인"
+                                                },
+                                                {
+                                                    "enum": "characteristic_num_3",
+                                                    "value": "쾌활한"
+                                                },
+                                                {
+                                                    "enum": "characteristic_num_4",
+                                                    "value": "다정한"
+                                                },
+                                                {
+                                                    "enum": "characteristic_num_5",
+                                                    "value": "리드적인"
+                                                }
+                                            ]
+                                        }
                                     }
                                 }
                             }
