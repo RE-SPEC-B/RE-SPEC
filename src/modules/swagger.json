@@ -10,14 +10,6 @@
     "schemes": [
         "http"
     ],
-    "components": {
-        "schemas": {
-            "Auth": {
-                "schema01": {},
-                "schema02": {}
-            }
-        }
-    },
     "paths": {
         "/auth/register": {
             "post": {
@@ -640,7 +632,7 @@
         },
         "/user/register/mentor": {
             "post": {
-                "summary": "멘토 등록",
+                "summary": "멘토 등록 (개발중)",
                 "description": "멘티인 상태인 사람만 등록할 수 있습니다.",
                 "tags": [
                     "User"
@@ -757,7 +749,381 @@
                 }
             }
         },
-        "/menu/top/search/mentor": {
+        "/user/mentor/{userid}/info": {
+            "get": {
+                "summary": "멘토 상세 정보",
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "description": "멘토 검색 시, 그 데이터들 속 id (유저 id)",
+                        "name": "userid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "멘토 상세정보 가져오기 성공.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "id": {
+                                            "description": "멘토의 유저 아이디",
+                                            "type": "integer"
+                                        },
+                                        "username": {
+                                            "type": "string"
+                                        },
+                                        "profile": {
+                                            "description": "프로필 사진",
+                                            "type": "string"
+                                        },
+                                        "Career/company": {
+                                            "description": "회사명",
+                                            "type": "string"
+                                        },
+                                        "Career/enum": {
+                                            "description": "경력년차 ENUM값",
+                                            "type": "string"
+                                        },
+                                        "Characteristics/enum": {
+                                            "description": "유저 키워드 ENUM값",
+                                            "type": "string"
+                                        },
+                                        "Jobs/enum": {
+                                            "description": "직업 ENUM값",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/introduction": {
+                                            "description": "멘토소개글",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/mentoring": {
+                                            "description": "멘토링 횟수",
+                                            "type": "integer"
+                                        },
+                                        "Mentorinfo/correcting": {
+                                            "description": "포트폴리오 첨삭 횟수",
+                                            "type": "integer"
+                                        },
+                                        "Mentorinfo/satisfaction": {
+                                            "description": "멘토 만족도",
+                                            "type": "float"
+                                        },
+                                        "Mentorinfo/video": {
+                                            "description": "자기소개 영상",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/title": {
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Portfolio/url": {
+                                            "description": "포트폴리오 url",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Portfolio/announcement": {
+                                            "description": "포트폴리오 필독",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Portfolio/Portfoliopreviews/preview": {
+                                            "description": "포트폴리오 미리보기 사진",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Portfolio/recommendations/recommendation": {
+                                            "description": "이런 분들이 신청하면 좋아요! 목록",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Portfolio/progresses/progress": {
+                                            "description": "포트폴리오 리뷰는 이렇게 진행돼요! 목록",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Mentorcareers/companyname": {
+                                            "description": "경력목록/회사명",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Mentorcareers/company": {
+                                            "description": "경력목록/회사",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Mentorcareers/job": {
+                                            "description": "경력목록/직업",
+                                            "type": "string"
+                                        },
+                                        "Mentorinfo/Mentorcareers/start": {
+                                            "type": "date"
+                                        },
+                                        "Mentorinfo/Mentorcareers/end": {
+                                            "type": "date"
+                                        },
+                                        "Mentorinfo/Mentorstrengths/strength": {
+                                            "description": "멘토강점",
+                                            "type": "string"
+                                        },
+                                        "reviews": {
+                                            "description": "리뷰 개수",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "example": {
+                                        "message": "Get mentor info success.",
+                                        "data": [
+                                            {
+                                                "id": 3,
+                                                "username": "RESPEC003",
+                                                "profile": "https://sonb-test-bucket.s3.ap-northeast-2.amazonaws.com/1691669898025364.png",
+                                                "Career": {
+                                                    "company": "네이버",
+                                                    "enum": "career_level_2"
+                                                },
+                                                "Characteristics": [
+                                                    {
+                                                        "enum": "characteristic_num_3"
+                                                    },
+                                                    {
+                                                        "enum": "characteristic_num_6"
+                                                    }
+                                                ],
+                                                "Jobs": [
+                                                    {
+                                                        "enum": "job_num_3"
+                                                    }
+                                                ],
+                                                "Mentorinfo": {
+                                                    "introduction": "눈에 띄는 스펙없이도 눈에 띄는 코칭이 가능해요! 전 주변 지인들의...",
+                                                    "mentoring": 4,
+                                                    "correcting": 8,
+                                                    "satisfaction": 3.2,
+                                                    "video": "https://sonb-test-bucket.s3.ap-northeast-2.amazonaws.com/9191674380674747.mp4",
+                                                    "title": "네이버 현직자가 알려주는 비전공자 취업이야기",
+                                                    "Portfolio": {
+                                                        "url": "https://~",
+                                                        "announcement": "신입이나 커리어 전환하시려는 분들은 현재 나의 결과물과 기업을 매칭해서...",
+                                                        "Portfoliopreviews": [
+                                                            {
+                                                                "preview": "사진주소1"
+                                                            },
+                                                            {
+                                                                "preview": "사진주소2"
+                                                            },
+                                                            {
+                                                                "preview": "사진주소3"
+                                                            }
+                                                        ],
+                                                        "Portfoliorecommendations": [
+                                                            {
+                                                                "recommendation": "추천1"
+                                                            }
+                                                        ],
+                                                        "Portfolioprogresses": [
+                                                            {
+                                                                "progress": "과정1"
+                                                            },
+                                                            {
+                                                                "progress": "과정2"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "Mentorcareers": [
+                                                        {
+                                                            "companyname": "LG",
+                                                            "company": "LG 서비스",
+                                                            "job": "상품기획",
+                                                            "start": "2013-04-00",
+                                                            "end": "2014-05-00"
+                                                        },
+                                                        {
+                                                            "companyname": "NAVER",
+                                                            "company": "네이버 서비스",
+                                                            "job": "사업기획",
+                                                            "start": "2015-04-00",
+                                                            "end": "2016-05-00"
+                                                        }
+                                                    ],
+                                                    "Mentorstrengths": [
+                                                        {
+                                                            "strength": "대기업 이직 포트폴리오 피드백"
+                                                        },
+                                                        {
+                                                            "strength": "커리어 방향성에 대한 상세한 조언"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "reviews": 8
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/mentor/{userid}/reviews": {
+            "get": {
+                "summary": "멘토 리뷰 정보들",
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "description": "멘토 검색 시, 그 데이터들 속 id (유저 id)",
+                        "name": "userid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "멘토 리뷰정보 가져오기 성공.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "id": {
+                                            "description": "리뷰 id",
+                                            "type": "integer"
+                                        },
+                                        "content": {
+                                            "description": "리뷰 내용",
+                                            "type": "string"
+                                        },
+                                        "score": {
+                                            "description": "별점 0.5단위 0 ~ 5",
+                                            "type": "float"
+                                        },
+                                        "createdAt": {
+                                            "description": "생성일",
+                                            "type": "date"
+                                        },
+                                        "User/username": {
+                                            "description": "유저 닉네임",
+                                            "type": "string"
+                                        },
+                                        "Mentorproduct/product": {
+                                            "description": "구매한 상품",
+                                            "type": "string"
+                                        },
+                                        "reviews": {
+                                            "description": "리뷰 개수",
+                                            "type": "integer"
+                                        },
+                                        "average": {
+                                            "description": "리뷰 점수 평균",
+                                            "type": "float"
+                                        },
+                                        "evaluations/evaluation": {
+                                            "description": "멘토 상위 3개 평가 항목",
+                                            "type": "string"
+                                        },
+                                        "evaluations/percentage": {
+                                            "description": "전체 / 해당 평가 항목수 (Percent)",
+                                            "type": "float"
+                                        },
+                                        "evaluations/count": {
+                                            "description": "해당 평가 항목수",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "example": {
+                                        "message": "Get mentor reviews success.",
+                                        "data": [
+                                            {
+                                                "id": 2,
+                                                "content": "현직자와 이야기 나눌 수 있는 기회가 잘 없었는데...",
+                                                "score": 3,
+                                                "createdAt": "2022-11-23T11:26:12.000Z",
+                                                "User": {
+                                                    "username": "RESPEC001"
+                                                },
+                                                "Mentorproduct": {
+                                                    "product": "멘토링 1시간"
+                                                }
+                                            },
+                                            {
+                                                "id": 3,
+                                                "content": "뜻깊은 대화를 할 수 있어 좋은 기회였습니다!",
+                                                "score": 2.5,
+                                                "createdAt": "2022-11-23T11:26:12.000Z",
+                                                "User": {
+                                                    "username": "RESPEC004"
+                                                },
+                                                "Mentorproduct": {
+                                                    "product": "멘토링 40분"
+                                                }
+                                            },
+                                            {
+                                                "id": 5,
+                                                "content": "현직자와 이야기 나눌 수 있는 기회가 잘 없었는데...",
+                                                "score": 4.5,
+                                                "createdAt": "2022-11-23T11:26:12.000Z",
+                                                "User": {
+                                                    "username": "RESPEC005"
+                                                },
+                                                "Mentorproduct": {
+                                                    "product": "포트폴리오 첨삭 30분"
+                                                }
+                                            },
+                                            {
+                                                "id": 8,
+                                                "content": "뜻깊은 대화를 할 수 있어 좋은 기회였습니다!",
+                                                "score": 4,
+                                                "createdAt": "2022-11-23T11:26:12.000Z",
+                                                "User": {
+                                                    "username": "RESPEC007"
+                                                },
+                                                "Mentorproduct": {
+                                                    "product": "포트폴리오 첨삭 45분"
+                                                }
+                                            },
+                                            {
+                                                "reviews": 4,
+                                                "average": 3.5,
+                                                "evaluations": [
+                                                    {
+                                                        "evaluation": "친절하게 설명해 주셨어요.",
+                                                        "percentage": 50,
+                                                        "count": 2
+                                                    },
+                                                    {
+                                                        "evaluation": "명확한 피드백을 주셨어요.",
+                                                        "percentage": 25,
+                                                        "count": 1
+                                                    },
+                                                    {
+                                                        "evaluation": "전문성이 느껴졌어요.",
+                                                        "percentage": 25,
+                                                        "count": 1
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/menu/search/mentor": {
             "get": {
                 "summary": "키워드를 통한 멘토 검색",
                 "tags": [
@@ -774,7 +1140,7 @@
                         }
                     },
                     {
-                        "description": "정렬기준(최신순, 인기순, 후기순)",
+                        "description": "정렬기준(최신순: recent, 인기순: popularity, 후기순: review)",
                         "name": "order",
                         "in": "query",
                         "schema": {
@@ -805,19 +1171,23 @@
                                             "description": "해당 멘토의 후기 개수",
                                             "type": "integer"
                                         },
-                                        "company": {
+                                        "Career/company": {
+                                            "description": "회사명",
                                             "type": "string"
                                         },
-                                        "career": {
+                                        "Career/enum": {
+                                            "description": "경력년차 ENUM값",
                                             "type": "string"
                                         },
-                                        "characteristic": {
+                                        "Characteristics/enum": {
+                                            "description": "유저 키워드 ENUM값",
                                             "type": "string"
                                         },
-                                        "job": {
+                                        "Jobs/enum": {
+                                            "description": "직업 ENUM값",
                                             "type": "string"
                                         },
-                                        "Mentorinfo": {
+                                        "Mentorinfo/title": {
                                             "type": "string"
                                         },
                                         "count": {
@@ -826,33 +1196,33 @@
                                         }
                                     },
                                     "example": {
-                                        "message": "Search mento data by keyword success.",
+                                        "message": "Search mentor data by keyword success.",
                                         "data": {
                                             "rows": [
                                                 {
                                                     "id": 1,
                                                     "username": "RESPEC001",
-                                                    "profile": null,
+                                                    "profile": "https://sonb-test-bucket.s3.ap-northeast-2.amazonaws.com/1691669898025364.png",
                                                     "reviews": 4,
                                                     "Career": {
                                                         "company": "당근",
-                                                        "career": "5~8년차"
+                                                        "enum": "career_level_2"
                                                     },
                                                     "Characteristics": [
                                                         {
-                                                            "characteristic": "논리적인"
+                                                            "enum": "characteristic_num_2"
                                                         },
                                                         {
-                                                            "characteristic": "쾌활한"
+                                                            "enum": "characteristic_num_3"
                                                         }
                                                     ],
                                                     "Jobs": [
                                                         {
-                                                            "job": "인프라/보안"
+                                                            "enum": "job_num_4"
                                                         }
                                                     ],
                                                     "Mentorinfo": {
-                                                        "introduction": "안녕하세요!"
+                                                        "title": "당근 현직자가 알려주는 비전공자 취업이야기"
                                                     }
                                                 },
                                                 {
@@ -890,7 +1260,7 @@
                 }
             }
         },
-        "/menu/bottom/search/mentor": {
+        "/menu/search/filter/mentor": {
             "get": {
                 "summary": "필터를 통한 멘토 검색",
                 "tags": [
@@ -898,16 +1268,15 @@
                 ],
                 "parameters": [
                     {
-                        "description": "직업명 (입력예시 -> QA,DBA,클라우드)",
-                        "name": "job",
+                        "description": "직업명 (입력예시 -> job_num_2,job_num_3,job_num_4)",
+                        "name": "jobenum",
                         "in": "query",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "재학 or 졸업한 대학명",
+                        "description": "재학 or 졸업한 대학명 (입력예시 -> 서울대학교)",
                         "name": "university",
                         "in": "query",
                         "schema": {
@@ -915,31 +1284,31 @@
                         }
                     },
                     {
-                        "description": "학력(대학교(4년제), 석사...)",
-                        "name": "education",
+                        "description": "학력 (입력예시 -> education_level_2,education_level_4)",
+                        "name": "educationenum",
                         "in": "query",
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "회사규모(대기업, 중견기업...)",
-                        "name": "companysize",
+                        "description": "회사규모 (입력예시 -> company_size_1,company_size_2)",
+                        "name": "companysizeenum",
                         "in": "query",
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "경력(1~4년차, 5~8년차...)",
-                        "name": "career",
+                        "description": "경력 (입력예시 -> career_level_2,career_level_3)",
+                        "name": "careerenum",
                         "in": "query",
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "description": "정렬기준(최신순, 인기순, 후기순)",
+                        "description": "정렬기준(최신순: recent, 인기순: popularity, 후기순: review)",
                         "name": "order",
                         "in": "query",
                         "schema": {
@@ -970,19 +1339,23 @@
                                             "description": "해당 멘토의 후기 개수",
                                             "type": "integer"
                                         },
-                                        "company": {
+                                        "Career/company": {
+                                            "description": "회사명",
                                             "type": "string"
                                         },
-                                        "career": {
+                                        "Career/enum": {
+                                            "description": "경력년차 ENUM값",
                                             "type": "string"
                                         },
-                                        "characteristic": {
+                                        "Characteristics/enum": {
+                                            "description": "유저 키워드 ENUM값",
                                             "type": "string"
                                         },
-                                        "job": {
+                                        "Jobs/enum": {
+                                            "description": "직업 ENUM값",
                                             "type": "string"
                                         },
-                                        "Mentorinfo": {
+                                        "Mentorinfo/title": {
                                             "type": "string"
                                         },
                                         "count": {
@@ -991,37 +1364,60 @@
                                         }
                                     },
                                     "example": {
-                                        "message": "Search mento data by filter success.",
+                                        "message": "Search mentor data by filter success.",
                                         "data": {
                                             "rows": [
                                                 {
                                                     "id": 1,
                                                     "username": "RESPEC001",
-                                                    "profile": null,
+                                                    "profile": "https://sonb-test-bucket.s3.ap-northeast-2.amazonaws.com/1691669898025364.png",
                                                     "reviews": 4,
                                                     "Career": {
                                                         "company": "당근",
-                                                        "career": "5~8년차"
+                                                        "enum": "career_level_2"
                                                     },
                                                     "Characteristics": [
                                                         {
-                                                            "characteristic": "논리적인"
+                                                            "enum": "characteristic_num_2"
                                                         },
                                                         {
-                                                            "characteristic": "쾌활한"
+                                                            "enum": "characteristic_num_3"
                                                         }
                                                     ],
                                                     "Jobs": [
                                                         {
-                                                            "job": "인프라/보안"
+                                                            "enum": "job_num_4"
                                                         }
                                                     ],
                                                     "Mentorinfo": {
-                                                        "introduction": "안녕하세요!"
+                                                        "title": "당근 현직자가 알려주는 비전공자 취업이야기"
                                                     }
                                                 },
                                                 {
-                                                    "count": 1
+                                                    "id": 1,
+                                                    "username": "RESPEC002",
+                                                    "profile": "https://sonb-test-bucket.s3.ap-northeast-2.amazonaws.com/1691669898025364.png",
+                                                    "reviews": 7,
+                                                    "Career": {
+                                                        "company": "네이버",
+                                                        "enum": "career_level_2"
+                                                    },
+                                                    "Characteristics": [
+                                                        {
+                                                            "enum": "characteristic_num_2"
+                                                        }
+                                                    ],
+                                                    "Jobs": [
+                                                        {
+                                                            "enum": "job_num_6"
+                                                        }
+                                                    ],
+                                                    "Mentorinfo": {
+                                                        "title": "네이버 현직자가 알려주는 비전공자 취업이야기"
+                                                    }
+                                                },
+                                                {
+                                                    "count": 2
                                                 }
                                             ]
                                         }
@@ -1047,6 +1443,166 @@
                                     "example": {
                                         "message": "No data.",
                                         "detail": "No detail."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/data/enum": {
+            "get": {
+                "summary": "ENUM값 목록",
+                "tags": [
+                    "Data"
+                ],
+                "requestBody": {},
+                "responses": {
+                    "200": {
+                        "description": "검색 성공.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Career": {
+                                            "description": "Career ENUM값들"
+                                        },
+                                        "Education": {
+                                            "description": "Education ENUM값들"
+                                        },
+                                        "Company": {
+                                            "description": "Company ENUM값들"
+                                        },
+                                        "Job": {
+                                            "description": "Job ENUM값들"
+                                        },
+                                        "Characteristic": {
+                                            "description": "Characteristic ENUM값들"
+                                        }
+                                    },
+                                    "example": {
+                                        "message": "Get enum data success.",
+                                        "data": {
+                                            "Career": [
+                                                {
+                                                    "enum": "career_level_1",
+                                                    "value": "1~4년차"
+                                                },
+                                                {
+                                                    "enum": "career_level_2",
+                                                    "value": "5~8년차"
+                                                },
+                                                {
+                                                    "enum": "career_level_3",
+                                                    "value": "9~12년차"
+                                                },
+                                                {
+                                                    "enum": "career_level_4",
+                                                    "value": "13년차 이상"
+                                                }
+                                            ],
+                                            "Education": [
+                                                {
+                                                    "enum": "education_level_1",
+                                                    "value": "고등학교"
+                                                },
+                                                {
+                                                    "enum": "education_level_2",
+                                                    "value": "대학교 (2, 3년제)"
+                                                },
+                                                {
+                                                    "enum": "education_level_3",
+                                                    "value": "대학교 4년제"
+                                                },
+                                                {
+                                                    "enum": "education_level_4",
+                                                    "value": "석사"
+                                                },
+                                                {
+                                                    "enum": "education_level_5",
+                                                    "value": "박사"
+                                                },
+                                                {
+                                                    "enum": "education_level_6",
+                                                    "value": "동문"
+                                                }
+                                            ],
+                                            "Company": [
+                                                {
+                                                    "enum": "company_size_1",
+                                                    "value": "대기업"
+                                                },
+                                                {
+                                                    "enum": "company_size_2",
+                                                    "value": "중견기업"
+                                                },
+                                                {
+                                                    "enum": "company_size_3",
+                                                    "value": "스타트업"
+                                                },
+                                                {
+                                                    "enum": "company_size_4",
+                                                    "value": "개인사업자"
+                                                },
+                                                {
+                                                    "enum": "company_size_5",
+                                                    "value": "외국계"
+                                                },
+                                                {
+                                                    "enum": "company_size_6",
+                                                    "value": "공기업"
+                                                }
+                                            ],
+                                            "Job": [
+                                                {
+                                                    "enum": "job_num_1",
+                                                    "value": "그래픽 디자인"
+                                                },
+                                                {
+                                                    "enum": "job_num_2",
+                                                    "value": "QA"
+                                                },
+                                                {
+                                                    "enum": "job_num_3",
+                                                    "value": "사업기획"
+                                                },
+                                                {
+                                                    "enum": "job_num_4",
+                                                    "value": "인프라/보안"
+                                                },
+                                                {
+                                                    "enum": "job_num_5",
+                                                    "value": "클라우드"
+                                                },
+                                                {
+                                                    "enum": "job_num_6",
+                                                    "value": "DBA"
+                                                }
+                                            ],
+                                            "Characteristic": [
+                                                {
+                                                    "enum": "characteristic_num_1",
+                                                    "value": "꼰대같은"
+                                                },
+                                                {
+                                                    "enum": "characteristic_num_2",
+                                                    "value": "논리적인"
+                                                },
+                                                {
+                                                    "enum": "characteristic_num_3",
+                                                    "value": "쾌활한"
+                                                },
+                                                {
+                                                    "enum": "characteristic_num_4",
+                                                    "value": "다정한"
+                                                },
+                                                {
+                                                    "enum": "characteristic_num_5",
+                                                    "value": "리드적인"
+                                                }
+                                            ]
+                                        }
                                     }
                                 }
                             }

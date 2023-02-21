@@ -98,7 +98,7 @@ exports.jobUserFindT = async (word) => {
 exports.jobUserFindB = async (value, keys) => {
     return await Job.findAll({
         attributes: ['id'],
-        where: { job: { [Op.or]: value[keys.indexOf('job')] } },
+        where: { jobenum: { [Op.or]: value[keys.indexOf('jobenum')] } },
     })
         .then(async (data) => {
             let job_id = [];
@@ -116,6 +116,13 @@ exports.jobUserFindB = async (value, keys) => {
         .catch((err) => {
             return res.status(500).json({ err });
         });
+};
+
+/**
+ * jobenum 쿼리를 받지 못했을 경우, 모든 유저의 user id를 리턴하는 함수
+ */
+exports.AllUserFindB =  () => {
+    return User.findAll({ attributes: ['id'] });
 };
 
 /**
@@ -247,11 +254,11 @@ exports.careerUserFind = async (where_career) => {
  */
 exports.userMentoFilter = (ids, order) => {
     let order_option = null;
-    if(order === "최신순") {
+    if(order === "recent") {
         order_option = [['createdAt', 'DESC']];
-    } else if (order === "인기순") {
+    } else if (order === "popularity") {
         order_option = [[{ model : Mentorinfo },'satisfaction', 'DESC']];
-    } else if (order === "후기순") {
+    } else if (order === "review") {
         order_option = [['reviews', 'DESC']];
     }
 
@@ -260,23 +267,23 @@ exports.userMentoFilter = (ids, order) => {
             {
                 model: Career,
                 required: false,
-                attributes: ['company', 'career'],
+                attributes: ['company', ['careerenum', 'enum']],
             },
             {
                 model: Characteristic,
-                attributes: ['characteristic'],
+                attributes: [['characteristicenum', 'enum']],
                 required: false,
                 through: { attributes: [] }
             },
             {
                 model: Job,
-                attributes: ['job'],
+                attributes: [['jobenum', 'enum']],
                 required: false,
                 through: { attributes: [] }
             },
             {
                 model: Mentorinfo,
-                attributes: ['introduction'],
+                attributes: ['title'],
                 required: false,
                 include: [{
                     model: Mentorreview,

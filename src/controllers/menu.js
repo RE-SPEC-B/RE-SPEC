@@ -7,6 +7,7 @@ const {
     parseIds,
     jobUserFindT,
     jobUserFindB,
+    AllUserFindB,
     characteristicUserFind,
     companyUserFind,
     mbtiUserFind,
@@ -42,7 +43,7 @@ exports.searchMentoT = async (req, res) => {
         userMentoFilter(ids, order)
             .then((data) => {
                 data.push({"count": data.length});
-                return success(res, 200, 'Search mento data by keyword success.', data);
+                return success(res, 200, 'Search mentor data by keyword success.', data);
             })
             .catch((err) => {
                 return fail(res, 500, err);
@@ -50,7 +51,7 @@ exports.searchMentoT = async (req, res) => {
 };
 
 exports.searchMentoB = async (req, res) => {
-    let { job, university, education, companysize, career, order } = req.query;
+    let { jobenum, university, educationenum, companysizeenum, careerenum, order } = req.query;
     let keywords = req.query;
     let keys = Object.keys(keywords);
     let value = parseValue(keywords, keys);
@@ -60,19 +61,22 @@ exports.searchMentoB = async (req, res) => {
     let where_education,
         where_career = null;
 
-    if (job) {
+    if (jobenum) {
         id = await jobUserFindB(value, keys);
         for (let idx = 0; idx < id.length; idx++) ids.push(id[idx].UserId);
+    } else {
+        id = await AllUserFindB();
+        for (let idx = 0; idx < id.length; idx++) ids.push(id[idx].id);
     }
 
-    where_education = keySelectWhere('education', 'university', ids, value, keys);
-    if (ids.length !== 0 && (education || university)) {
+    where_education = keySelectWhere('educationenum', 'university', ids, value, keys);
+    if (ids.length !== 0 && (educationenum || university)) {
         id = await educationUserFind(where_education);
         ids = parseIds(id);
     }
 
-    where_career = keySelectWhere('career', 'companysize', ids, value, keys);
-    if (ids.length !== 0 && (career || companysize)) {
+    where_career = keySelectWhere('careerenum', 'companysizeenum', ids, value, keys);
+    if (ids.length !== 0 && (careerenum || companysizeenum)) {
         id = await careerUserFind(where_career);
         ids = parseIds(id);
     }
@@ -85,7 +89,7 @@ exports.searchMentoB = async (req, res) => {
         userMentoFilter(ids, order)
             .then((data) => {
                 data.push({"count": data.length});
-                return success(res, 200, 'Search mento data by filter success.', data);
+                return success(res, 200, 'Search mentor data by filter success.', data);
             })
             .catch((err) => {
                 return fail(res, 500, err);

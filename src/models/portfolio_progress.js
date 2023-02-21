@@ -2,7 +2,7 @@
 
 const _sequelize = require('sequelize');
 
-module.exports = class Education extends _sequelize.Model {
+module.exports = class Portfolioprogress extends _sequelize.Model {
     static init(sequelize) {
         return super.init(
             {
@@ -13,20 +13,16 @@ module.exports = class Education extends _sequelize.Model {
                     unique: true,
                     primaryKey: true,
                 },
-                university: {
-                    type: _sequelize.STRING(20),
-                    allowNull: false,
-                },
-                educationenum: {
-                    type: _sequelize.STRING(30),
+                progress: {
+                    type: _sequelize.STRING(100),
                     allowNull: false,
                 },
             },
             {
                 sequelize,
                 timestamps: true,
-                modelName: 'Education',
-                tableName: 'education',
+                modelName: 'Portfolioprogress',
+                tableName: 'portfolioprogress',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -34,7 +30,6 @@ module.exports = class Education extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Education.belongsTo(db.Educationinfo, { foreignKey: 'educationenum', targetKey: 'enum', onDelete: 'cascade', onUpdate: 'cascade'});
-        db.Education.belongsTo(db.User, { foreignKey: 'userkey', targetKey: 'id' });
+        db.Portfolioprogress.belongsTo(db.Portfolio, { foreignKey: 'portfoliokey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

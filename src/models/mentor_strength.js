@@ -2,7 +2,7 @@
 
 const _sequelize = require('sequelize');
 
-module.exports = class Education extends _sequelize.Model {
+module.exports = class Mentorstrength extends _sequelize.Model {
     static init(sequelize) {
         return super.init(
             {
@@ -13,20 +13,16 @@ module.exports = class Education extends _sequelize.Model {
                     unique: true,
                     primaryKey: true,
                 },
-                university: {
-                    type: _sequelize.STRING(20),
-                    allowNull: false,
-                },
-                educationenum: {
-                    type: _sequelize.STRING(30),
+                strength: {
+                    type: _sequelize.STRING(50),
                     allowNull: false,
                 },
             },
             {
                 sequelize,
                 timestamps: true,
-                modelName: 'Education',
-                tableName: 'education',
+                modelName: 'Mentorstrength',
+                tableName: 'mentorstrength',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -34,7 +30,6 @@ module.exports = class Education extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Education.belongsTo(db.Educationinfo, { foreignKey: 'educationenum', targetKey: 'enum', onDelete: 'cascade', onUpdate: 'cascade'});
-        db.Education.belongsTo(db.User, { foreignKey: 'userkey', targetKey: 'id' });
+        db.Mentorstrength.belongsTo(db.Mentorinfo, { foreignKey: 'mentorkey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };
