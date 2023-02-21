@@ -44,7 +44,11 @@ exports.mentorInfo = (req, res) => {
             return success(res, 200, 'Get mentor info success.', data);
         })
         .catch((err) => {
-            return fail(res, 500, err.message);
+            if(err.message === 'There is no data.') {
+                return fail(res, 404, err.message);
+            } else {
+                return fail(res, 500, err.message);
+            }
         });
 }
 
