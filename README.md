@@ -22,7 +22,7 @@
 2. 멘토 찾기 & 검색 API 설계
 
 ## Project Summary Note
-> Click Notion icon
+> Click Notion icon 
 
 👉 [![Notion](https://img.shields.io/badge/Notion-000000.svg?style=flat&logo=Notion&logoColor=white)](https://quilt-tanker-16d.notion.site/RE-SPEC-1c8f389a7b924283a8c5401e07ff334a)
 
