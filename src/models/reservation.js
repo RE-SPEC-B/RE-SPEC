@@ -6,12 +6,11 @@ module.exports = class Reservation extends _sequelize.Model {
     static init(sequelize) {
         return super.init(
             {
-                // 테이블 필드에 대한 설정
                 id: {
                     type: _sequelize.INTEGER,
                     autoIncrement: true,
                     allowNull: false,
-                    unique: true, // 중복 X
+                    unique: true,
                     primaryKey: true,
                 },
                 status: {
@@ -70,7 +69,7 @@ module.exports = class Reservation extends _sequelize.Model {
 
     // 다른 모델과의 관계
     static associate(db) {
-        db.Reservation.belongsTo(db.User, { foreignKey: 'userkey', targetKey: 'id' });
+        db.Reservation.belongsTo(db.User, { foreignKey: 'userkey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
         db.Reservation.belongsTo(db.Mentorinfo, { foreignKey: 'mentorkey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

@@ -22,6 +22,7 @@ const Portfolio = require('../models/portfolio');
 const Portfoliopreview = require('../models/portfolio_preview');
 const Portfoliorecommendation = require('../models/portfolio_recommendation');
 const Portfolioprogress = require('../models/portfolio_progress');
+const Reservation = require('../models/reservation');
 
 // new Sequelize를 통해 MySQL 연결 객체를 생성한다.
 const sequelize = new _sequelize(
@@ -58,6 +59,7 @@ db.Portfolio = Portfolio;
 db.Portfoliopreview = Portfoliopreview;
 db.Portfoliorecommendation = Portfoliorecommendation;
 db.Portfolioprogress = Portfolioprogress;
+db.Reservation = Reservation;
 
 User.init(sequelize);
 Jobcategory.init(sequelize);
@@ -78,6 +80,7 @@ Portfolio.init(sequelize);
 Portfoliopreview.init(sequelize);
 Portfoliorecommendation.init(sequelize);
 Portfolioprogress.init(sequelize);
+Reservation.init(sequelize);
 
 User.associate(db);
 Jobcategory.associate(db);
@@ -98,5 +101,6 @@ Portfolio.associate(db);
 Portfoliopreview.associate(db);
 Portfoliorecommendation.associate(db);
 Portfolioprogress.associate(db);
+Reservation.associate(db);
 
 module.exports = db;
