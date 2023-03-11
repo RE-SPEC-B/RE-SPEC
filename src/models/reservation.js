@@ -13,9 +13,15 @@ module.exports = class Reservation extends _sequelize.Model {
                     unique: true,
                     primaryKey: true,
                 },
+                type: {
+                    type: _sequelize.ENUM('MT','PT'),
+                    allowNull: false,
+                    defaultValue: 'MT',
+                },
                 status: {
                     type: _sequelize.STRING(20),
                     allowNull: false,
+                    defaultValue: 0,
                 },
                 duration: {
                     type: _sequelize.INTEGER,
