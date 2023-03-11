@@ -8,11 +8,13 @@ const user_route = require('./user');
 const menu_route = require('./menu');
 const data_route = require('./data');
 const mentoring_route = require('./mentoring');
+const portfolio_route = require('./portfolio');
 
 _router.use('/auth', auth_route);
 _router.use('/user', user_route);
 _router.use('/menu', menu_route);
 _router.use('/data', data_route);
 _router.use('/mentoring', mentoring_route);
+_router.use('/portfolio', portfolio_route);
 
 module.exports = _router;
