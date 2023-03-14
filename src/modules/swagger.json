@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "RE:SPEC's APIs",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "description": "Test the APIs!"
     },
     "host": "localhost:5000",
@@ -1602,6 +1602,181 @@
                                                     "value": "리드적인"
                                                 }
                                             ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reservation/create": {
+            "post": {
+                "summary": "멘토링 예약",
+                "tags": [
+                    "Reservation"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "mentor_key": {
+                                        "description": "멘토 id",
+                                        "type": "integer"
+                                    },
+                                    "type": {
+                                        "description": "MT or PT (멘토링 or 포트폴리오 첨삭)",
+                                        "type": "string (ENUM)"
+                                    },
+                                    "duration": {
+                                        "description": "멘토링 진행시간",
+                                        "type": "integer"
+                                    },
+                                    "proposed_start1": {
+                                        "description": "예약의 첫번째 제안시간",
+                                        "type": "date"
+                                    },
+                                    "proposed_start2": {
+                                        "description": "예약의 두번째 제안시간",
+                                        "type": "date"
+                                    },
+                                    "proposed_start3": {
+                                        "description": "예약의 세번째 제안시간",
+                                        "type": "date"
+                                    },
+                                    "question": {
+                                        "description": "멘토에게 보내는 질문",
+                                        "type": "text"
+                                    },
+                                    "link": {
+                                        "description": "포트폴리오 링크(포트폴리오 첨삭 신청 시 수집)",
+                                        "type": "text"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "멘토링 예약시": {
+                                    "value": {
+                                        "mentor_key": 4,
+                                        "type": "MT",
+                                        "duration": 20,
+                                        "proposed_start1": "2023-03-13 18:00:00",
+                                        "proposed_start2": "2023-03-13 18:20:00",
+                                        "proposed_start3": "2023-03-13 18:40:00",
+                                        "question": "질문내용"
+                                    }
+                                },
+                                "포트폴리오 첨삭 예약시": {
+                                    "value": {
+                                        "mentor_key": 4,
+                                        "type": "PT",
+                                        "duration": 20,
+                                        "proposed_start1": "2023-03-13 18:00:00",
+                                        "proposed_start2": "2023-03-13 18:20:00",
+                                        "proposed_start3": "2023-03-13 18:40:00",
+                                        "question": "질문내용",
+                                        "link": "http://link~"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "예약 요청 성공.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "description": "관련 데이터",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "message": "Mentoring Reservation success.",
+                                        "data": "No data."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "승인 거부.",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "타입 미입력시.": {
+                                        "value": {
+                                            "message": "Type is required.",
+                                            "detail": "No detail."
+                                        }
+                                    },
+                                    "진행시간 미선택시": {
+                                        "value": {
+                                            "message": "Duration is required.",
+                                            "detail": "No detail."
+                                        }
+                                    },
+                                    "예약시간 미선택시 (1개 이상)": {
+                                        "value": {
+                                            "message": "More than one proposed reservation time is required.",
+                                            "detail": "No detail."
+                                        }
+                                    },
+                                    "PT타입후, link 미입력시": {
+                                        "value": {
+                                            "message": "Portfolio link is required.",
+                                            "detail": "No detail."
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "description": "오류에 대한 세부정보",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버 DB & 서버 에러",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "선택한 예약시간이 같을시": {
+                                        "value": {
+                                            "message": "Reservation times cannot be the same.",
+                                            "detail": "No detail."
+                                        }
+                                    },
+                                    "타입 잘 못 전달할시": {
+                                        "value": {
+                                            "message": "Type must be MT or PT.",
+                                            "detail": "No detail."
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "description": "오류에 대한 세부정보",
+                                            "type": "string"
                                         }
                                     }
                                 }

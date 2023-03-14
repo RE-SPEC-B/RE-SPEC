@@ -6,8 +6,8 @@ const _router = _express.Router();
 const { isLoggedIn, isNotLoggedIn } = require('../middlewares/auth');
 // const upload = require("../middlewares/multer");
 
-const ctrl = require('../controllers/mentoring');
+const ctrl = require('../controllers/reservation');
 
-_router.post("/reserve", isLoggedIn, ctrl.mentoringReserve);
+_router.post('/create', isLoggedIn, ctrl.createReservation);
 
 module.exports = _router;
