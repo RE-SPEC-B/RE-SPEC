@@ -28,7 +28,7 @@ exports.createReservation = async (req, res) => {
                 return success(res, 200, 'Mentoring Reservation success.');
             })
             .catch((err) => {
-                return fail(res, 500, `${err}`);
+                return fail(res, 500, `${err.message}`);
             });
     } catch (error) {
         return fail(res, 500, `${error}`);
