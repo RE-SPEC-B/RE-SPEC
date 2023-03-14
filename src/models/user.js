@@ -80,5 +80,6 @@ module.exports = class User extends _sequelize.Model {
         db.User.hasOne(db.Education, { foreignKey: 'userkey', sourceKey: 'id' });
         db.User.hasOne(db.Mentorinfo, { foreignKey: 'userkey', sourceKey: 'id' });
         db.User.hasMany(db.Mentorreview, { foreignKey: 'userkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.User.hasMany(db.Reservation, { foreignKey: 'userkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

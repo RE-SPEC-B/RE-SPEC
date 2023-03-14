@@ -61,5 +61,6 @@ module.exports = class Mentorinfo extends _sequelize.Model {
         db.Mentorinfo.hasMany(db.Mentorreview, { foreignKey: 'mentorkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
         db.Mentorinfo.hasMany(db.Mentorcareer, { foreignKey: 'mentorkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
         db.Mentorinfo.hasMany(db.Mentorstrength, { foreignKey: 'mentorkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorinfo.hasMany(db.Reservation, { foreignKey: 'mentorkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };
