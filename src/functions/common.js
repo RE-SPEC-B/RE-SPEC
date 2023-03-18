@@ -6,9 +6,3 @@ exports.checkDuplicateDates = (date1, date2, date3) => {
 
     return false;
 };
-
-exports.isValidReservationType = (type) => {
-    const validTypes = ['MT', 'PT'];
-
-    return validTypes.includes(type);
-};

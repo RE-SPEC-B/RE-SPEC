@@ -21,7 +21,7 @@ const {
 
 const model = require('../utils/connect');
 const reservation = require('../models/reservation');
-const { checkDuplicateDates, isValidReservationType } = require('../functions/common');
+const { checkDuplicateDates } = require('../functions/common');
 
 const { Op, fn, col } = require('sequelize');
 
@@ -43,10 +43,6 @@ const { Op, fn, col } = require('sequelize');
 exports.reserve = async (user_key, mentor_key, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link) => {
     if (checkDuplicateDates(proposed_start1, proposed_start2, proposed_start3)) {
         throw new Error('Reservation times cannot be the same.');
-    }
-
-    if (!isValidReservationType(type)) {
-        throw new Error('Type must be MT or PT.');
     }
 
     try {

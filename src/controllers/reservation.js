@@ -17,9 +17,6 @@ exports.createReservation = async (req, res) => {
     let { mentor_key, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link } = req.body;
     let user_key = req.session.passport.user;
 
-    if (!type) return fail(res, 403, 'Type is required.');
-    if (!duration) return fail(res, 403, 'Duration is required.');
-    if (!proposed_start1) return fail(res, 403, 'More than one proposed reservation time is required.');
     if (type == 'PT' && !link) return fail(res, 403, 'Portfolio link is required.');
 
     try {
