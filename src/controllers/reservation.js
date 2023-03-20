@@ -21,10 +21,10 @@ exports.createReservation = async (req, res) => {
     if (type == 'PT' && !link) return fail(res, 403, 'Portfolio link is required.');
     if (duration < 10) return fail(res, 403, 'Duration must be more than 10.');
 
-    try {
-        const isValidMentor = await validateMentor(user_key, mentor_key);
-        if (!isValidMentor) return fail(res, 403, 'User must be different from mentor');
+    const isValidMentor = await validateMentor(user_key, mentor_key);
+    if (!isValidMentor) return fail(res, 403, 'User must be different from mentor');
 
+    try {
         await reserve(user_key, mentor_key, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link)
             .then(() => {
                 return success(res, 200, 'Mentoring Reservation success.');
@@ -32,6 +32,20 @@ exports.createReservation = async (req, res) => {
             .catch((error) => {
                 return fail(res, 500, `${error}`);
             });
+    } catch (error) {
+        return fail(res, 500, `${error}`);
+    }
+};
+
+exports.confirmReservation = async (req, res) => {
+    let { reservation_key, start } = req.body;
+    let user_key = req.session.passport.user;
+
+    try {
+        const isValidReservation = await checkWaitingReservation(reservation_key, user_key);
+        if (!isValidReservation) return fail(res, 403, 'Invalid Reservation');
+
+        return success(res, 200, 'Valid Reservation');
     } catch (error) {
         return fail(res, 500, `${error}`);
     }

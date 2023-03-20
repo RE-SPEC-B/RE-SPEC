@@ -62,6 +62,25 @@ exports.validateMentor = async (user_key, mentor_key) => {
     });
 };
 
-let isNotSameUserWithMentor = (user_key, mentor_key) => {
-    return user_key != mentor_key;
+let isNotSameUserWithMentor = (user_key, mentor_user_key) => {
+    return user_key != mentor_user_key;
+};
+
+/**
+ * 예약 키 정보을 바탕으로, 멘토에게 예약된 정보가 맞는지
+ * 확인하고 반환하는 함수
+ *
+ * @param {*} reservation_key 예약 ID
+ * @param {*} user_key 멘토의 유저ID
+ * @returns
+ */
+exports.checkWaitingReservation = async (reservation_key, user_key) => {
+    return await Mentorinfo.findOne({ where: { userkey: user_key } }).then((mentorInfo) => {
+        console.log(reservation_key, mentorInfo.id);
+        return Reservation.findOne({
+            where: { status: 'WAITING', id: reservation_key, mentorkey: mentorInfo.id },
+        }).catch((err) => {
+            throw new Error('Invalid Reservation!');
+        });
+    });
 };
