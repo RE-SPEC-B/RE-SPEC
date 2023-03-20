@@ -8,6 +8,7 @@ const _bodyParser = require('body-parser');
 const _cors = require('cors');
 
 const { sequelize } = require('./src/utils/connect');
+const _admin = require('firebase-admin');
 const _config = require('config');
 
 const _morgan = require('morgan');
@@ -20,6 +21,7 @@ _app.use(_session({ secret: 'secret', resave: false, saveUninitialized: false })
 _app.use(_passport.initialize());
 _app.use(_passport.session());
 
+const serviceAccount = require('./respec-fb1c5-firebase-adminsdk-s5cr3-17a54ae09a');
 const { _swaggerUi } = require('./src/modules/swagger');
 const swaggerFile = require('./src/modules/swagger.json');
 
@@ -54,3 +56,8 @@ sequelize
     .catch((err) => {
         console.error(err);
     });
+
+// Firebase init
+_admin.initializeApp({
+    credential: _admin.credential.cert(serviceAccount),
+});
