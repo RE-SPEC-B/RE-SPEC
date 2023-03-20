@@ -57,6 +57,10 @@ module.exports = class User extends _sequelize.Model {
                     type: _sequelize.STRING(100),
                     allowNull: true,
                 },
+                fcm: {
+                    type: _sequelize.STRING(255),
+                    allowNull: true,
+                },
             },
             {
                 // 테이블 자체에 대한 설정
