@@ -1,23 +1,6 @@
 'use strict';
 
-const { 
-    User, 
-    Job, 
-    Characteristic, 
-    Education, 
-    Career, 
-    Mentorinfo, 
-    Mentorreview, 
-    Mentorcareer, 
-    Mentorstrength, 
-    Mentorproduct,
-    Portfolio, 
-    Portfoliopreview, 
-    Portfoliorecommendation, 
-    Portfolioprogress, 
-    Mentorevaluation,
-    Reservation
-} = require('../utils/connect');
+const { Mentorinfo, Reservation } = require('../utils/connect');
 
 const model = require('../utils/connect');
 const reservation = require('../models/reservation');
@@ -49,6 +32,7 @@ exports.reserve = async (user_key, mentor_key, type, duration, proposed_start1, 
         let result = await reservation.create({
             type: type == 'MT' ? 'MT' : 'PT',
             duration: duration,
+            status: 'WAITING',
             proposed_start1: proposed_start1,
             proposed_start2: proposed_start2,
             proposed_start3: proposed_start3,
@@ -62,4 +46,22 @@ exports.reserve = async (user_key, mentor_key, type, duration, proposed_start1, 
     } catch (err) {
         throw new Error(err);
     }
+};
+
+/**
+ * 멘토의 ID를 바탕으로 멘토 정보와 신청 유저와 일치하는지 확인해서
+ * 예약 가능한 멘토인지 검증 함수
+ *
+ * @param {*} mentor_key 예약을 신청받는 멘토의 ID
+ * @returns
+ */
+exports.validateMentor = async (user_key, mentor_key) => {
+    return Mentorinfo.findOne({ where: { id: mentor_key } }).then((mentorInfo) => {
+        if (!mentorInfo) throw new Error('Invalid Mentor!');
+        return isNotSameUserWithMentor(user_key, mentorInfo.userkey);
+    });
+};
+
+let isNotSameUserWithMentor = (user_key, mentor_key) => {
+    return user_key != mentor_key;
 };
