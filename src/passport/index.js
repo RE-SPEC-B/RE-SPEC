@@ -5,7 +5,7 @@ const kakao = require('./kakaoStrategy');
 const google = require('./googleStrategy');
 const naver = require('./naverStrategy');
 
-const User = require('../models/user');
+const User = require('../models/user/user');
 
 const _config = require('config');
 

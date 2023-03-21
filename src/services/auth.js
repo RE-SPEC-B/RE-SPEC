@@ -1,6 +1,6 @@
 'use strict';
 
-const User = require('../models/user');
+const User = require('../models/user/user');
 const { Op } = require('sequelize');
 
 const _bcrypt = require('bcrypt');
