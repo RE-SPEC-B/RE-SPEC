@@ -8,12 +8,12 @@ const _bcrypt = require('bcrypt');
 /**
  * 사용자로부터 입력받은 정보들을 바탕으로, 비밀번호 암호화 진행 후,
  * 회원가입 로직을 수행하는 함수
- * 
+ *
  * @param {*} username 유저닉네임
  * @param {*} email 유저이메일
  * @param {*} password 비밀번호
  * @param {*} provider 로그인 제공처
- * @returns 
+ * @returns
  */
 exports.register = async (username, email, password, provider) => {
     try {
@@ -23,7 +23,7 @@ exports.register = async (username, email, password, provider) => {
             email: email,
             password: hash_password,
             provider: provider,
-        })
+        });
     } catch (err) {
         throw new Error(err);
     }
@@ -32,10 +32,10 @@ exports.register = async (username, email, password, provider) => {
 /**
  * 사용자로부터 입력받은 정보들을 바탕으로, 중복되는 유저가 있는지
  * 확인하고 반환하는 함수
- * 
+ *
  * @param {*} username 유저닉네임
  * @param {*} email 유저이메일
- * @returns 
+ * @returns
  */
 exports.userFind = async (username, email) => {
     try {
@@ -43,4 +43,4 @@ exports.userFind = async (username, email) => {
     } catch (err) {
         throw new Error(err);
     }
-}
+};

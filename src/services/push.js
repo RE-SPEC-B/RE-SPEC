@@ -1,20 +1,17 @@
 'use strict';
 
-const { 
-    User, 
-    Mentorinfo,
-} = require('../utils/connect');
+const { User, Mentorinfo } = require('../utils/connect');
 
 const { Op, fn, col } = require('sequelize');
 
 const _admin = require('firebase-admin');
 
 /**
- * 
- * @param {*} fcm 알람을 받을 유저의 fcm 
+ *
+ * @param {*} fcm 알람을 받을 유저의 fcm
  * @param {*} title 알람 제목
  * @param {*} body 알람 내용
- * @returns 
+ * @returns
  */
 exports.pushAlarm = (fcm, title, body) => {
     try {
@@ -27,49 +24,47 @@ exports.pushAlarm = (fcm, title, body) => {
                 body: `${body} ${now}`,
             },
             token: fcm,
-        }
-    
-        _admin
-            .messaging()
-            .send(message)
+        };
+
+        _admin.messaging().send(message);
 
         return;
     } catch (err) {
         return new Error(err);
     }
-}
+};
 
 /**
- * 
+ *
  * 어느 유저의 FCM 토큰 정보를 찾습니다.
  * Ex) findUserFcm(0, mentoy_key)을 요청하면, 해당 멘토의 FCM 토큰 정보를 반환합니다.
  * Ex) findUserFcm(user_key, 0)을 요청하면, 해당 유저의 FCM 토큰 정보를 반환합니다.
- * 
+ *
  * @param {*} user_key FCM 토큰 정보를 찾을 user id
  * @param {*} mentor_key FCM 토큰 정보를 찾을 mentor id
- * @returns 
+ * @returns
  */
 exports.findUserFcm = async (user_key, mentor_key) => {
     let user_data;
 
     try {
-        if(user_key == 0) { // find mentor's user id
+        if (user_key == 0) { // find mentor's user id
             user_data = await Mentorinfo.findOne({
                 attributes: ['userkey'],
                 where: { id: mentor_key },
-            })
-    
+            });
+
             return User.findOne({
                 attributes: ['fcm'],
                 where: { id: user_data.userkey },
-            })
+            });
         } else { // finc user's user id
             return User.findOne({
                 attributes: ['fcm'],
                 where: { id: user_key },
-            })
+            });
         }
     } catch (err) {
         return new Error(err);
     }
-}
+};

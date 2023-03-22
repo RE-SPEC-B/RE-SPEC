@@ -2,7 +2,7 @@
 
 const _passport = require('passport');
 
-const service = require('../services/auth')
+const service = require('../services/auth');
 const { register, userFind } = service;
 
 const { success, fail } = require('../functions/responseStatus');
@@ -26,10 +26,10 @@ exports.localLogin = (req, res) => {
 
         // 로컬 로그인후, 정상 오류시
         if (!user) { 
-            if (info.message === "Invalid password.") {
-                return fail(res, 403, info.message)
+            if (info.message === 'Invalid password.') {
+                return fail(res, 403, info.message);
             } else {
-                return fail(res, 404, info.message)
+                return fail(res, 404, info.message);
             }
         }
 

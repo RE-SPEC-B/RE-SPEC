@@ -5,6 +5,6 @@ const _router = _express.Router();
 
 const ctrl = require('../controllers/data');
 
-_router.get("/enum", ctrl.enumValue);
+_router.get('/enum', ctrl.enumValue);
 
 module.exports = _router;

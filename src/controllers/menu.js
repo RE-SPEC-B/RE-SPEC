@@ -42,7 +42,7 @@ exports.searchMentoT = async (req, res) => {
     else
         userMentoFilter(ids, order)
             .then((data) => {
-                data.push({"count": data.length});
+                data.push({ count: data.length });
                 return success(res, 200, 'Search mentor data by keyword success.', data);
             })
             .catch((err) => {
@@ -88,7 +88,7 @@ exports.searchMentoB = async (req, res) => {
     else
         userMentoFilter(ids, order)
             .then((data) => {
-                data.push({"count": data.length});
+                data.push({ count: data.length });
                 return success(res, 200, 'Search mentor data by filter success.', data);
             })
             .catch((err) => {
