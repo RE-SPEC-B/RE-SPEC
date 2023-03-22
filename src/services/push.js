@@ -8,6 +8,8 @@ const _admin = require('firebase-admin');
 
 /**
  *
+ * FCM을 사용하여 해당 사용자에게 푸시 알림을 보내는 함수
+ * 
  * @param {*} fcm 알람을 받을 유저의 fcm
  * @param {*} title 알람 제목
  * @param {*} body 알람 내용
@@ -45,9 +47,9 @@ exports.pushAlarm = (fcm, title, body) => {
  * @returns
  */
 exports.findUserFcm = async (user_key, mentor_key) => {
-    let user_data;
-
     try {
+        let user_data;
+        
         if (user_key == 0) { // find mentor's user id
             user_data = await Mentorinfo.findOne({
                 attributes: ['userkey'],
