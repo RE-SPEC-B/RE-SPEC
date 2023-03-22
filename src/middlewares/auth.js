@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const { fail } = require('../functions/responseStatus');
 
@@ -7,12 +7,16 @@ const { fail } = require('../functions/responseStatus');
 exports.isLoggedIn = (req, res, next) => {
     if (req.isAuthenticated()) {
         next();
-    } else { return fail(res, 403, "You are not logged in."); }
+    } else {
+        return fail(res, 403, 'You are not logged in.');
+    }
 };
 
 // 로그인한 사용자는 회원가입과 로그인 라우터에 접근 불가
 exports.isNotLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         next();
-    } else { return fail(res, 403, "You are already logged in."); }
+    } else {
+        return fail(res, 403, 'You are already logged in.');
+    }
 };

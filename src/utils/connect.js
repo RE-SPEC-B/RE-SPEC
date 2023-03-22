@@ -3,7 +3,7 @@
 const _sequelize = require('sequelize');
 const _config = require('config');
 
-const models = require('../models/index')
+const models = require('../models/index');
 
 const sequelize = new _sequelize(
     _config.get('mysql_local.database'),
@@ -12,7 +12,7 @@ const sequelize = new _sequelize(
     {
         host: _config.get('mysql_local.host'),
         dialect: _config.get('mysql_local.dialect'),
-        logging: _config.get('server.state') === 'production' ? false : console.log
+        logging: _config.get('server.state') === 'production' ? false : console.log,
     },
 );
 

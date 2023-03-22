@@ -1,7 +1,7 @@
 'use strict';
 
 // 모듈 불러오기
-const {     
+const {
     sequelize,
     _admin,
     _config,
@@ -11,7 +11,7 @@ const {
     _passport,
     serviceAccount,
     _swaggerUi,
-    swaggerFile 
+    swaggerFile,
 } = require('./loaders/module');
 
 // 웹세팅
@@ -29,7 +29,7 @@ passportConfig();
 // 라우팅
 const api_router = require('./src/routes');
 
-_app.use("/api-docs", _swaggerUi.serve, _swaggerUi.setup(swaggerFile));
+_app.use('/api-docs', _swaggerUi.serve, _swaggerUi.setup(swaggerFile));
 _app.use('/', api_router);
 
 // 서버 연결

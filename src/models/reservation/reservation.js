@@ -73,7 +73,6 @@ module.exports = class Reservation extends _sequelize.Model {
         );
     }
 
-    // 다른 모델과의 관계
     static associate(db) {
         db.Reservation.belongsTo(db.User, { foreignKey: 'userkey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
         db.Reservation.belongsTo(db.Mentorinfo, { foreignKey: 'mentorkey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
