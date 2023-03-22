@@ -31,4 +31,14 @@ _router.post('/', [
     ctrl.createReservation,
 );
 
+// 멘토의 예약 확정
+_router.post('/confirm/', [
+        isLoggedIn,
+        check('reservation_key', 'Reservation Key is required').notEmpty(),
+        check('start', 'Start is required').notEmpty(),
+        validator,
+    ],
+    ctrl.confirmReservation,
+);
+
 module.exports = _router;
