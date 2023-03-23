@@ -55,6 +55,8 @@ exports.createReservation = async (req, res) => {
 exports.confirmReservation = async (req, res) => {
     let { reservation_key, start } = req.body;
     let user_key = req.session.passport.user;
+    let user_name = req.session.sid;
+    let user_data;
 
     try {
         const mentor_key = await getMentorKey(user_key);
@@ -64,7 +66,10 @@ exports.confirmReservation = async (req, res) => {
         if (!isValidReservation) return fail(res, 403, 'Invalid Reservation');
 
         await confirm(reservation_key, start)
-            .then(() => {
+            .then(async (data) => {
+                user_data = await findUserFcm(data.userkey);
+                pushAlarm(user_data.fcm, `🍪 [RE:SPEC] 멘토링 확정!`, `${user_name}멘토와의 예약이 확정되셨습니다!`);
+
                 return success(res, 200, 'Reservation confirmed.');
             })
             .catch((err) => {
