@@ -5,7 +5,7 @@ const kakao = require('./kakaoStrategy');
 const google = require('./googleStrategy');
 const naver = require('./naverStrategy');
 
-const User = require('../models/user');
+const User = require('../models/user/user');
 
 const _config = require('config');
 
@@ -15,11 +15,11 @@ module.exports = () => {
     });
 
     _passport.deserializeUser((req, id, done) => {
-        User.findOne({ where: { id }})
+        User.findOne({ where: { id } })
             .then((user) => {
                 req.session.sid = user.username;
-                if(_config.get('server.state') !== 'production') {
-                    console.log("Session Check :" + req.session.sid); // dev 단계 남겨놓음
+                if (_config.get('server.state') !== 'production') {
+                    console.log('Session Check :' + req.session.sid); // dev 단계 남겨놓음
                 }
                 done(null, user);
             })
@@ -30,4 +30,4 @@ module.exports = () => {
     kakao();
     google();
     naver();
-}
+};

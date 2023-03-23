@@ -3,7 +3,7 @@ const _passport = require('passport');
 
 const _config = require('config');
 
-const User = require('../models/user');
+const User = require('../models/user/user');
 const logger = require('../functions/winston');
 
 module.exports = () => {
