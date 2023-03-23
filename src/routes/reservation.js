@@ -4,16 +4,9 @@ const _express = require('express');
 const _router = _express.Router();
 
 const { isLoggedIn, isNotLoggedIn } = require('../middlewares/auth');
-const { check, body, validationResult } = require('express-validator');
+const { validator } = require('../middlewares/validator');
+const { check } = require('express-validator');
 
-// 검증 미들웨어
-const validator = (req, res, next) => {
-    const errors = validationResult(req);
-    if (errors.isEmpty()) {
-        return next();
-    }
-    return res.status(400).json({ message: errors.array()[0].msg });
-};
 const ctrl = require('../controllers/reservation');
 
 // 예약 추가
@@ -35,7 +28,12 @@ _router.post('/', [
 _router.post('/confirm/', [
         isLoggedIn,
         check('reservation_key', 'Reservation Key is required').notEmpty(),
-        check('start', 'Start is required').notEmpty(),
+        check('start')
+            .notEmpty()
+            .withMessage('Start is required')
+            .isISO8601()
+            .toDate()
+            .withMessage('Invalid start time'),
         validator,
     ],
     ctrl.confirmReservation,

@@ -3,7 +3,7 @@
 const service = require('../services/reservation');
 const push = require('../services/push');
 
-const { reserve, checkWaitingReservation, validateMentor } = service;
+const { reserve, confirm, checkWaitingReservation, validateMentor, getMentorKey } = service;
 const { pushAlarm, findUserFcm } = push;
 
 const { success, fail } = require('../functions/responseStatus');
@@ -26,14 +26,13 @@ exports.createReservation = async (req, res) => {
     if (type == 'PT' && !link) return fail(res, 403, 'Portfolio link is required.');
     if (duration < 10) return fail(res, 403, 'Duration must be more than 10.');
 
-    const isValidMentor = await validateMentor(user_key, mentor_key);
-    if (!isValidMentor) return fail(res, 403, 'User must be different from mentor');
-
     try {
-        user_data = await findUserFcm(0, mentor_key);
+        const isValidMentor = await validateMentor(user_key, mentor_key);
+        if (!isValidMentor) return fail(res, 403, 'User must be different from mentor');
         
         await reserve(user_key, mentor_key, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link)
             .then(() => {
+                user_data = await findUserFcm(0, mentor_key);
                 pushAlarm(user_data.fcm, `🍪 [RE:SPEC] 멘티 예약 신청!`, `${user_name}가 ${type == 'MT' ? '멘토링' : '포트폴리오 첨삭'}을 신청했습니다!`);
 
                 return success(res, 200, 'Mentoring Reservation success.');
@@ -46,15 +45,31 @@ exports.createReservation = async (req, res) => {
     }
 };
 
+/**
+ * 멘토가 멘토링 또는 포트폴리오 예약을 확정하는 API입니다.
+ *
+ * 프로세스)
+ * 1. 유저가 멘토가 맞는지, 유저에게 예약대기중인 예약이 맞는지 검증
+ * 2. 검증이 이상 없다면 예약 확정
+ */
 exports.confirmReservation = async (req, res) => {
     let { reservation_key, start } = req.body;
     let user_key = req.session.passport.user;
 
     try {
-        const isValidReservation = await checkWaitingReservation(reservation_key, user_key);
+        const mentor_key = await getMentorKey(user_key);
+        if (!mentor_key) return fail(res, 403, 'User is not a mentor');
+
+        const isValidReservation = await checkWaitingReservation(reservation_key, mentor_key);
         if (!isValidReservation) return fail(res, 403, 'Invalid Reservation');
 
-        return success(res, 200, 'Valid Reservation');
+        await confirm(reservation_key, start)
+            .then(() => {
+                return success(res, 200, 'Reservation confirmed.');
+            })
+            .catch((err) => {
+                return fail(res, 500, `${err}`);
+            });
     } catch (error) {
         return fail(res, 500, `${error}`);
     }
