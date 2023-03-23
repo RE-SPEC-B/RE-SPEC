@@ -31,7 +31,7 @@ exports.createReservation = async (req, res) => {
         if (!isValidMentor) return fail(res, 403, 'User must be different from mentor');
         
         await reserve(user_key, mentor_key, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link)
-            .then(() => {
+            .then(async () => {
                 user_data = await findUserFcm(0, mentor_key);
                 pushAlarm(user_data.fcm, `🍪 [RE:SPEC] 멘티 예약 신청!`, `${user_name}가 ${type == 'MT' ? '멘토링' : '포트폴리오 첨삭'}을 신청했습니다!`);
 
