@@ -20,11 +20,14 @@
 3. 멘토 찾기 & 검색 API (키워드 & 필터)
 4. 멘토 상세페이지 관련 데이터 GET API
 5. 멘토 리뷰들 관련 데이터 GET API
+6. 멘토 예약 신청 API
 
 ## 📝 ToDo
 
 1. 멘토 전환 API
-2. 멘토 예약 기능
+2. 멘토 예약 확정 API
+3. 예약 목록 정보 GET API
+4. 각 예약 과정 중 단계별 앱 push 기능
 
 ## ⛓ Database ERD
 ![ERD](./readme/erd.png)
@@ -33,7 +36,7 @@
 > Click the icons!
 
 #### 협업 워크스페이션: [![Notion](https://img.shields.io/badge/Notion-000000.svg?style=flat&logo=Notion&logoColor=white)](https://quilt-tanker-16d.notion.site/RE-SPEC-1c8f389a7b924283a8c5401e07ff334a)
-#### API 명세서: [![Swagger](https://img.shields.io/badge/Swagger-85EA2D.svg?style=flat&logo=Swagger&logoColor=white)](http://13.125.159.223:3000/api-docs/)
+#### API 명세서: [![Swagger](https://img.shields.io/badge/Swagger-85EA2D.svg?style=flat&logo=Swagger&logoColor=white)](http://3.37.54.173:3000/api-docs/)
 
 ## 🛠 Dependency Module
 
@@ -46,7 +49,9 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
-    "express-validator": "^6.14.2",
+    "express-validator": "^6.15.0",
+    "firebase": "^9.18.0",
+    "firebase-admin": "^11.5.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "multer-s3": "^2.10.0",

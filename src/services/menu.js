@@ -121,7 +121,7 @@ exports.jobUserFindB = async (value, keys) => {
 /**
  * jobenum 쿼리를 받지 못했을 경우, 모든 유저의 user id를 리턴하는 함수
  */
-exports.AllUserFindB =  () => {
+exports.AllUserFindB = () => {
     return User.findAll({ attributes: ['id'] });
 };
 
@@ -254,11 +254,11 @@ exports.careerUserFind = async (where_career) => {
  */
 exports.userMentoFilter = (ids, order) => {
     let order_option = null;
-    if(order === "recent") {
+    if (order === 'recent') {
         order_option = [['createdAt', 'DESC']];
-    } else if (order === "popularity") {
-        order_option = [[{ model : Mentorinfo },'satisfaction', 'DESC']];
-    } else if (order === "review") {
+    } else if (order === 'popularity') {
+        order_option = [[{ model: Mentorinfo }, 'satisfaction', 'DESC']];
+    } else if (order === 'review') {
         order_option = [['reviews', 'DESC']];
     }
 
@@ -273,30 +273,29 @@ exports.userMentoFilter = (ids, order) => {
                 model: Characteristic,
                 attributes: [['characteristicenum', 'enum']],
                 required: false,
-                through: { attributes: [] }
+                through: { attributes: [] },
             },
             {
                 model: Job,
                 attributes: [['jobenum', 'enum']],
                 required: false,
-                through: { attributes: [] }
+                through: { attributes: [] },
             },
             {
                 model: Mentorinfo,
                 attributes: ['title'],
                 required: false,
-                include: [{
-                    model: Mentorreview,
-                    attributes: [],
-                }],
+                include: [
+                    {
+                        model: Mentorreview,
+                        attributes: [],
+                    },
+                ],
             },
         ],
-        attributes: [
-            'id', 'username', 'profile',
-            [fn('COUNT', col('Mentorinfo.Mentorreviews.id')), 'reviews']
-        ],
+        attributes: ['id', 'username', 'profile', [fn('COUNT', col('Mentorinfo.Mentorreviews.id')), 'reviews']],
         where: { [Op.and]: [{ position: 'mentor' }, { id: { [Op.or]: ids } }] },
         order: order_option,
         group: ['User.id', 'Career.id', 'Characteristics.id', 'Jobs.id', 'Mentorinfo.id'],
-    })
+    });
 };

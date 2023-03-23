@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const _swaggerUi = require('swagger-ui-express');
 // const _swaggerAutogen = require('swagger-autogen')();
@@ -11,14 +11,14 @@ const options = {
             description: `Test the APIs!`,
         },
         host: 'localhost:5000',
-        basePath: '/'
+        basePath: '/',
     },
     apis: ['./src/routes/index.js'],
-    outputFile: './src/modules/swagger.json'
+    outputFile: './src/modules/swagger.json',
 };
 
 // _swaggerAutogen( options.outputFile, options.apis, options.swaggerDefinition);
 
 module.exports = {
-    _swaggerUi
+    _swaggerUi,
 };

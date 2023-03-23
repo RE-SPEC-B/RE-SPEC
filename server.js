@@ -1,34 +1,27 @@
 'use strict';
 
-// 모듈 선언
-const _express = require('express');
-const _app = _express();
+// 모듈 불러오기
+const {
+    sequelize,
+    _admin,
+    _config,
+    _morgan,
+    logger,
+    _session,
+    _passport,
+    serviceAccount,
+    _swaggerUi,
+    swaggerFile,
+} = require('./loaders/module');
 
-const _bodyParser = require('body-parser');
-const _cors = require('cors');
+// 웹세팅
+const _app = require('./loaders/express');
 
-const { sequelize } = require('./src/utils/connect');
-const _config = require('config');
-
-const _morgan = require('morgan');
-const logger = require('./src/functions/winston');
-
-const _session = require('express-session');
-const _passport = require('passport');
+_app.use(_morgan(':method ":url HTTP/:http-version" :status :response-time ms', { stream: logger.stream }));
 
 _app.use(_session({ secret: 'secret', resave: false, saveUninitialized: false }));
 _app.use(_passport.initialize());
 _app.use(_passport.session());
-
-const { _swaggerUi } = require('./src/modules/swagger');
-const swaggerFile = require('./src/modules/swagger.json');
-
-// 웹세팅
-_app.use(_bodyParser.json());
-_app.use(_bodyParser.urlencoded({ extended: true }));
-_app.use(_cors());
-
-_app.use(_morgan(':method ":url HTTP/:http-version" :status :response-time ms', { stream: logger.stream }));
 
 const passportConfig = require('./src/passport');
 passportConfig();
@@ -36,7 +29,7 @@ passportConfig();
 // 라우팅
 const api_router = require('./src/routes');
 
-_app.use("/api-docs", _swaggerUi.serve, _swaggerUi.setup(swaggerFile));
+_app.use('/api-docs', _swaggerUi.serve, _swaggerUi.setup(swaggerFile));
 _app.use('/', api_router);
 
 // 서버 연결
@@ -54,3 +47,8 @@ sequelize
     .catch((err) => {
         console.error(err);
     });
+
+// Firebase 서비스 초기화
+_admin.initializeApp({
+    credential: _admin.credential.cert(serviceAccount),
+});

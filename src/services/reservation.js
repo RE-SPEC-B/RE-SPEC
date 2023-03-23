@@ -3,7 +3,7 @@
 const { Mentorinfo, Reservation } = require('../utils/connect');
 
 const model = require('../utils/connect');
-const reservation = require('../models/reservation');
+const reservation = require('../models/reservation/reservation');
 const { checkDuplicateDates } = require('../functions/common');
 
 const { Op, fn, col } = require('sequelize');
