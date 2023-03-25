@@ -112,3 +112,13 @@ exports.confirm = async (reservation_key, start) => {
         throw new Error(err);
     }
 };
+
+/**
+ * 멘토 키 정보을 바탕으로
+ * 예약을 목록을 추출하는 함수
+ * @param {*} mentor_key 멘토 ID
+ * @returns {Object}
+ */
+exports.getReservationsOfMentor = async (mentor_key) => {
+    return await Reservation.findAll({ where: { mentorkey: mentor_key } });
+};

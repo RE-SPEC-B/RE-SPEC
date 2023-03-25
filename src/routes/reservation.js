@@ -26,7 +26,7 @@ _router.post('/', [
 );
 
 // 멘토의 예약 확정
-_router.post('/confirm/', [
+_router.post('/confirm', [
         isLoggedIn,
         check('reservation_key', 'Reservation Key is required').notEmpty(),
         check('start')
@@ -39,5 +39,8 @@ _router.post('/confirm/', [
     ],
     ctrl.confirmReservation,
 );
+
+// 멘토의 예약 목록 호출
+_router.get('/list/mentor', isLoggedIn, ctrl.getListOfMentor);
 
 module.exports = _router;
