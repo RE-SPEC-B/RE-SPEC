@@ -19,6 +19,7 @@ _router.post('/', [
             .withMessage('Type must be MT or PT.'),
         check('duration', 'Duration is required').notEmpty(),
         check('proposed_start1', 'More than one proposed reservation time is required').notEmpty(),
+        check('mentor_key', 'Mentor key is required').notEmpty(),
         validator,
     ],
     ctrl.createReservation,
