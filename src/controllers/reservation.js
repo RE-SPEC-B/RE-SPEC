@@ -37,11 +37,11 @@ exports.createReservation = async (req, res) => {
 
                 return success(res, 200, 'Mentoring Reservation success.');
             })
-            .catch((error) => {
-                return fail(res, 500, `${error}`);
+            .catch((err) => {
+                return fail(res, 500, `${err.message}`);
             });
-    } catch (error) {
-        return fail(res, 500, `${error}`);
+    } catch (err) {
+        return fail(res, 500, `${err.message}`);
     }
 };
 
@@ -73,9 +73,9 @@ exports.confirmReservation = async (req, res) => {
                 return success(res, 200, 'Reservation confirmed.');
             })
             .catch((err) => {
-                return fail(res, 500, `${err}`);
+                return fail(res, 500, `${err.message}`);
             });
-    } catch (error) {
-        return fail(res, 500, `${error}`);
+    } catch (err) {
+        return fail(res, 500, `${err.message}`);
     }
 };
