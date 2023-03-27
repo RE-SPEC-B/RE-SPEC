@@ -41,6 +41,13 @@ _router.post('/confirm', [
 );
 
 // 멘토의 예약 목록 호출
-_router.get('/list/mentor', isLoggedIn, ctrl.getListOfMentor);
+_router.get('/list/mentor/:mentorkey', [
+        isLoggedIn,
+        check('mentorkey')
+            .isInt()
+            .withMessage('Mentorkey must be int'),
+        validator,
+    ], ctrl.getListOfMentor
+);
 
 module.exports = _router;

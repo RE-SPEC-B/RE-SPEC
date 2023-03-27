@@ -88,14 +88,12 @@ exports.confirmReservation = async (req, res) => {
  * 2. 검증이 이상 없다면 멘토에게 예약된 모든 예약 가져옴
  */
 exports.getListOfMentor = async (req, res) => {
-    let user_key = req.session.passport.user;
+    let { mentorkey } = req.params;
 
     try {
-        const mentor_key = await getMentorKey(user_key);
-        if (!mentor_key) return fail(res, 403, 'User is not a mentor');
-
-        await getReservationsOfMentor(mentor_key)
+        await getReservationsOfMentor(mentorkey)
             .then((data) => {
+                if(!data[0]) return fail(res, 404, 'There is no data.');
                 return success(res, 200, 'Get reservations of mentor.', data);
             })
             .catch((err) => {
