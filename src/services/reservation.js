@@ -2,8 +2,6 @@
 
 const { Mentorinfo, Reservation } = require('../utils/connect');
 
-const model = require('../utils/connect');
-const reservation = require('../models/reservation/reservation');
 const { checkDuplicateDates } = require('../functions/common');
 
 const { Op, fn, col } = require('sequelize');
@@ -24,12 +22,12 @@ const { Op, fn, col } = require('sequelize');
  * @returns
  */
 exports.reserve = async (user_key, mentor_key, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link) => {
-    if (checkDuplicateDates(proposed_start1, proposed_start2, proposed_start3)) {
+    if (await checkDuplicateDates(proposed_start1, proposed_start2, proposed_start3)) {
         throw new Error('Reservation times cannot be the same.');
     }
 
     try {
-        let result = await reservation.create({
+        let result = await Reservation.create({
             type: type == 'MT' ? 'MT' : 'PT',
             duration: duration,
             status: 'WAITING',
@@ -56,14 +54,10 @@ exports.reserve = async (user_key, mentor_key, type, duration, proposed_start1, 
  * @returns boolean 예약 검증 결과
  */
 exports.validateMentor = async (user_key, mentor_key) => {
-    return Mentorinfo.findOne({ where: { id: mentor_key } }).then((mentorInfo) => {
+    return await Mentorinfo.findOne({ where: { id: mentor_key } }).then((mentorInfo) => {
         if (!mentorInfo) throw new Error('Invalid Mentor!');
-        return isNotSameUserWithMentor(user_key, mentorInfo.userkey);
+        return user_key != mentorInfo.userkey;
     });
-};
-
-let isNotSameUserWithMentor = (user_key, mentor_user_key) => {
-    return user_key != mentor_user_key;
 };
 
 /**
@@ -111,10 +105,21 @@ exports.confirm = async (reservation_key, start) => {
 
         // 참고: CONFIRMED 업데이트 이후, 해당 멘티에게 알림을 보내기위해, FCM정보가 필요합니다.
         // 따라서, 아래 코드를 삽입했고 작업하실땐, 지우셔도 됩니다.
-        return Reservation.findOne({
+        return await Reservation.findOne({
             where: { id: reservation_key },
         })
     } catch (err) {
         throw new Error(err);
     }
+};
+
+/**
+ * 해당 멘토의 예약이 확정된 목록을 추출하는 함수
+ * @returns {Object}
+ */
+exports.getReservationsOfMentor = async (mentorkey) => {
+    return await Reservation.findAll({ 
+        attributes: ['id', 'type', 'status', 'duration', 'start'],
+        where: {[Op.and]: [{ status: 'CONFIRMED' }, { mentorkey: mentorkey }]}
+    });
 };

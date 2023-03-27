@@ -3,7 +3,7 @@
 const service = require('../services/reservation');
 const push = require('../services/push');
 
-const { reserve, confirm, checkWaitingReservation, validateMentor, getMentorKey } = service;
+const { reserve, confirm, checkWaitingReservation, validateMentor, getMentorKey, getReservationsOfMentor } = service;
 const { pushAlarm, findUserFcm } = push;
 
 const { success, fail } = require('../functions/responseStatus');
@@ -29,7 +29,7 @@ exports.createReservation = async (req, res) => {
     try {
         const isValidMentor = await validateMentor(user_key, mentor_key);
         if (!isValidMentor) return fail(res, 403, 'User must be different from mentor');
-        
+
         await reserve(user_key, mentor_key, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link)
             .then(async () => {
                 user_data = await findUserFcm(0, mentor_key);
@@ -37,11 +37,11 @@ exports.createReservation = async (req, res) => {
 
                 return success(res, 200, 'Mentoring Reservation success.');
             })
-            .catch((error) => {
-                return fail(res, 500, `${error}`);
+            .catch((err) => {
+                return fail(res, 500, `${err.message}`);
             });
-    } catch (error) {
-        return fail(res, 500, `${error}`);
+    } catch (err) {
+        return fail(res, 500, `${err.message}`);
     }
 };
 
@@ -73,9 +73,33 @@ exports.confirmReservation = async (req, res) => {
                 return success(res, 200, 'Reservation confirmed.');
             })
             .catch((err) => {
-                return fail(res, 500, `${err}`);
+                return fail(res, 500, `${err.message}`);
             });
-    } catch (error) {
-        return fail(res, 500, `${error}`);
+    } catch (err) {
+        return fail(res, 500, `${err.message}`);
+    }
+};
+
+/**
+ * 멘토의 예약 목록을 호출하는 API입니다.
+ *
+ * 프로세스)
+ * 1. 유저가 멘토가 맞는지 검증
+ * 2. 검증이 이상 없다면 멘토에게 예약된 모든 예약 가져옴
+ */
+exports.getListOfMentor = async (req, res) => {
+    let { mentorkey } = req.params;
+
+    try {
+        await getReservationsOfMentor(mentorkey)
+            .then((data) => {
+                if(!data[0]) return fail(res, 404, 'There is no data.');
+                return success(res, 200, 'Get reservations of mentor.', data);
+            })
+            .catch((err) => {
+                return fail(res, 500, err.message);
+            });
+    } catch (err) {
+        return fail(res, 500, `${err.message}`);
     }
 };

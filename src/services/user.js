@@ -122,7 +122,7 @@ exports.mentorInfoGet = async (id) => {
             },
             {
                 model: Mentorinfo,
-                attributes: ['introduction', 'mentoring', 'correcting', 'satisfaction', 'video', 'title'],
+                attributes: ['id', 'introduction', 'mentoring', 'correcting', 'satisfaction', 'video', 'title'],
                 required: false,
                 include: [
                     {
