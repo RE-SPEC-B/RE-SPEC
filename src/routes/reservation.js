@@ -14,12 +14,11 @@ _router.post('/', [
         isLoggedIn,
         check('type')
             .notEmpty()
-            .withMessage('Type is required')
+            .withMessage('Type is required.')
             .isIn(['MT', 'PT'])
             .withMessage('Type must be MT or PT.'),
-        check('duration', 'Duration is required').notEmpty(),
-        check('proposed_start1', 'More than one proposed reservation time is required').notEmpty(),
-        check('mentor_key', 'Mentor key is required').notEmpty(),
+        check('duration', 'Duration is required.').notEmpty(),
+        check('mentor_key', 'Mentor key is required.').notEmpty(),
         validator,
     ],
     ctrl.createReservation,
@@ -28,13 +27,13 @@ _router.post('/', [
 // 멘토의 예약 확정
 _router.post('/confirm', [
         isLoggedIn,
-        check('reservation_key', 'Reservation Key is required').notEmpty(),
+        check('reservation_key', 'Reservation Key is required.').notEmpty(),
         check('start')
             .notEmpty()
-            .withMessage('Start is required')
+            .withMessage('Start is required.')
             .isISO8601()
             .toDate()
-            .withMessage('Invalid start time'),
+            .withMessage('Invalid start time.'),
         validator,
     ],
     ctrl.confirmReservation,
@@ -45,7 +44,7 @@ _router.get('/list/mentor/:mentorkey', [
         isLoggedIn,
         check('mentorkey')
             .isInt()
-            .withMessage('Mentorkey must be int'),
+            .withMessage('Mentorkey must be int.'),
         validator,
     ], ctrl.getListOfMentor
 );

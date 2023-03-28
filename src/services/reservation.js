@@ -104,7 +104,6 @@ exports.confirm = async (reservation_key, start) => {
         );
 
         // 참고: CONFIRMED 업데이트 이후, 해당 멘티에게 알림을 보내기위해, FCM정보가 필요합니다.
-        // 따라서, 아래 코드를 삽입했고 작업하실땐, 지우셔도 됩니다.
         return await Reservation.findOne({
             where: { id: reservation_key },
         })
@@ -114,12 +113,35 @@ exports.confirm = async (reservation_key, start) => {
 };
 
 /**
- * 해당 멘토의 예약이 확정된 목록을 추출하는 함수
+ * 해당 멘토의 예약이 확정된 목록을 옵션별로, 추출하는 함수
  * @returns {Object}
  */
-exports.getReservationsOfMentor = async (mentorkey) => {
+exports.getReservationsByOption = async (mentorkey, status) => {
+    let where_option, attributes_option;
+
+    if(status === 'WAITING') {
+        where_option = {[Op.and]: [{ status: 'WAITING' }, { mentorkey: mentorkey }]};
+        attributes_option = null;
+    } else if (status === 'CONFIRMED') {
+        where_option = {[Op.and]: [{ status: 'CONFIRMED' }, { mentorkey: mentorkey }]};
+        attributes_option = ['id', 'type', 'duration', 'start'];
+    } else {
+        throw new Error('You must input value of status WAITING or CONFIRMED.')
+    }
+
     return await Reservation.findAll({ 
-        attributes: ['id', 'type', 'status', 'duration', 'start'],
-        where: {[Op.and]: [{ status: 'CONFIRMED' }, { mentorkey: mentorkey }]}
+        attributes: attributes_option,
+        where: where_option
     });
+};
+
+/**
+ * 해당 멘티 - 멘토의 예약 정보 반환하는 함수
+ * 
+ * @param {*} userkey 멘티 id
+ * @param {*} mentorkey 멘토 id
+ * @returns 
+ */
+exports.getReservationsForCheck = async (userkey, mentorkey) => {
+    return await Reservation.findAll({ where: {[Op.and]: [{ userkey: userkey }, { mentorkey: mentorkey }]} });
 };
