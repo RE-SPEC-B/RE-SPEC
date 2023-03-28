@@ -2,8 +2,8 @@
 
 const _passport = require('passport');
 
-const service = require('../services/auth');
-const { register, userFind } = service;
+const auth = require('../services/auth');
+const { register, userFind } = auth;
 
 const { success, fail } = require('../functions/responseStatus');
 

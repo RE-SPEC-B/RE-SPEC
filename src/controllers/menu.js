@@ -1,6 +1,6 @@
 'use strict';
 
-const service = require('../services/menu');
+const menu = require('../services/menu');
 const {
     keySelectWhere,
     parseValue,
@@ -14,7 +14,7 @@ const {
     educationUserFind,
     careerUserFind,
     userMentoFilter,
-} = service;
+} = menu;
 
 const { success, fail } = require('../functions/responseStatus');
 

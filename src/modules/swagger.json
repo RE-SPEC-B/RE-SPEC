@@ -803,6 +803,10 @@
                                             "description": "직업 ENUM값",
                                             "type": "string"
                                         },
+                                        "Mentorinfo/id": {
+                                            "description": "멘토id",
+                                            "type": "integer"
+                                        },
                                         "Mentorinfo/introduction": {
                                             "description": "멘토소개글",
                                             "type": "string"
@@ -898,6 +902,7 @@
                                                     }
                                                 ],
                                                 "Mentorinfo": {
+                                                    "id": 1,
                                                     "introduction": "눈에 띄는 스펙없이도 눈에 띄는 코칭이 가능해요! 전 주변 지인들의...",
                                                     "mentoring": 4,
                                                     "correcting": 8,

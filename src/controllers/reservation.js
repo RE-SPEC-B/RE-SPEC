@@ -1,9 +1,9 @@
 'use strict';
 
-const service = require('../services/reservation');
+const reservation = require('../services/reservation');
 const push = require('../services/push');
 
-const { reserve, confirm, checkWaitingReservation, validateMentor, getMentorKey, getReservationsOfMentor } = service;
+const { reserve, confirm, checkWaitingReservation, validateMentor, getMentorKey, getReservationsOfMentor } = reservation;
 const { pushAlarm, findUserFcm } = push;
 
 const { success, fail } = require('../functions/responseStatus');

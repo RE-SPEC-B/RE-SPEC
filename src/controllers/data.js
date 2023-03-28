@@ -1,8 +1,8 @@
 'use strict';
 
-const service = require('../services/data');
+const data = require('../services/data');
 
-const { enumValueGet } = service;
+const { enumValueGet } = data;
 
 const { success, fail } = require('../functions/responseStatus');
 

@@ -1,13 +1,13 @@
 'use strict';
 
-const service = require('../services/user');
+const user = require('../services/user');
 const { 
     userFindAndUpdate, 
     jobFindAndInfoCreate, 
     mentorInfoGet, 
     mentorReviewsGet, 
     userInfoPut 
-} = service;
+} = user;
 
 const { success, fail } = require('../functions/responseStatus');
 
