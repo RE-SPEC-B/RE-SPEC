@@ -19,7 +19,7 @@ module.exports = class Reservation extends _sequelize.Model {
                     defaultValue: 'MT',
                 },
                 status: {
-                    type: _sequelize.ENUM('WAITING', 'REJECTED', 'REAPPLIED', 'CONFIRMED'),
+                    type: _sequelize.ENUM('WAITING', 'REJECTED', 'REAPPLIED', 'REAPPLIED_REQUEST', 'CONFIRMED'),
                     allowNull: false,
                     defaultValue: 'WAITING',
                 },

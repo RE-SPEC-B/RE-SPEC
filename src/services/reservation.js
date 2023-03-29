@@ -96,21 +96,34 @@ exports.checkWaitingReservation = async (reservation_key, mentor_key) => {
  */
 exports.confirm = async (reservation_key, start) => {
     // TODO: 확정 시간이 반드시 제안 시간 중 하나여야 한다는 정책이 없기때문에 정책이 명확해지면 작업할 예정
-    try {
-        const now = new Date();
-        await Reservation.update(
-            { status: 'CONFIRMED', start: start, updatedAt: now },
-            { where: { id: reservation_key } },
-        );
+    const now = new Date();
+    await Reservation.update({ status: 'CONFIRMED', start: start, updatedAt: now }, { where: { id: reservation_key } });
 
-        // 참고: CONFIRMED 업데이트 이후, 해당 멘티에게 알림을 보내기위해, FCM정보가 필요합니다.
-        // 따라서, 아래 코드를 삽입했고 작업하실땐, 지우셔도 됩니다.
-        return await Reservation.findOne({
-            where: { id: reservation_key },
-        })
-    } catch (err) {
-        throw new Error(err);
-    }
+    // 참고: CONFIRMED 업데이트 이후, 해당 멘티에게 알림을 보내기위해, FCM정보가 필요합니다.
+    // 따라서, 아래 코드를 삽입했고 작업하실땐, 지우셔도 됩니다.
+    return await Reservation.findOne({
+        where: { id: reservation_key },
+    });
+};
+
+/**
+ * 재신청 여부를 적용하여
+ * 예약을 반려하는 함수
+ * @param {*} reservation_key 예약 ID
+ * @param {*} start 확정된 멘토링 시작 시간
+ * @returns
+ */
+exports.reject = async (reservation_key, isReapplyAvailable) => {
+    // TODO: 최초예약, 반려, 재예약 등 예약 관련 로깅 작업
+    let status = isReapplyAvailable ? 'REAPPLIED_REQUEST' : 'REJECTED';
+
+    await Reservation.update({ status: status }, { where: { id: reservation_key } });
+
+    // 참고: CONFIRMED 업데이트 이후, 해당 멘티에게 알림을 보내기위해, FCM정보가 필요합니다.
+    // 따라서, 아래 코드를 삽입했고 작업하실땐, 지우셔도 됩니다.
+    return await Reservation.findOne({
+        where: { id: reservation_key },
+    });
 };
 
 /**
