@@ -40,7 +40,7 @@ _router.post('/confirm', [
 );
 
 // 멘토의 예약 목록 호출
-_router.get('/list/mentor/:mentorkey', [
+_router.get('/mentor/:mentorkey/:status/list', [
         isLoggedIn,
         check('mentorkey')
             .isInt()
