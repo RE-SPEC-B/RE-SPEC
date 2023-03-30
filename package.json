@@ -1,6 +1,6 @@
 {
   "name": "re-spec",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "this RE:SPEC's backend project package",
   "main": "index.js",
   "scripts": {

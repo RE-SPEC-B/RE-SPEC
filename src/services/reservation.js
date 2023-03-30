@@ -2,8 +2,6 @@
 
 const { User, Mentorinfo, Reservation } = require('../utils/connect');
 
-const { checkDuplicateDates } = require('../functions/common');
-
 const { Op, fn, col } = require('sequelize');
 
 /**
@@ -22,10 +20,6 @@ const { Op, fn, col } = require('sequelize');
  * @returns
  */
 exports.reserve = async (user_key, mentor_key, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link) => {
-    if (await checkDuplicateDates(proposed_start1, proposed_start2, proposed_start3)) {
-        throw new Error('Reservation times cannot be the same.');
-    }
-
     try {
         let result = await Reservation.create({
             type: type == 'MT' ? 'MT' : 'PT',
@@ -125,8 +119,6 @@ exports.getReservationsByOption = async (mentorkey, status) => {
     } else if (status === 'confirm') {
         where_option = {[Op.and]: [{ status: 'CONFIRMED' }, { mentorkey: mentorkey }]};
         attributes_option = ['id', 'type', 'duration', 'start'];
-    } else {
-        throw new Error('You must input value of status WAITING or CONFIRMED.')
     }
 
     return await Reservation.findAll({ 

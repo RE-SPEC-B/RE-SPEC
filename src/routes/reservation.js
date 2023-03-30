@@ -41,10 +41,14 @@ _router.post('/confirm', [
 
 // 멘토의 예약 목록 호출
 _router.get('/mentor/:mentorkey/:status/list', [
-        isLoggedIn,
         check('mentorkey')
             .isInt()
             .withMessage('Mentorkey must be int.'),
+        check('status')
+            .notEmpty()
+            .withMessage('status is required.')
+            .isIn(['wait', 'confirm'])
+            .withMessage('You must input value of status wait or confirm.'),
         validator,
     ], ctrl.getListOfMentor
 );

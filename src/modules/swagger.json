@@ -1616,9 +1616,10 @@
                 }
             }
         },
-        "/reservation/create": {
+        "/reservation": {
             "post": {
                 "summary": "멘토링 예약",
+                "description": "멘토에게 예약 신청을 보내면, 해당 멘토의 FCM 토큰을 통해 push alarm이 전달됩니다.",
                 "tags": [
                     "Reservation"
                 ],
@@ -1712,21 +1713,41 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "승인 거부.",
+                    "400": {
+                        "description": "잘못된 입력.",
                         "content": {
                             "application/json": {
                                 "examples": {
-                                    "타입 미입력시.": {
+                                    "타입 미입력시": {
                                         "value": {
-                                            "message": "Type is required.",
+                                            "message": "Type is required."
+                                        }
+                                    },
+                                    "MT, PT 이외의 것 입력 시": {
+                                        "value": {
+                                            "message": "Type must be MT or PT."
+                                        }
+                                    },
+                                    "PT타입후, link 미입력시": {
+                                        "value": {
+                                            "message": "Portfolio link is required.",
                                             "detail": "No detail."
                                         }
                                     },
                                     "진행시간 미선택시": {
                                         "value": {
-                                            "message": "Duration is required.",
+                                            "message": "Duration is required."
+                                        }
+                                    },
+                                    "진행시간이 10분 미만일 경우": {
+                                        "value": {
+                                            "message": "Duration must be more than 10.",
                                             "detail": "No detail."
+                                        }
+                                    },
+                                    "멘토id 미입력시": {
+                                        "value": {
+                                            "message": "Mentor key is required."
                                         }
                                     },
                                     "예약시간 미선택시 (1개 이상)": {
@@ -1735,9 +1756,21 @@
                                             "detail": "No detail."
                                         }
                                     },
-                                    "PT타입후, link 미입력시": {
+                                    "해당 멘티가 시간이 중복되게 신청하는 경우": {
                                         "value": {
-                                            "message": "Portfolio link is required.",
+                                            "message": "Reservation times can not overlap.",
+                                            "detail": "No detail."
+                                        }
+                                    },
+                                    "선택한 예약시간이 같을시": {
+                                        "value": {
+                                            "message": "Reservation times cannot be the same.",
+                                            "detail": "No detail."
+                                        }
+                                    },
+                                    "멘토가 자신에게 예약 신청할 경우": {
+                                        "value": {
+                                            "message": "User must be different from mentor.",
                                             "detail": "No detail."
                                         }
                                     }
@@ -1760,20 +1793,382 @@
                         "description": "서버 DB & 서버 에러",
                         "content": {
                             "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "description": "오류에 대한 세부정보",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reservation/confirm": {
+            "post": {
+                "summary": "멘토링 확정",
+                "description": "# 멘토가 자신에게 들어온 예약 목록을 보고, 예약시간을 확정시키는 API\n(확정시킬 때, 해당 멘토의 이미 확정된 시간들을 참고해서, 시간이 겹치지 않게 했습니다.)\n\nEx) 해당 멘토의 예약된 시간: 2023-03-13 17:20:00, duration: 20이라면, 멘토는 다른 예약의 확정을 2023-03-13 17:20:00 ~ 2023-03-13 17:40:00에는 못합니다.",
+                "tags": [
+                    "Reservation"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "reservation_key": {
+                                        "description": "예약 id - 예약 목록을 불러오는 API에서 알 수 있습니다.",
+                                        "type": "integer"
+                                    },
+                                    "duration": {
+                                        "description": "멘토링 진행 시간 - (20, 40, 60)",
+                                        "type": "integer"
+                                    },
+                                    "start": {
+                                        "description": "예약 확정 시간 - 예약 목록을 불러오는 API에서의 제안 시간들중 멘토가 한 가지를 확정시킬 수 있습니다.",
+                                        "type": "date"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "reservation_key": "98",
+                                "duration": 40,
+                                "start": "2023-03-13 17:20:00"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "예약 확정 성공.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "description": "관련 데이터",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "message": "Reservation confirmed.",
+                                        "data": "No data."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "잘못된 입력.",
+                        "content": {
+                            "application/json": {
                                 "examples": {
-                                    "선택한 예약시간이 같을시": {
+                                    "reservation_key 미입력시": {
                                         "value": {
-                                            "message": "Reservation times cannot be the same.",
+                                            "message": "Reservation Key is required."
+                                        }
+                                    },
+                                    "start 미입력시": {
+                                        "value": {
+                                            "message": "Start is required."
+                                        }
+                                    },
+                                    "날짜 형식이 아닐시": {
+                                        "value": {
+                                            "message": "Invalid start time."
+                                        }
+                                    },
+                                    "예약 정보가 대기상태가 아닐시": {
+                                        "value": {
+                                            "message": "Invalid Reservation.",
                                             "detail": "No detail."
                                         }
                                     },
-                                    "타입 잘 못 전달할시": {
+                                    "예약시간을 겹치게 확정시키려 할 때": {
                                         "value": {
-                                            "message": "Type must be MT or PT.",
+                                            "message": "The time overlaps.",
                                             "detail": "No detail."
                                         }
                                     }
                                 },
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "description": "오류에 대한 세부정보",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "권한 없음.",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "본인이 멘토가 아닐시": {
+                                        "value": {
+                                            "message": "User is not a mentor.",
+                                            "detail": "No detail."
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "description": "오류에 대한 세부정보",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버 DB & 서버 에러",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "description": "오류에 대한 세부정보",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reservation/mentor/{mentorid}/{status}/list": {
+            "get": {
+                "summary": "멘토링 예약정보 목록",
+                "description": "# 해당 멘토의 확정된 or 대기중인 목록 GET API\nEx) /reservation/mentor/3/confirm/list - 멘티가 3번 멘토의 예약확정된 목록을 확인하는 용도\n\nEx) /reservation/mentor/3/wait/list - 멘토가 멘티에게 요청온 예약목록을 확인하는 용도",
+                "tags": [
+                    "Reservation"
+                ],
+                "parameters": [
+                    {
+                        "description": "멘토 상세페이지 데이터속 멘토id",
+                        "name": "mentorid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "확정목록 - confirm, 대기목록 - wait",
+                        "name": "status",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "예약 확정 성공.",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "대기중인 목록을 가져왔을때": {
+                                        "value": {
+                                            "message": "Get reservations of mentor.",
+                                            "data": [
+                                                {
+                                                    "id": 100,
+                                                    "type": "MT",
+                                                    "duration": 20,
+                                                    "start": null,
+                                                    "proposed_start1": "2023-03-13T09:40:00.000Z",
+                                                    "proposed_start2": "2023-03-13T11:00:00.000Z",
+                                                    "proposed_start3": null,
+                                                    "link": "",
+                                                    "question": "질문내용",
+                                                    "userkey": 1,
+                                                    "username": "RESPEC001"
+                                                },
+                                                {
+                                                    "id": 101,
+                                                    "type": "PT",
+                                                    "duration": 20,
+                                                    "start": null,
+                                                    "proposed_start1": "2023-03-13T09:30:00.000Z",
+                                                    "proposed_start2": "2023-03-13T11:20:00.000Z",
+                                                    "proposed_start3": null,
+                                                    "link": "link주소",
+                                                    "question": "질문내용",
+                                                    "userkey": 1,
+                                                    "username": "RESPEC001"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "확정된 목록을 가져왔을때": {
+                                        "value": {
+                                            "message": "Get reservations of mentor.",
+                                            "data": [
+                                                {
+                                                    "id": 76,
+                                                    "type": "MT",
+                                                    "duration": 20,
+                                                    "start": "2023-03-13T10:10:00.000Z"
+                                                },
+                                                {
+                                                    "id": 78,
+                                                    "type": "MT",
+                                                    "duration": 20,
+                                                    "start": "2023-03-13T09:20:00.000Z"
+                                                },
+                                                {
+                                                    "id": 79,
+                                                    "type": "PT",
+                                                    "duration": 20,
+                                                    "start": "2023-03-13T09:00:00.000Z"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "예약 id",
+                                            "type": "integer"
+                                        },
+                                        "type": {
+                                            "description": "MT or PT (멘토링 or 포트폴리오 첨삭)",
+                                            "type": "string (ENUM)"
+                                        },
+                                        "duration": {
+                                            "description": "멘토링 진행시간",
+                                            "type": "integer"
+                                        },
+                                        "start": {
+                                            "description": "확정된 시간",
+                                            "type": "date"
+                                        },
+                                        "proposed_start1": {
+                                            "description": "예약의 첫번째 제안시간",
+                                            "type": "date"
+                                        },
+                                        "proposed_start2": {
+                                            "description": "예약의 두번째 제안시간",
+                                            "type": "date"
+                                        },
+                                        "proposed_start3": {
+                                            "description": "예약의 세번째 제안시간",
+                                            "type": "date"
+                                        },
+                                        "question": {
+                                            "description": "멘토에게 보내는 질문",
+                                            "type": "text"
+                                        },
+                                        "link": {
+                                            "description": "포트폴리오 링크(포트폴리오 첨삭 신청 시 수집)",
+                                            "type": "text"
+                                        },
+                                        "userkey": {
+                                            "description": "멘토링 or 포트폴리오 첨삭 신청한 유저 id",
+                                            "type": "integer"
+                                        },
+                                        "username": {
+                                            "description": "멘토링 or 포트폴리오 첨삭 신청한 유저 닉네임",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "잘못된 입력.",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "mentorkey가 int형이 아닐시": {
+                                        "value": {
+                                            "message": "Mentorkey must be int."
+                                        }
+                                    },
+                                    "status 미입력시": {
+                                        "value": {
+                                            "message": "You must input value of status wait or confirm."
+                                        }
+                                    },
+                                    "status가 wait or confirm이 아닐시": {
+                                        "value": {
+                                            "message": "You must input value of status wait or confirm."
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "description": "오류에 대한 세부정보",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "데이터 없음.",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "데이터 없음.": {
+                                        "value": {
+                                            "message": "There is no data.",
+                                            "detail": "No detail."
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "description": "오류에 대한 세부정보",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버 DB & 서버 에러",
+                        "content": {
+                            "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {

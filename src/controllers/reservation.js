@@ -16,6 +16,8 @@ const {
 
 const { pushAlarm, findUserFcm } = push;
 
+const { checkDuplicateDates } = require('../functions/common');
+
 const { success, fail } = require('../functions/responseStatus');
 
 /**
@@ -33,13 +35,16 @@ exports.createReservation = async (req, res) => {
     let user_name = req.session.sid;
     let user_data;
 
-    if (type == 'PT' && !link) return fail(res, 403, 'Portfolio link is required.');
-    if (duration < 10) return fail(res, 403, 'Duration must be more than 10.');
-    if (!proposed_start1 && !proposed_start2 && !proposed_start3) return fail(res, 403, 'More than one proposed reservation time is required.');
+    if (type == 'PT' && !link) return fail(res, 400, 'Portfolio link is required.');
+    if (duration < 10) return fail(res, 400, 'Duration must be more than 10.');
+    if (!proposed_start1 && !proposed_start2 && !proposed_start3) return fail(res, 400, 'More than one proposed reservation time is required.');
+    if (await checkDuplicateDates(proposed_start1, proposed_start2, proposed_start3)) {
+        return fail(res, 400, 'Reservation times cannot be the same.');
+    }
 
     try {
         const is_valid_mentor = await validateMentor(user_key, mentor_key);
-        if (!is_valid_mentor) return fail(res, 403, 'User must be different from mentor.');
+        if (!is_valid_mentor) return fail(res, 400, 'User must be different from mentor.');
 
         // 해당 멘티에 한정하여, 중복 예약 신청 검사
         const reservations = await getReservationsForCheck(user_key, mentor_key);
@@ -92,7 +97,7 @@ exports.confirmReservation = async (req, res) => {
         if (!mentor_key) return fail(res, 403, 'User is not a mentor.');
         
         const is_valid_reservation = await checkWaitingReservation(reservation_key, mentor_key);
-        if (!is_valid_reservation) return fail(res, 403, 'Invalid Reservation.');
+        if (!is_valid_reservation) return fail(res, 400, 'Invalid Reservation.');
 
         const reservations = await getReservationsByOption(mentor_key, 'confirm');
         
