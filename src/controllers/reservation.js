@@ -3,7 +3,17 @@
 const reservation = require('../services/reservation');
 const push = require('../services/push');
 
-const { reserve, confirm, checkWaitingReservation, validateMentor, getMentorKey, getReservationsByOption, getReservationsForCheck } = reservation;
+const { 
+    reserve, 
+    confirm, 
+    checkWaitingReservation,
+    validateMentor, 
+    getMentorKey, 
+    getReservationsByOption, 
+    getReservationsForCheck,
+    addUsernamesByReservation
+} = reservation;
+
 const { pushAlarm, findUserFcm } = push;
 
 const { success, fail } = require('../functions/responseStatus');
@@ -84,7 +94,7 @@ exports.confirmReservation = async (req, res) => {
         const is_valid_reservation = await checkWaitingReservation(reservation_key, mentor_key);
         if (!is_valid_reservation) return fail(res, 403, 'Invalid Reservation.');
 
-        const reservations = await getReservationsByOption(mentor_key, 'CONFIRMED');
+        const reservations = await getReservationsByOption(mentor_key, 'confirm');
         
         const new_range = [new Date(start), new Date(start.getTime() + (duration * 60000))]; // 비교 대상 시간 배열 생성
         const range = reservations.map(data => [new Date(data.start), new Date(data.start.getTime() + (data.duration * 60000))]);
@@ -119,20 +129,27 @@ exports.confirmReservation = async (req, res) => {
 };
 
 /**
- * 멘토의 예약 목록을 호출하는 API입니다.
+ * 옵션에 따른, 멘토의 예약 목록을 호출하는 API입니다.
  *
  * 프로세스)
- * 1. 유저가 멘토가 맞는지 검증
- * 2. 검증이 이상 없다면 멘토에게 예약된 모든 예약 가져옴
+ * 1. 멘토키, 예약값(wait, confirm)을 전달받습니다.
+ * 2-1. 예약값이 wait이라면, 반환값에 username을 추가해 전달합니다.
+ * 2-2. 예약값이 confirm이라면, 순수값을 전달합니다.
  */
 exports.getListOfMentor = async (req, res) => {
-    let { mentorkey } = req.params;
+    let { mentorkey, status } = req.params;
 
     try {
-        await getReservationsByOption(mentorkey, 'CONFIRMED')
-            .then((data) => {
+        await getReservationsByOption(mentorkey, status)
+            .then(async (data) => {
                 if(!data[0]) return fail(res, 404, 'There is no data.');
-                return success(res, 200, 'Get reservations of mentor.', data);
+
+                if(status === 'wait') {
+                    const wait_reservations = await addUsernamesByReservation(data);
+                    return success(res, 200, 'Get reservations of mentor.', wait_reservations);
+                } else {
+                    return success(res, 200, 'Get reservations of mentor.', data);
+                }
             })
             .catch((err) => {
                 return fail(res, 500, err.message);

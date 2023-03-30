@@ -1,6 +1,6 @@
 'use strict';
 
-const { Mentorinfo, Reservation } = require('../utils/connect');
+const { User, Mentorinfo, Reservation } = require('../utils/connect');
 
 const { checkDuplicateDates } = require('../functions/common');
 
@@ -113,16 +113,16 @@ exports.confirm = async (reservation_key, start) => {
 };
 
 /**
- * 해당 멘토의 예약이 확정된 목록을 옵션별로, 추출하는 함수
+ * 해당 멘토의 예약목록을 옵션별로, 추출하는 함수
  * @returns {Object}
  */
 exports.getReservationsByOption = async (mentorkey, status) => {
     let where_option, attributes_option;
 
-    if(status === 'WAITING') {
+    if(status === 'wait') {
         where_option = {[Op.and]: [{ status: 'WAITING' }, { mentorkey: mentorkey }]};
-        attributes_option = null;
-    } else if (status === 'CONFIRMED') {
+        attributes_option = ['id', 'type', 'duration', 'start', 'proposed_start1', 'proposed_start2', 'proposed_start3', 'link', 'question', 'userkey'];
+    } else if (status === 'confirm') {
         where_option = {[Op.and]: [{ status: 'CONFIRMED' }, { mentorkey: mentorkey }]};
         attributes_option = ['id', 'type', 'duration', 'start'];
     } else {
@@ -143,5 +143,25 @@ exports.getReservationsByOption = async (mentorkey, status) => {
  * @returns 
  */
 exports.getReservationsForCheck = async (userkey, mentorkey) => {
-    return await Reservation.findAll({ where: {[Op.and]: [{ userkey: userkey }, { mentorkey: mentorkey }]} });
+    return await Reservation.findAll({ where: {[Op.and]: [{ userkey: userkey }, { mentorkey: mentorkey }, { status: 'WAITING'}]} });
 };
+
+/**
+ * 
+ * 예약 데이터의 사용자 ID에 해당하는 사용자 이름을 가져오는 기능을 수행하는 함수
+ * 
+ * @param {*} reservations 예약 데이터
+ * @returns 
+ */
+exports.addUsernamesByReservation = async (reservations) => {
+    for (let data of reservations) {
+        const result = await User.findAll({
+            attributes: ['username'],
+            where: { id: data.userkey }
+        })
+        const rows = result.map(item => item.toJSON());
+        data.dataValues.username = rows[0]?.username || null;
+    }
+    
+    return reservations;
+}
