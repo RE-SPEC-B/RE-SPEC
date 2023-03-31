@@ -9,11 +9,11 @@ const { combine, timestamp, colorize, printf, label } = format;
 const log_dir = 'logs';
 
 // 사용자 지정 포맷
-const printFormat = printf(({ timestamp, label, level, message }) => {
+const print_format = printf(({ timestamp, label, level, message }) => {
     return `${timestamp} [${label}] ${level} : ${message}`;
 });
 
-const printLogFormat = {
+const print_log_format = {
     default: combine(
         label({
             label: 'RE:SPEC',
@@ -22,12 +22,12 @@ const printLogFormat = {
         timestamp({
             format: 'YYYY-MM-DD HH:mm:dd',
         }),
-        printFormat,
+        print_format,
     ),
 };
 
 const logger = createLogger({
-    format: printLogFormat.default,
+    format: print_log_format.default,
     transports: [
         // info 레벨 로그를 저장할 파일 설정
         new _winstonDaily({
@@ -63,7 +63,7 @@ const logger = createLogger({
 if (_config.get('server.state') !== 'production') {
     logger.add(
         new transports.Console({
-            format: combine(colorize({ all: true }), printFormat),
+            format: combine(colorize({ all: true }), print_format),
         }),
     );
 }

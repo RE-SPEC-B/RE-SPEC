@@ -40,7 +40,8 @@ exports.keySelectWhere = (a, b, ids, value, keys) => {
     let type = [];
     for (let key of keys) if (key === a || key === b) type.push(key);
     for (let idx = 0; idx < type.length; idx++) {
-        where_arr.push({ [type[idx]]: { [Op.or]: value[keys.indexOf(type[idx])] } });
+
+        where_arr.push({ [type[idx].replace(/_/g, '')]: { [Op.or]: value[keys.indexOf(type[idx])] } });
     }
     return { [Op.and]: where_arr };
 };
@@ -98,7 +99,7 @@ exports.jobUserFindT = async (word) => {
 exports.jobUserFindB = async (value, keys) => {
     return await Job.findAll({
         attributes: ['id'],
-        where: { jobenum: { [Op.or]: value[keys.indexOf('jobenum')] } },
+        where: { jobenum: { [Op.or]: value[keys.indexOf('job_enum')] } },
     })
         .then(async (data) => {
             let job_id = [];

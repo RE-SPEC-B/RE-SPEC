@@ -13,7 +13,7 @@ module.exports = () => {
             },
             async (email, password, done) => {
                 try {
-                    const isUser = await User.findOne({ 
+                    const is_user = await User.findOne({ 
                         attributes: ['id', 
                         'profile', 
                         'username', 
@@ -25,13 +25,13 @@ module.exports = () => {
                         where: { email } 
                     });
 
-                    if (isUser) {
-                        const result = await _bcrypt.compare(password, isUser.password);
-                        if (result) done(null, isUser);
+                    if (is_user) {
+                        const result = await _bcrypt.compare(password, is_user.password);
+                        if (result) done(null, is_user);
                         else done(null, false, { message: 'Invalid password.' });
                     } else done(null, false, { message: 'User does not exist.' });
-                } catch (error) {
-                    done(error);
+                } catch (err) {
+                    done(err);
                 }
             },
         ),

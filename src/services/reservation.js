@@ -48,9 +48,9 @@ exports.reserve = async (user_key, mentor_key, type, duration, proposed_start1, 
  * @returns boolean 예약 검증 결과
  */
 exports.validateMentor = async (user_key, mentor_key) => {
-    return await Mentorinfo.findOne({ where: { id: mentor_key } }).then((mentorInfo) => {
-        if (!mentorInfo) throw new Error('Invalid Mentor!');
-        return user_key != mentorInfo.userkey;
+    return await Mentorinfo.findOne({ where: { id: mentor_key } }).then((mentor_info) => {
+        if (!mentor_info) throw new Error('Invalid Mentor!');
+        return user_key != mentor_info.userkey;
     });
 };
 
@@ -61,9 +61,9 @@ exports.validateMentor = async (user_key, mentor_key) => {
  * @returns
  */
 exports.getMentorKey = async (user_key) => {
-    return await Mentorinfo.findOne({ where: { userkey: user_key } }).then((mentorInfo) => {
-        if (!mentorInfo) return;
-        return mentorInfo.id;
+    return await Mentorinfo.findOne({ where: { userkey: user_key } }).then((mentor_info) => {
+        if (!mentor_info) return;
+        return mentor_info.id;
     });
 };
 
@@ -110,14 +110,14 @@ exports.confirm = async (reservation_key, start) => {
  * 해당 멘토의 예약목록을 옵션별로, 추출하는 함수
  * @returns {Object}
  */
-exports.getReservationsByOption = async (mentorkey, status) => {
+exports.getReservationsByOption = async (mentor_key, status) => {
     let where_option, attributes_option;
 
     if(status === 'wait') {
-        where_option = {[Op.and]: [{ status: 'WAITING' }, { mentorkey: mentorkey }]};
+        where_option = {[Op.and]: [{ status: 'WAITING' }, { mentorkey: mentor_key }]};
         attributes_option = ['id', 'type', 'duration', 'start', 'proposed_start1', 'proposed_start2', 'proposed_start3', 'link', 'question', 'userkey'];
     } else if (status === 'confirm') {
-        where_option = {[Op.and]: [{ status: 'CONFIRMED' }, { mentorkey: mentorkey }]};
+        where_option = {[Op.and]: [{ status: 'CONFIRMED' }, { mentorkey: mentor_key }]};
         attributes_option = ['id', 'type', 'duration', 'start'];
     }
 
@@ -130,12 +130,12 @@ exports.getReservationsByOption = async (mentorkey, status) => {
 /**
  * 해당 멘티 - 멘토의 예약 정보 반환하는 함수
  * 
- * @param {*} userkey 멘티 id
- * @param {*} mentorkey 멘토 id
+ * @param {*} user_key 멘티 id
+ * @param {*} mentor_key 멘토 id
  * @returns 
  */
-exports.getReservationsForCheck = async (userkey, mentorkey) => {
-    return await Reservation.findAll({ where: {[Op.and]: [{ userkey: userkey }, { mentorkey: mentorkey }, { status: 'WAITING'}]} });
+exports.getReservationsForCheck = async (user_key, mentor_key) => {
+    return await Reservation.findAll({ where: {[Op.and]: [{ userkey: user_key }, { mentorkey: mentor_key }, { status: 'WAITING'}]} });
 };
 
 /**

@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "RE:SPEC's APIs",
-        "version": "1.1.0",
+        "version": "1.2.4",
         "description": "Test the APIs!"
     },
     "host": "localhost:5000",
@@ -22,7 +22,7 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "username": {
+                                    "user_name": {
                                         "description": "유저 닉네임",
                                         "type": "string"
                                     },
@@ -36,7 +36,7 @@
                                     }
                                 },
                                 "example": {
-                                    "username": "RESPEC001",
+                                    "user_name": "RESPEC001",
                                     "email": "RESPEC001@naver.com",
                                     "password": "123"
                                 }
@@ -1274,7 +1274,7 @@
                 "parameters": [
                     {
                         "description": "직업명 (입력예시 -> job_num_2,job_num_3,job_num_4)",
-                        "name": "jobenum",
+                        "name": "job_enum",
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -1290,7 +1290,7 @@
                     },
                     {
                         "description": "학력 (입력예시 -> education_level_2,education_level_4)",
-                        "name": "educationenum",
+                        "name": "education_enum",
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -1298,7 +1298,7 @@
                     },
                     {
                         "description": "회사규모 (입력예시 -> company_size_1,company_size_2)",
-                        "name": "companysizeenum",
+                        "name": "companysize_enum",
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -1306,7 +1306,7 @@
                     },
                     {
                         "description": "경력 (입력예시 -> career_level_2,career_level_3)",
-                        "name": "careerenum",
+                        "name": "career_enum",
                         "in": "query",
                         "schema": {
                             "type": "string"
