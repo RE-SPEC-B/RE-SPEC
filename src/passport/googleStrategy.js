@@ -16,7 +16,7 @@ module.exports = () => {
             },
             async (accessToken, refreshToken, profile, done) => {
                 try {
-                    const isUser = await User.findOne({
+                    const is_user = await User.findOne({
                         attributes: ['id', 
                         'profile', 
                         'username', 
@@ -28,21 +28,20 @@ module.exports = () => {
                         where: { snsId: profile.id, provider: 'google' },
                     });
 
-                    if (isUser) {
+                    if (is_user) {
                         logger.info(`User ${profile.displayName} is already registered.`);
-                        done(null, isUser);
+                        done(null, is_user);
                     } else {
-                        const newUser = await User.create({
+                        const new_user = await User.create({
                             email: 'GOOGLE' + profile._json.email,
                             username: profile.displayName,
                             snsId: profile.id,
                             provider: 'google',
                         });
-                        done(null, newUser);
+                        done(null, new_user);
                     }
-                } catch (error) {
-                    console.error(error);
-                    done(error);
+                } catch (err) {
+                    done(err);
                 }
             },
         ),

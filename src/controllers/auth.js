@@ -8,21 +8,21 @@ const { register, userFind } = auth;
 const { success, fail } = require('../functions/responseStatus');
 
 exports.localRegister = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { user_name, email, password } = req.body;
 
     try {
-        const isUser = await userFind(username, email);
-        if (isUser) return fail(res, 403, 'Exist email or username.'); // 가입된 유저
+        const is_user = await userFind(user_name, email);
+        if (is_user) return fail(res, 403, 'Exist email or username.'); // 가입된 유저
 
-        await register(username, email, password, 'local')
+        await register(user_name, email, password, 'local')
             .then(() => { return success(res, 200, 'Register success.'); })
             .catch((err) => { return fail(res, 500, `${err}`); });
-    } catch (error) { return fail(res, 500, `${error}`); }
+    } catch (err) { return fail(res, 500, `${err}`); }
 };
 
 exports.localLogin = (req, res) => {
-    _passport.authenticate('local', (authError, user, info) => {
-        if (authError) return fail(res, 500, `${authError}`);
+    _passport.authenticate('local', (auth_err, user, info) => {
+        if (auth_err) return fail(res, 500, `${auth_err}`);
 
         // 로컬 로그인후, 정상 오류시
         if (!user) { 
@@ -33,8 +33,8 @@ exports.localLogin = (req, res) => {
             }
         }
 
-        return req.login(user, (loginError) => {
-            if (loginError) return fail(res, 500, `${loginError}`);
+        return req.login(user, (login_error) => {
+            if (login_error) return fail(res, 500, `${login_error}`);
             return success(res, 200, 'Local login success.', user);
         });
     })(req, res);
@@ -48,21 +48,21 @@ exports.logout = (req, res) => {
 };
 
 exports.kakaoLoginCallback = (req, res) => {
-    _passport.authenticate('kakao', (authError, user) => {
+    _passport.authenticate('kakao', (auth_err, user) => {
         if (!user) return fail(res, 404, 'Kakao user not found.');
         req.logIn(user, (err) => { return success(res, 200, 'Kakao login success.', user); });
     })(req, res);
 };
 
 exports.googleLoginCallback = (req, res) => {
-    _passport.authenticate('google', (authError, user) => {
+    _passport.authenticate('google', (auth_err, user) => {
         if (!user) return fail(res, 404, 'Google user not found.');
         req.logIn(user, (err) => { return success(res, 200, 'Google login success.', user); });
     })(req, res);
 };
 
 exports.naverLoginCallback = (req, res) => {
-    _passport.authenticate('naver', (authError, user) => {
+    _passport.authenticate('naver', (auth_err, user) => {
         if (!user) return fail(res, 404, 'Naver user not found.');
         req.logIn(user, (err) => { return success(res, 200, 'Naver login success.', user); });
     })(req, res);
