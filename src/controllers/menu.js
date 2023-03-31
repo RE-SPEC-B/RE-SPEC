@@ -1,6 +1,7 @@
 'use strict';
 
 const menu = require('../services/menu');
+
 const {
     keySelectWhere,
     parseValue,
@@ -51,17 +52,17 @@ exports.searchMentoT = async (req, res) => {
 };
 
 exports.searchMentoB = async (req, res) => {
-    let { jobenum, university, educationenum, companysizeenum, careerenum, order } = req.query;
+    let { job_enum, university, education_enum, companysize_enum, career_enum, order } = req.query;
     let keywords = req.query;
     let keys = Object.keys(keywords);
     let value = parseValue(keywords, keys);
-
+    
     let id,
         ids = [];
     let where_education,
         where_career = null;
 
-    if (jobenum) {
+    if (job_enum) {
         id = await jobUserFindB(value, keys);
         for (let idx = 0; idx < id.length; idx++) ids.push(id[idx].UserId);
     } else {
@@ -69,14 +70,14 @@ exports.searchMentoB = async (req, res) => {
         for (let idx = 0; idx < id.length; idx++) ids.push(id[idx].id);
     }
 
-    where_education = keySelectWhere('educationenum', 'university', ids, value, keys);
-    if (ids.length !== 0 && (educationenum || university)) {
+    where_education = keySelectWhere('education_enum', 'university', ids, value, keys);
+    if (ids.length !== 0 && (education_enum || university)) {
         id = await educationUserFind(where_education);
         ids = parseIds(id);
     }
 
-    where_career = keySelectWhere('careerenum', 'companysizeenum', ids, value, keys);
-    if (ids.length !== 0 && (careerenum || companysizeenum)) {
+    where_career = keySelectWhere('career_enum', 'companysize_enum', ids, value, keys);
+    if (ids.length !== 0 && (career_enum || companysize_enum)) {
         id = await careerUserFind(where_career);
         ids = parseIds(id);
     }
