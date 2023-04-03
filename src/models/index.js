@@ -21,7 +21,7 @@ const models = {
     Portfoliorecommendation: require('./portfolio/portfolio_recommendation'),
     Portfolioprogress: require('./portfolio/portfolio_progress'),
     Reservation: require('./reservation/reservation'),
-    Log_reservation: require('./reservation/log_reservation'),
+    LogReservation: require('./reservation/log_reservation'),
 };
 
 module.exports = models;

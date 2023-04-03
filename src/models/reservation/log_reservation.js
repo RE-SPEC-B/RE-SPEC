@@ -2,7 +2,7 @@
 
 const _sequelize = require('sequelize');
 
-module.exports = class Log_reservation extends _sequelize.Model {
+module.exports = class LogReservation extends _sequelize.Model {
     static init(sequelize) {
         return super.init(
             {
@@ -14,7 +14,7 @@ module.exports = class Log_reservation extends _sequelize.Model {
                     primaryKey: true,
                 },
                 status_from: {
-                    type: _sequelize.ENUM('WAITING', 'REJECTED', 'REAPPLIED', 'REAPPLIED_REQUEST', 'CONFIRMED'),
+                    type: _sequelize.ENUM('WAITING', 'REJECTED', 'REAPPLIED', 'REAPPLIED_REQUEST', 'CONFIRMED', ''),
                     allowNull: false,
                     defaultValue: 'WAITING',
                 },
@@ -31,7 +31,7 @@ module.exports = class Log_reservation extends _sequelize.Model {
             },
             {
                 sequelize,
-                timestamps: true,
+                timestamps: false,
                 modelName: 'Log_reservation',
                 tableName: 'log_reservation',
                 charset: 'utf8',
@@ -41,6 +41,6 @@ module.exports = class Log_reservation extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Log_reservation.belongsTo(db.Reservation, { foreignKey: 'reservationkey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.LogReservation.belongsTo(db.Reservation, { foreignKey: 'reservation_key', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

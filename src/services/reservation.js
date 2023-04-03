@@ -1,10 +1,11 @@
 'use strict';
 
-const { Mentorinfo, Reservation } = require('../utils/connect');
+const { Mentorinfo, Reservation, LogReservation } = require('../utils/connect');
 
 const { checkDuplicateDates } = require('../functions/common');
 
-const { Op, fn, col } = require('sequelize');
+const { Op, fn, col, Transaction } = require('sequelize');
+const { sequelize } = require('../utils/connect');
 
 /**
  * 고객 ID, 멘토 ID, 예약정보를 받아 저장합니다.
@@ -26,21 +27,28 @@ exports.reserve = async (user_key, mentor_key, type, duration, proposed_start1, 
         throw new Error('Reservation times cannot be the same.');
     }
 
+    const transaction = await sequelize.transaction();
     try {
-        let result = await Reservation.create({
-            type: type == 'MT' ? 'MT' : 'PT',
-            duration: duration,
-            status: 'WAITING',
-            proposed_start1: proposed_start1,
-            proposed_start2: proposed_start2,
-            proposed_start3: proposed_start3,
-            question: question,
-            link: type == 'PT' ? link : '',
-            userkey: user_key,
-            mentorkey: mentor_key,
-        });
+        const reservation = await Reservation.create({
+                type: type == 'MT' ? 'MT' : 'PT',
+                duration: duration,
+                status: 'WAITING',
+                proposed_start1: proposed_start1,
+                proposed_start2: proposed_start2,
+                proposed_start3: proposed_start3,
+                question: question,
+                link: type == 'PT' ? link : '',
+                userkey: user_key,
+                mentorkey: mentor_key,
+            },
+            { transaction: transaction },
+        );
+        // 예약 로그 기록
+        const logReservationData = { reservation_key: reservation.id, status_from: '', status_to: 'WAITING' };
+        await LogReservation.create(logReservationData, { transaction: transaction });
+        await transaction.commit();
 
-        return result;
+        return reservation;
     } catch (err) {
         throw new Error(err);
     }
