@@ -105,13 +105,28 @@ exports.checkWaitingReservation = async (reservation_key, mentor_key) => {
 exports.confirm = async (reservation_key, start) => {
     // TODO: 확정 시간이 반드시 제안 시간 중 하나여야 한다는 정책이 없기때문에 정책이 명확해지면 작업할 예정
     const now = new Date();
-    await Reservation.update({ status: 'CONFIRMED', start: start, updatedAt: now }, { where: { id: reservation_key } });
 
-    // 참고: CONFIRMED 업데이트 이후, 해당 멘티에게 알림을 보내기위해, FCM정보가 필요합니다.
-    // 따라서, 아래 코드를 삽입했고 작업하실땐, 지우셔도 됩니다.
-    return await Reservation.findOne({
-        where: { id: reservation_key },
-    });
+    const transaction = await sequelize.transaction();
+
+    try {
+        await Reservation.update(
+            { status: 'CONFIRMED', start: start, updatedAt: now },
+            { where: { id: reservation_key } },
+            { transaction: transaction },
+        );
+        // 예약 로그 기록
+        const logReservationData = { reservation_key: reservation_key, status_from: 'WAITING', status_to: 'CONFIRMED' };
+        await LogReservation.create(logReservationData, { transaction: transaction });
+        await transaction.commit();
+
+        // 참고: CONFIRMED 업데이트 이후, 해당 멘티에게 알림을 보내기위해, FCM정보가 필요합니다.
+        // 따라서, 아래 코드를 삽입했고 작업하실땐, 지우셔도 됩니다.
+        return await Reservation.findOne({
+            where: { id: reservation_key },
+        });
+    } catch (err) {
+        throw new Error(err);
+    }
 };
 
 /**
@@ -124,14 +139,23 @@ exports.confirm = async (reservation_key, start) => {
 exports.reject = async (reservation_key, isReapplyAvailable) => {
     // TODO: 최초예약, 반려, 재예약 등 예약 관련 로깅 작업
     let status = isReapplyAvailable ? 'REAPPLIED_REQUEST' : 'REJECTED';
+    const transaction = await sequelize.transaction();
 
-    await Reservation.update({ status: status }, { where: { id: reservation_key } });
+    try {
+        await Reservation.update({ status: status }, { where: { id: reservation_key } }, { transaction: transaction });
+        // 예약 로그 기록
+        const logReservationData = { reservation_key: reservation_key, status_from: 'WAITING', status_to: status };
+        await LogReservation.create(logReservationData, { transaction: transaction });
+        await transaction.commit();
 
-    // 참고: CONFIRMED 업데이트 이후, 해당 멘티에게 알림을 보내기위해, FCM정보가 필요합니다.
-    // 따라서, 아래 코드를 삽입했고 작업하실땐, 지우셔도 됩니다.
-    return await Reservation.findOne({
-        where: { id: reservation_key },
-    });
+        // 참고: CONFIRMED 업데이트 이후, 해당 멘티에게 알림을 보내기위해, FCM정보가 필요합니다.
+        // 따라서, 아래 코드를 삽입했고 작업하실땐, 지우셔도 됩니다.
+        return await Reservation.findOne({
+            where: { id: reservation_key },
+        });
+    } catch (err) {
+        throw new Error(err);
+    }
 };
 
 /**
@@ -139,7 +163,7 @@ exports.reject = async (reservation_key, isReapplyAvailable) => {
  * @returns {Object}
  */
 exports.getReservationsOfMentor = async (mentorkey) => {
-    return await Reservation.findAll({ 
+    return await Reservation.findAll({
         attributes: ['id', 'type', 'status', 'duration', 'start'],
         where: {[Op.and]: [{ status: 'CONFIRMED' }, { mentorkey: mentorkey }]}
     });
