@@ -1,8 +1,9 @@
 'use strict';
 
-const { User, Mentorinfo, Reservation } = require('../utils/connect');
+const { User, Mentorinfo, Reservation, LogReservation } = require('../utils/connect');
 
-const { Op, fn, col } = require('sequelize');
+const { Op, fn, col, Transaction } = require('sequelize');
+const { sequelize } = require('../utils/connect');
 
 /**
  * 고객 ID, 멘토 ID, 예약정보를 받아 저장합니다.
@@ -20,21 +21,28 @@ const { Op, fn, col } = require('sequelize');
  * @returns
  */
 exports.reserve = async (user_key, mentor_key, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link) => {
+    const transaction = await sequelize.transaction();
     try {
-        let result = await Reservation.create({
-            type: type == 'MT' ? 'MT' : 'PT',
-            duration: duration,
-            status: 'WAITING',
-            proposed_start1: proposed_start1,
-            proposed_start2: proposed_start2,
-            proposed_start3: proposed_start3,
-            question: question,
-            link: type == 'PT' ? link : '',
-            userkey: user_key,
-            mentorkey: mentor_key,
-        });
+        const reservation = await Reservation.create({
+                type: type == 'MT' ? 'MT' : 'PT',
+                duration: duration,
+                status: 'WAITING',
+                proposed_start1: proposed_start1,
+                proposed_start2: proposed_start2,
+                proposed_start3: proposed_start3,
+                question: question,
+                link: type == 'PT' ? link : '',
+                userkey: user_key,
+                mentorkey: mentor_key,
+            },
+            { transaction: transaction },
+        );
+        // 예약 로그 기록
+        const logReservationData = { reservation_key: reservation.id, status_from: '', status_to: 'WAITING' };
+        await LogReservation.create(logReservationData, { transaction: transaction });
+        await transaction.commit();
 
-        return result;
+        return reservation;
     } catch (err) {
         throw new Error(err);
     }
@@ -90,17 +98,52 @@ exports.checkWaitingReservation = async (reservation_key, mentor_key) => {
  */
 exports.confirm = async (reservation_key, start) => {
     // TODO: 확정 시간이 반드시 제안 시간 중 하나여야 한다는 정책이 없기때문에 정책이 명확해지면 작업할 예정
+    const now = new Date();
+
+    const transaction = await sequelize.transaction();
+
     try {
-        const now = new Date();
         await Reservation.update(
             { status: 'CONFIRMED', start: start, updatedAt: now },
             { where: { id: reservation_key } },
+            { transaction: transaction },
         );
+        // 예약 로그 기록
+        const logReservationData = { reservation_key: reservation_key, status_from: 'WAITING', status_to: 'CONFIRMED' };
+        await LogReservation.create(logReservationData, { transaction: transaction });
+        await transaction.commit();
 
         // 참고: CONFIRMED 업데이트 이후, 해당 멘티에게 알림을 보내기위해, FCM정보가 필요합니다.
         return await Reservation.findOne({
             where: { id: reservation_key },
-        })
+        });
+    } catch (err) {
+        throw new Error(err);
+    }
+};
+
+/**
+ * 재신청 여부를 적용하여
+ * 예약을 반려하는 함수
+ * @param {*} reservation_key 예약 ID
+ * @param {*} start 확정된 멘토링 시작 시간
+ * @returns
+ */
+exports.reject = async (reservation_key, is_reapply_available) => {
+    // TODO: 최초예약, 반려, 재예약 등 예약 관련 로깅 작업
+    let status = is_reapply_available ? 'REAPPLIED_REQUEST' : 'REJECTED';
+    const transaction = await sequelize.transaction();
+
+    try {
+        await Reservation.update({ status: status }, { where: { id: reservation_key } }, { transaction: transaction });
+        // 예약 로그 기록
+        const logReservationData = { reservation_key: reservation_key, status_from: 'WAITING', status_to: status };
+        await LogReservation.create(logReservationData, { transaction: transaction });
+        await transaction.commit();
+        
+        return await Reservation.findOne({
+            where: { id: reservation_key },
+        });
     } catch (err) {
         throw new Error(err);
     }

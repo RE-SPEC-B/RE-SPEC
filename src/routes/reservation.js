@@ -25,9 +25,9 @@ _router.post('/', [
 );
 
 // 멘토의 예약 확정
-_router.post('/confirm', [
+_router.post('/confirm/:reservationkey', [
         isLoggedIn,
-        check('reservation_key', 'Reservation Key is required.').notEmpty(),
+        check('reservationkey', 'Reservation Key is required.').notEmpty(),
         check('start')
             .notEmpty()
             .withMessage('Start is required.')
@@ -37,6 +37,19 @@ _router.post('/confirm', [
         validator,
     ],
     ctrl.confirmReservation,
+);
+
+// 멘토의 예약 거절
+_router.post('/reject/:reservationkey', [
+        isLoggedIn,
+        check('is_reapply_available')
+            .notEmpty()
+            .withMessage('is_reapply_available is required')
+            .isBoolean()
+            .withMessage('is_reapply_available must be boolean'),
+        validator,
+    ],
+    ctrl.rejectReservation,
 );
 
 // 멘토의 예약 목록 호출
@@ -50,7 +63,8 @@ _router.get('/mentor/:mentorkey/:status/list', [
             .isIn(['wait', 'confirm'])
             .withMessage('You must input value of status wait or confirm.'),
         validator,
-    ], ctrl.getListOfMentor
+    ],
+    ctrl.getListOfMentor,
 );
 
 module.exports = _router;

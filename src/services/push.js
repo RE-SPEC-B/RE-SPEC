@@ -49,7 +49,7 @@ exports.pushAlarm = (fcm, title, body) => {
 exports.findUserFcm = async (user_key, mentor_key) => {
     try {
         let user_data;
-        
+
         if (user_key == 0) { // find mentor's user id
             user_data = await Mentorinfo.findOne({
                 attributes: ['userkey'],
