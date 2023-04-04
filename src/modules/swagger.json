@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "RE:SPEC's APIs",
-        "version": "1.2.4",
+        "version": "1.3.0",
         "description": "Test the APIs!"
     },
     "host": "localhost:5000",
@@ -1810,22 +1810,29 @@
                 }
             }
         },
-        "/reservation/confirm": {
+        "/reservation/confirm/{reservationkey}": {
             "post": {
                 "summary": "멘토링 확정",
                 "description": "# 멘토가 자신에게 들어온 예약 목록을 보고, 예약시간을 확정시키는 API\n(확정시킬 때, 해당 멘토의 이미 확정된 시간들을 참고해서, 시간이 겹치지 않게 했습니다.)\n\nEx) 해당 멘토의 예약된 시간: 2023-03-13 17:20:00, duration: 20이라면, 멘토는 다른 예약의 확정을 2023-03-13 17:20:00 ~ 2023-03-13 17:40:00에는 못합니다.",
                 "tags": [
                     "Reservation"
                 ],
+                "parameters": [
+                    {
+                        "description": "예약 id - 예약 목록을 불러오는 API에서 알 수 있습니다.",
+                        "name": "reservationkey",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "reservation_key": {
-                                        "description": "예약 id - 예약 목록을 불러오는 API에서 알 수 있습니다.",
-                                        "type": "integer"
-                                    },
                                     "duration": {
                                         "description": "멘토링 진행 시간 - (20, 40, 60)",
                                         "type": "integer"
@@ -1837,7 +1844,6 @@
                                 }
                             },
                             "example": {
-                                "reservation_key": "98",
                                 "duration": 40,
                                 "start": "2023-03-13 17:20:00"
                             }
@@ -1897,6 +1903,151 @@
                                         "value": {
                                             "message": "The time overlaps.",
                                             "detail": "No detail."
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "description": "오류에 대한 세부정보",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "권한 없음.",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "본인이 멘토가 아닐시": {
+                                        "value": {
+                                            "message": "User is not a mentor.",
+                                            "detail": "No detail."
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "description": "오류에 대한 세부정보",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "서버 DB & 서버 에러",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "detail": {
+                                            "description": "오류에 대한 세부정보",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/reservation/reject/{reservationkey}": {
+            "post": {
+                "summary": "멘토링 거절",
+                "description": "# 멘토가 자신에게 들어온 예약 목록을 보고, 예약시간을 거절 or 재예약시키는 API",
+                "tags": [
+                    "Reservation"
+                ],
+                "parameters": [
+                    {
+                        "description": "예약 id - 예약 목록을 불러오는 API에서 알 수 있습니다.",
+                        "name": "reservationkey",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "is_reapply_available": {
+                                        "description": "true = 재예약, false = 거절",
+                                        "type": "boolean"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "is_reapply_available": true
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "예약 거절 성공.",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "멘토링 재예약 요청": {
+                                        "value": {
+                                            "message": "Reservation reapplication requested.",
+                                            "data": "No data."
+                                        }
+                                    },
+                                    "멘토링 거절": {
+                                        "value": {
+                                            "message": "Reservation rejected.",
+                                            "data": "No data."
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "description": "관련 데이터",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "잘못된 입력.",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "is_reapply_available 미입력시": {
+                                        "value": {
+                                            "message": "is_reapply_available is required."
+                                        }
+                                    },
+                                    "is_reapply_available가 boolean타입이 아닐시": {
+                                        "value": {
+                                            "message": "is_reapply_available must be boolean."
                                         }
                                     }
                                 },

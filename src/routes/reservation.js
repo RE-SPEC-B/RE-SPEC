@@ -44,9 +44,9 @@ _router.post('/reject/:reservationkey', [
         isLoggedIn,
         check('is_reapply_available')
             .notEmpty()
-            .withMessage('is_reapply_available is required')
+            .withMessage('is_reapply_available is required.')
             .isBoolean()
-            .withMessage('is_reapply_available must be boolean'),
+            .withMessage('is_reapply_available must be boolean.'),
         validator,
     ],
     ctrl.rejectReservation,
