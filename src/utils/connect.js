@@ -14,9 +14,9 @@ const sequelize = new _sequelize(
         dialect: _config.get('mysql_local.dialect'),
         logging: (message) => {
             console.log(message);
-            // 사이즈가 작은 프로젝트이기때문에 파일시스템이 아닌 DB에 로깅 결정
-            // 프로젝트가 발전하면 추후에 로깅 방식 변경 고려
-            if (!message.includes('logs')) {
+            // 사이즈가 작은 프로젝트이기때문에 파일시스템이 아닌 DB에 로깅 결정. 프로젝트가 발전하면 추후에 로깅 방식 변경 고려
+            // 로깅을 위한 로깅이 안되도록 예외처리
+            if (!message.includes('INSERT INTO `logs`')) {
                 logToDatabase(message);
             }
         },
