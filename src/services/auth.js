@@ -19,7 +19,7 @@ exports.register = async (username, email, password, provider) => {
     try {
         const hash_password = await _bcrypt.hash(password, 12);
         return await User.create({
-            username: username,
+            user_name: username,
             email: email,
             password: hash_password,
             provider: provider,
@@ -37,9 +37,9 @@ exports.register = async (username, email, password, provider) => {
  * @param {*} email 유저이메일
  * @returns
  */
-exports.userFind = async (username, email) => {
+exports.userFind = async (user_name, email) => {
     try {
-        return await User.findOne({ where: { [Op.or]: [{ username: username }, { email: email }] } });
+        return await User.findOne({ where: { [Op.or]: [{ user_name: user_name }, { email: email }] } });
     } catch (err) {
         throw new Error(err);
     }

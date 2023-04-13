@@ -19,14 +19,14 @@ _router.post('/', [
             .withMessage('Type must be MT or PT.'),
         check('duration', 'Duration is required').notEmpty(),
         check('proposed_start1', 'More than one proposed reservation time is required').notEmpty(),
-        check('mentor_key', 'Mentor key is required').notEmpty(),
+        check('mentor_id', 'Mentor key is required').notEmpty(),
         validator,
     ],
     ctrl.createReservation,
 );
 
 // 멘토의 예약 확정
-_router.post('/confirm/:reservation_key', [
+_router.post('/confirm/:reservation_id', [
         isLoggedIn,
         check('start')
             .notEmpty()
@@ -40,7 +40,7 @@ _router.post('/confirm/:reservation_key', [
 );
 
 // 멘토의 예약 거절
-_router.post('/reject/:reservation_key', [
+_router.post('/reject/:reservation_id', [
         isLoggedIn,
         check('is_reapply_available')
             .notEmpty()

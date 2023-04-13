@@ -293,7 +293,7 @@ exports.userMentoFilter = (ids, order) => {
                 ],
             },
         ],
-        attributes: ['id', 'username', 'profile', [fn('COUNT', col('Mentorinfo.Mentorreviews.id')), 'reviews']],
+        attributes: ['id', 'user_name', 'profile', [fn('COUNT', col('Mentorinfo.Mentorreviews.id')), 'reviews']],
         where: { [Op.and]: [{ position: 'mentor' }, { id: { [Op.or]: ids } }] },
         order: order_option,
         group: ['User.id', 'Career.id', 'Characteristics.id', 'Jobs.id', 'Mentorinfo.id'],

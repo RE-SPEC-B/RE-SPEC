@@ -3,7 +3,7 @@
 const service = require('../services/reservation');
 const push = require('../services/push');
 
-const { reserve, confirm, reject, checkWaitingReservation, validateMentor, getMentorKey, getReservationsOfMentor } = service;
+const { reserve, confirm, reject, checkWaitingReservation, validateMentor, getMentorId, getReservationsOfMentor } = service;
 const { pushAlarm, findUserFcm } = push;
 
 const { success, fail } = require('../functions/responseStatus');
@@ -18,26 +18,22 @@ const { success, fail } = require('../functions/responseStatus');
  * 4. 이상 없다면 해당 멘토에게 push 알람보낸뒤, 예약내용 저장
  */
 exports.createReservation = async (req, res) => {
-    let { type, duration, question, link } = req.body;
-    let mentorKey = req.body.mentor_key;
-    let proposedStart1 = req.body.proposed_start1;
-    let proposedStart2 = req.body.proposed_start2;
-    let proposedStart3 = req.body.proposed_start3;
-    let userKey = req.session.passport.user;
-    let userName = req.session.sid;
-    let userData;
+    let { mentor_id, proposed_start1, proposed_start2, proposed_start3, type, duration, question, link } = req.body;
+    let user_id = req.session.passport.user;
+    let user_name = req.session.sid;
+    let user_data;
 
     if (type == 'PT' && !link) return fail(res, 403, 'Portfolio link is required.');
     if (duration < 10) return fail(res, 403, 'Duration must be more than 10.');
 
     try {
-        const isValidMentor = await validateMentor(userKey, mentorKey);
+        const isValidMentor = await validateMentor(user_id, mentor_id);
         if (!isValidMentor) return fail(res, 403, 'User must be different from mentor');
 
-        await reserve(userKey, mentorKey, type, duration, proposedStart1, proposedStart2, proposedStart3, question, link)
+        await reserve(user_id, mentor_id, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link)
             .then(async () => {
-                userData = await findUserFcm(0, mentorKey);
-                pushAlarm(userData.fcm, `🍪 [RE:SPEC] 멘티 예약 신청!`, `${userName}가 ${type == 'MT' ? '멘토링' : '포트폴리오 첨삭'}을 신청했습니다!`);
+                user_data = await findUserFcm(0, mentor_id);
+                pushAlarm(user_data.fcm, `🍪 [RE:SPEC] 멘티 예약 신청!`, `${user_name}가 ${type == 'MT' ? '멘토링' : '포트폴리오 첨삭'}을 신청했습니다!`);
 
                 return success(res, 200, 'Mentoring Reservation success.');
             })
@@ -59,26 +55,26 @@ exports.createReservation = async (req, res) => {
  * 2. 검증이 이상 없다면 예약 확정
  */
 exports.confirmReservation = async (req, res) => {
-    let reservationKey = req.params.reservation_key;
+    let reservation_id = req.params.reservation_id;
     let { start } = req.body;
-    let userKey = req.session.passport.user;
-    let userName = req.session.sid;
-    let userData;
+    let user_id = req.session.passport.user;
+    let user_name = req.session.sid;
+    let user_data;
 
     //예약시간은 현 시간보다 미래여야함
     if (start < new Date()) return fail(res, 403, 'Start time must be future.');
 
     try {
-        const mentorKey = await getMentorKey(userKey);
-        if (!mentorKey) return fail(res, 403, 'User is not a mentor');
+        const mentor_id = await getMentorId(user_id);
+        if (!mentor_id) return fail(res, 403, 'User is not a mentor');
 
-        const isValidReservation = await checkWaitingReservation(reservationKey, mentorKey);
+        const isValidReservation = await checkWaitingReservation(reservation_id, mentor_id);
         if (!isValidReservation) return fail(res, 403, 'Invalid Reservation');
 
-        await confirm(reservationKey, start)
+        await confirm(reservation_id, start)
             .then(async (data) => {
-                userData = await findUserFcm(data.userkey);
-                pushAlarm(userData.fcm, `🍪 [RE:SPEC] 멘토링 확정!`, `${userName}멘토와의 예약이 확정되셨습니다!`);
+                user_data = await findUserFcm(data.user_id);
+                pushAlarm(user_data.fcm, `🍪 [RE:SPEC] 멘토링 확정!`, `${user_name}멘토와의 예약이 확정되셨습니다!`);
 
                 return success(res, 200, 'Reservation confirmed.');
             })
@@ -98,29 +94,29 @@ exports.confirmReservation = async (req, res) => {
  * 2. 검증이 이상 없다면 재신청 여부 고려하여 예약 거절
  */
 exports.rejectReservation = async (req, res) => {
-    let reservationKey = req.params.reservation_key;
-    let isReapplyAvailable = req.body.is_reapply_available;
-    let userKey = req.session.passport.user;
-    let userName = req.session.sid;
-    let userData;
+    let reservation_id = req.params.reservation_id;
+    let is_reapply_available = req.body.is_reapply_available;
+    let user_id = req.session.passport.user;
+    let user_name = req.session.sid;
+    let user_data;
 
     try {
-        const mentorKey = await getMentorKey(userKey);
-        if (!mentorKey) return fail(res, 403, 'User is not a mentor');
+        const mentor_id = await getMentorId(user_id);
+        if (!mentor_id) return fail(res, 403, 'User is not a mentor');
 
-        const isValidReservation = await checkWaitingReservation(reservationKey, mentorKey);
-        if (!isValidReservation) return fail(res, 403, 'Invalid Reservation');
+        const is_valid_reservation = await checkWaitingReservation(reservation_id, mentor_id);
+        if (!is_valid_reservation) return fail(res, 403, 'Invalid Reservation');
 
-        await reject(reservationKey, isReapplyAvailable)
+        await reject(reservation_id, is_reapply_available)
             .then(async (data) => {
-                userData = await findUserFcm(data.userKey);
-                if (isReapplyAvailable) {
-                    pushAlarm(userData.fcm, `🍪 [RE:SPEC] 멘토링 거절!`, `${userName}멘토와의 예약이 반려되셨습니다!`);
+                user_data = await findUserFcm(data.user_id);
+                if (is_reapply_available) {
+                    pushAlarm(user_data.fcm, `🍪 [RE:SPEC] 멘토링 거절!`, `${user_name}멘토와의 예약이 반려되셨습니다!`);
                 } else {
-                    pushAlarm(userData.fcm, `🍪 [RE:SPEC] 멘토링 재신청 요청!`, `${userName}멘토와의 예약이 해당 시간에 불가합니다! 다른 시간대로 재신청 해주세요!`);
+                    pushAlarm(user_data.fcm, `🍪 [RE:SPEC] 멘토링 재신청 요청!`, `${user_name}멘토와의 예약이 해당 시간에 불가합니다! 다른 시간대로 재신청 해주세요!`);
                 }
 
-                return success(res, 200, isReapplyAvailable ? 'Reservation reapplication requested.' : 'Reservation rejected.');
+                return success(res, 200, is_reapply_available ? 'Reservation reapplication requested.' : 'Reservation rejected.');
             })
             .catch((err) => {
                 return fail(res, 500, `${err.message}`);
@@ -138,10 +134,10 @@ exports.rejectReservation = async (req, res) => {
  * 2. 검증이 이상 없다면 멘토에게 예약된 모든 예약 가져옴
  */
 exports.getListOfMentor = async (req, res) => {
-    let mentorKey = req.params.mentor_key;
+    let mentor_id = req.params.mentor_id;
 
     try {
-        await getReservationsOfMentor(mentorKey)
+        await getReservationsOfMentor(mentor_id)
             .then((data) => {
                 if (!data[0]) return fail(res, 404, 'There is no data.');
                 return success(res, 200, 'Get reservations of mentor.', data);

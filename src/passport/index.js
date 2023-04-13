@@ -17,7 +17,7 @@ module.exports = () => {
     _passport.deserializeUser((req, id, done) => {
         User.findOne({ where: { id } })
             .then((user) => {
-                req.session.sid = user.username;
+                req.session.sid = user.user_name;
                 if (_config.get('server.state') !== 'production') {
                     console.log('Session Check :' + req.session.sid); // dev 단계 남겨놓음
                 }

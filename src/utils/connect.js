@@ -30,7 +30,7 @@ const sequelize = new _sequelize(
 // 로그 테이블 생성
 const Log = sequelize.define('log', {
     message: {
-        type: _sequelize.STRING,
+        type: _sequelize.TEXT,
         allowNull: false,
     },
 });

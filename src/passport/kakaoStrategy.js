@@ -18,11 +18,11 @@ module.exports = () => {
                     const isUser = await User.findOne({
                         attributes: ['id', 
                         'profile', 
-                        'username', 
+                        'user_name', 
                         'email', 
                         'password', 
                         'introduction', 
-                        'phonenum', 
+                        'phone_num', 
                         'position'],
                         where: { snsId: profile.id, provider: 'kakao' },
                     });
@@ -33,8 +33,8 @@ module.exports = () => {
                     } else {
                         const newUser = await User.create({
                             email: 'KAKAO' + profile._json.kakao_account.email,
-                            username: profile.displayName,
-                            snsId: profile.id,
+                            user_name: profile.displayName,
+                            sns_id: profile.id,
                             provider: 'kakao',
                         });
                         done(null, newUser);

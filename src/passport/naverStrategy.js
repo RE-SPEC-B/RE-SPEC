@@ -19,11 +19,11 @@ module.exports = () => {
                     const isUser = await User.findOne({
                         attributes: ['id', 
                         'profile', 
-                        'username', 
+                        'user_name', 
                         'email', 
                         'password', 
                         'introduction', 
-                        'phonenum', 
+                        'phone_num', 
                         'position'],
                         where: { snsId: profile.id, provider: 'naver' },
                     });
@@ -34,8 +34,8 @@ module.exports = () => {
                     } else {
                         const newUser = await User.create({
                             email: 'NAVER' + profile._json.email,
-                            username: profile.displayName,
-                            snsId: profile.id,
+                            user_name: profile.displayName,
+                            sns_id: profile.id,
                             provider: 'naver',
                         });
                         done(null, newUser);

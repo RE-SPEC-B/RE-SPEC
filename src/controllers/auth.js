@@ -25,7 +25,7 @@ exports.localLogin = (req, res) => {
         if (authError) return fail(res, 500, `${authError}`);
 
         // 로컬 로그인후, 정상 오류시
-        if (!user) { 
+        if (!user) {
             if (info.message === 'Invalid password.') {
                 return fail(res, 403, info.message);
             } else {
