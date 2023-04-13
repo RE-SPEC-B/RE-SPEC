@@ -27,7 +27,7 @@ module.exports = class Mentorreview extends _sequelize.Model {
                 sequelize,
                 timestamps: true,
                 modelName: 'Mentorreview',
-                tableName: 'mentorreview',
+                tableName: 'mentor_review',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -35,9 +35,9 @@ module.exports = class Mentorreview extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Mentorreview.belongsTo(db.Mentorinfo, { foreignKey: 'mentorkey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-        db.Mentorreview.belongsTo(db.User, { foreignKey: 'userkey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-        db.Mentorreview.belongsTo(db.Mentorproduct, { foreignKey: 'productkey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-        db.Mentorreview.belongsTo(db.Mentorevaluation, { foreignKey: 'evaluationkey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorreview.belongsTo(db.Mentorinfo, { foreignKey: 'mentor_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorreview.belongsTo(db.User, { foreignKey: 'user_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorreview.belongsTo(db.Mentorproduct, { foreignKey: 'product_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorreview.belongsTo(db.Mentorevaluation, { foreignKey: 'evaluation_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

@@ -31,7 +31,7 @@ module.exports = class Jobcategory extends _sequelize.Model {
 
     static associate(db) {
         db.Jobcategory.hasMany(db.Job, {
-            foreignKey: 'categorykey',
+            foreignKey: 'category_id',
             sourceKey: 'id',
             onDelete: 'cascade',
             onUpdate: 'cascade',

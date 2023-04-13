@@ -34,9 +34,9 @@ module.exports = class Portfolio extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Portfolio.belongsTo(db.Mentorinfo, { foreignKey: 'mentorkey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-        db.Portfolio.hasMany(db.Portfoliopreview, { foreignKey: 'portfoliokey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-        db.Portfolio.hasMany(db.Portfolioprogress, { foreignKey: 'portfoliokey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-        db.Portfolio.hasMany(db.Portfoliorecommendation, { foreignKey: 'portfoliokey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Portfolio.belongsTo(db.Mentorinfo, { foreignKey: 'mentor_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Portfolio.hasMany(db.Portfoliopreview, { foreignKey: 'portfolio_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Portfolio.hasMany(db.Portfolioprogress, { foreignKey: 'portfolio_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Portfolio.hasMany(db.Portfoliorecommendation, { foreignKey: 'portfolio_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

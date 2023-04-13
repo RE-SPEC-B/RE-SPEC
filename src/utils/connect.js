@@ -24,6 +24,9 @@ const sequelize = new _sequelize(
     },
 );
 
+// DB 스키마 Sync
+// sequelize.sync({force: true})
+
 // 로그 테이블 생성
 const Log = sequelize.define('log', {
     message: {

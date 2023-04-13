@@ -22,7 +22,7 @@ module.exports = class Portfoliopreview extends _sequelize.Model {
                 sequelize,
                 timestamps: true,
                 modelName: 'Portfoliopreview',
-                tableName: 'portfoliopreview',
+                tableName: 'portfolio_preview',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -30,6 +30,6 @@ module.exports = class Portfoliopreview extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Portfoliopreview.belongsTo(db.Portfolio, { foreignKey: 'portfoliokey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Portfoliopreview.belongsTo(db.Portfolio, { foreignKey: 'portfolio_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

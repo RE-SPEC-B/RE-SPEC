@@ -13,7 +13,7 @@ module.exports = class Mentorcareer extends _sequelize.Model {
                     unique: true,
                     primaryKey: true,
                 },
-                companyname: {
+                company_name: {
                     type: _sequelize.STRING(20),
                     allowNull: true,
                 },
@@ -38,7 +38,7 @@ module.exports = class Mentorcareer extends _sequelize.Model {
                 sequelize,
                 timestamps: true,
                 modelName: 'Mentorcareer',
-                tableName: 'mentorcareer',
+                tableName: 'mentor_career',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -46,6 +46,6 @@ module.exports = class Mentorcareer extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Mentorcareer.belongsTo(db.Mentorinfo, { foreignKey: 'mentorkey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorcareer.belongsTo(db.Mentorinfo, { foreignKey: 'mentor_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

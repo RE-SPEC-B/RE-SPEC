@@ -2,7 +2,7 @@
 
 const _sequelize = require('sequelize');
 
-module.exports = class Portfolioprogress extends _sequelize.Model {
+module.exports = class UserCoupon extends _sequelize.Model {
     static init(sequelize) {
         return super.init(
             {
@@ -13,16 +13,21 @@ module.exports = class Portfolioprogress extends _sequelize.Model {
                     unique: true,
                     primaryKey: true,
                 },
-                progress: {
-                    type: _sequelize.STRING(100),
+                is_used: {
+                    type: _sequelize.TINYINT(1),
                     allowNull: false,
+                    defaultValue: 0,
+                },
+                download_date: {
+                    type: _sequelize.DATE,
+                    allowNull: true,
                 },
             },
             {
                 sequelize,
                 timestamps: true,
-                modelName: 'Portfolioprogress',
-                tableName: 'portfolio_progress',
+                modelName: 'UserCoupon',
+                tableName: 'user_coupon',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -30,6 +35,7 @@ module.exports = class Portfolioprogress extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Portfolioprogress.belongsTo(db.Portfolio, { foreignKey: 'portfolio_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.UserCoupon.belongsTo(db.User, { foreignKey: 'user_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.UserCoupon.belongsTo(db.Coupon, { foreignKey: 'coupon_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };
