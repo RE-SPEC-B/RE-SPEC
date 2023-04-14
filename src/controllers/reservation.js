@@ -3,7 +3,7 @@
 const service = require('../services/reservation');
 const push = require('../services/push');
 
-const { reserve, confirm, reject, checkWaitingReservation, validateMentor, getMentorId, getReservationsOfMentor } = service;
+const { reserve, confirm, reject, checkWaitingReservation, validateMentor, validateCoupon, getMentorId, getReservationsOfMentor } = service;
 const { pushAlarm, findUserFcm } = push;
 
 const { success, fail } = require('../functions/responseStatus');
@@ -18,7 +18,7 @@ const { success, fail } = require('../functions/responseStatus');
  * 4. 이상 없다면 해당 멘토에게 push 알람보낸뒤, 예약내용 저장
  */
 exports.createReservation = async (req, res) => {
-    let { mentor_id, proposed_start1, proposed_start2, proposed_start3, type, duration, question, link } = req.body;
+    let { mentor_id, proposed_start1, proposed_start2, proposed_start3, type, duration, question, link, user_coupon_id } = req.body;
     let user_id = req.session.passport.user;
     let user_name = req.session.sid;
     let user_data;
@@ -30,7 +30,15 @@ exports.createReservation = async (req, res) => {
         const isValidMentor = await validateMentor(user_id, mentor_id);
         if (!isValidMentor) return fail(res, 403, 'User must be different from mentor');
 
-        await reserve(user_id, mentor_id, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link)
+        // 유효한 쿠폰인지 확인
+        if (user_coupon_id) {
+            const isValidCoupon = await validateCoupon(user_id, user_coupon_id);
+            if (!isValidCoupon) return fail(res, 403, 'Invalid coupon');
+        } else {
+            user_coupon_id = 0;
+        }
+
+        await reserve(user_id, mentor_id, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link, user_coupon_id)
             .then(async () => {
                 user_data = await findUserFcm(0, mentor_id);
                 pushAlarm(user_data.fcm, `🍪 [RE:SPEC] 멘티 예약 신청!`, `${user_name}가 ${type == 'MT' ? '멘토링' : '포트폴리오 첨삭'}을 신청했습니다!`);

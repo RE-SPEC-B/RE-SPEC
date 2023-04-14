@@ -22,6 +22,8 @@ const models = {
     Portfolioprogress: require('./portfolio/portfolio_progress'),
     Reservation: require('./reservation/reservation'),
     LogReservation: require('./reservation/log_reservation'),
+    Coupon: require('./other/coupon'),
+    UserCoupon: require('./user/user_coupon'),
 };
 
 module.exports = models;

@@ -45,6 +45,6 @@ module.exports = class Coupon extends _sequelize.Model {
 
     // 다른 모델과의 관계
     static associate(db) {
-        db.Coupon.hasMany(db.UserCoupon, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Coupon.hasMany(db.UserCoupon, { foreignKey: 'coupon_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };
