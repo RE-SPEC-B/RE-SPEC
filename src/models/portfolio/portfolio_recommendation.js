@@ -22,7 +22,7 @@ module.exports = class Portfoliorecommendation extends _sequelize.Model {
                 sequelize,
                 timestamps: true,
                 modelName: 'Portfoliorecommendation',
-                tableName: 'portfoliorecommendation',
+                tableName: 'portfoliore_commendation',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -30,6 +30,6 @@ module.exports = class Portfoliorecommendation extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Portfoliorecommendation.belongsTo(db.Portfolio, { foreignKey: 'portfoliokey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Portfoliorecommendation.belongsTo(db.Portfolio, { foreignKey: 'portfolio_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

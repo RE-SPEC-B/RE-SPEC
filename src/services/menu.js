@@ -36,12 +36,12 @@ exports.parseValue = (keywords, keys) => {
  * @returns
  */
 exports.keySelectWhere = (a, b, ids, value, keys) => {
-    let where_arr = [{ userkey: { [Op.or]: ids } }];
+    let where_arr = [{ user_id: { [Op.or]: ids } }];
     let type = [];
     for (let key of keys) if (key === a || key === b) type.push(key);
     for (let idx = 0; idx < type.length; idx++) {
 
-        where_arr.push({ [type[idx].replace(/_/g, '')]: { [Op.or]: value[keys.indexOf(type[idx])] } });
+        where_arr.push({ [type[idx]]: { [Op.or]: value[keys.indexOf(type[idx])] } });
     }
     return { [Op.and]: where_arr };
 };
@@ -99,7 +99,7 @@ exports.jobUserFindT = async (word) => {
 exports.jobUserFindB = async (value, keys) => {
     return await Job.findAll({
         attributes: ['id'],
-        where: { jobenum: { [Op.or]: value[keys.indexOf('job_enum')] } },
+        where: { job_enum: { [Op.or]: value[keys.indexOf('job_enum')] } },
     })
         .then(async (data) => {
             let job_id = [];
@@ -120,7 +120,7 @@ exports.jobUserFindB = async (value, keys) => {
 };
 
 /**
- * jobenum 쿼리를 받지 못했을 경우, 모든 유저의 user id를 리턴하는 함수
+ * job_enum 쿼리를 받지 못했을 경우, 모든 유저의 user id를 리턴하는 함수
  */
 exports.AllUserFindB = () => {
     return User.findAll({ attributes: ['id'] });
@@ -135,7 +135,7 @@ exports.AllUserFindB = () => {
  */
 exports.companyUserFind = async (word) => {
     return await Career.findAll({
-        attributes: ['userkey'],
+        attributes: ['user_id'],
         where: { company: { [Op.like]: '%' + word + '%' } },
     }).catch((err) => {
         return res.status(500).json({ err });
@@ -195,14 +195,14 @@ exports.mbtiUserFind = async (word) => {
  */
 exports.educationUserFind = async (where_education) => {
     return await Education.findAll({
-        attributes: ['userkey'],
+        attributes: ['user_id'],
         where: where_education,
     })
         .then(async (data) => {
-            if (data.length === 0) return; // 데이터가 없을때, userkey에 접근하면 오류
+            if (data.length === 0) return; // 데이터가 없을때, user_id에 접근하면 오류
 
             let education_id = [];
-            for (let x = 0; x < data.length; x++) education_id.push(data[x].userkey);
+            for (let x = 0; x < data.length; x++) education_id.push(data[x].user_id);
 
             return await User.findAll({
                 attributes: ['id'],
@@ -224,14 +224,14 @@ exports.educationUserFind = async (where_education) => {
  */
 exports.careerUserFind = async (where_career) => {
     return await Career.findAll({
-        attributes: ['userkey'],
+        attributes: ['user_id'],
         where: where_career,
     })
         .then(async (data) => {
             if (data.length === 0) return;
 
             let career_id = [];
-            for (let x = 0; x < data.length; x++) career_id.push(data[x].userkey);
+            for (let x = 0; x < data.length; x++) career_id.push(data[x].user_id);
 
             return await User.findAll({
                 attributes: ['id'],
@@ -268,17 +268,17 @@ exports.userMentoFilter = (ids, order) => {
             {
                 model: Career,
                 required: false,
-                attributes: ['company', ['careerenum', 'enum']],
+                attributes: ['company', ['career_enum', 'enum']],
             },
             {
                 model: Characteristic,
-                attributes: [['characteristicenum', 'enum']],
+                attributes: [['characteristic_enum', 'enum']],
                 required: false,
                 through: { attributes: [] },
             },
             {
                 model: Job,
-                attributes: [['jobenum', 'enum']],
+                attributes: [['job_enum', 'enum']],
                 required: false,
                 through: { attributes: [] },
             },
@@ -294,7 +294,7 @@ exports.userMentoFilter = (ids, order) => {
                 ],
             },
         ],
-        attributes: ['id', 'username', 'profile', [fn('COUNT', col('Mentorinfo.Mentorreviews.id')), 'reviews']],
+        attributes: ['id', 'user_name', 'profile', [fn('COUNT', col('Mentorinfo.Mentorreviews.id')), 'reviews']],
         where: { [Op.and]: [{ position: 'mentor' }, { id: { [Op.or]: ids } }] },
         order: order_option,
         group: ['User.id', 'Career.id', 'Characteristics.id', 'Jobs.id', 'Mentorinfo.id'],

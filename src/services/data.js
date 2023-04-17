@@ -9,17 +9,17 @@ exports.enumValueGet = async (req, res) => {
     let data = {}, temp_data;
     temp_data = await Careerinfo.findAll({ attributes: ['enum', ['career', 'value']] })
     data.Career = temp_data;
-    
+
     temp_data = await Educationinfo.findAll({ attributes: ['enum', ['education', 'value']] })
     data.Education = temp_data;
 
-    temp_data = await Companysizeinfo.findAll({ attributes: ['enum', ['companysize', 'value']] })
+    temp_data = await Companysizeinfo.findAll({ attributes: ['enum', ['company_size', 'value']] })
     data.Company = temp_data;
 
-    temp_data = await Job.findAll({ attributes: [['jobenum', 'enum'], ['job', 'value']] })
+    temp_data = await Job.findAll({ attributes: [['job_enum', 'enum'], ['job', 'value']] })
     data.Job = temp_data;
 
-    temp_data = await Characteristic.findAll({ attributes: [['characteristicenum', 'enum'], ['characteristic', 'value']] })
+    temp_data = await Characteristic.findAll({ attributes: [['characteristic_enum', 'enum'], ['characteristic', 'value']] })
     data.Characteristic = temp_data;
 
     return data;

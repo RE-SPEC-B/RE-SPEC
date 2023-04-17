@@ -17,15 +17,15 @@ module.exports = () => {
             async (accessToken, refreshToken, profile, done) => {
                 try {
                     const is_user = await User.findOne({
-                        attributes: ['id', 
-                        'profile', 
-                        'username', 
-                        'email', 
-                        'password', 
-                        'introduction', 
-                        'phonenum', 
+                        attributes: ['id',
+                        'profile',
+                        'user_name',
+                        'email',
+                        'password',
+                        'introduction',
+                        'phone_num',
                         'position'],
-                        where: { snsId: profile.id, provider: 'google' },
+                        where: { sns_id: profile.id, provider: 'google' },
                     });
 
                     if (is_user) {
@@ -34,8 +34,8 @@ module.exports = () => {
                     } else {
                         const new_user = await User.create({
                             email: 'GOOGLE' + profile._json.email,
-                            username: profile.displayName,
-                            snsId: profile.id,
+                            user_name: profile.displayName,
+                            sns_id: profile.id,
                             provider: 'google',
                         });
                         done(null, new_user);

@@ -22,7 +22,7 @@ module.exports = class Mentorstrength extends _sequelize.Model {
                 sequelize,
                 timestamps: true,
                 modelName: 'Mentorstrength',
-                tableName: 'mentorstrength',
+                tableName: 'mentor_strength',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -30,6 +30,6 @@ module.exports = class Mentorstrength extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Mentorstrength.belongsTo(db.Mentorinfo, { foreignKey: 'mentorkey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorstrength.belongsTo(db.Mentorinfo, { foreignKey: 'mentor_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

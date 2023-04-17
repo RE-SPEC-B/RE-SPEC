@@ -17,11 +17,11 @@ module.exports = class Career extends _sequelize.Model {
                     type: _sequelize.STRING(20),
                     allowNull: false,
                 },
-                companysizeenum: {
+                company_size_enum: {
                     type: _sequelize.STRING(30),
                     allowNull: false,
                 },
-                careerenum: {
+                career_enum: {
                     type: _sequelize.STRING(30),
                     allowNull: false,
                 },
@@ -38,8 +38,8 @@ module.exports = class Career extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Career.belongsTo(db.User, { foreignKey: 'userkey', targetKey: 'id' });
-        db.Career.belongsTo(db.Companysizeinfo, { foreignKey: 'companysizeenum', targetKey: 'enum', onDelete: 'cascade', onUpdate: 'cascade'});
-        db.Career.belongsTo(db.Careerinfo, { foreignKey: 'careerenum', targetKey: 'enum', onDelete: 'cascade', onUpdate: 'cascade'});
+        db.Career.belongsTo(db.User, { foreignKey: 'user_id', targetKey: 'id' });
+        db.Career.belongsTo(db.Companysizeinfo, { foreignKey: 'company_size_enum', targetKey: 'enum', onDelete: 'cascade', onUpdate: 'cascade'});
+        db.Career.belongsTo(db.Careerinfo, { foreignKey: 'career_enum', targetKey: 'enum', onDelete: 'cascade', onUpdate: 'cascade'});
     }
 };

@@ -41,6 +41,6 @@ module.exports = class LogReservation extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.LogReservation.belongsTo(db.Reservation, { foreignKey: 'reservation_key', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.LogReservation.belongsTo(db.Reservation, { foreignKey: 'reservation_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

@@ -13,7 +13,7 @@ module.exports = class User extends _sequelize.Model {
                     unique: true,
                     primaryKey: true,
                 },
-                username: {
+                user_name: {
                     type: _sequelize.STRING(30),
                     allowNull: false,
                 },
@@ -34,7 +34,7 @@ module.exports = class User extends _sequelize.Model {
                     type: _sequelize.STRING(100),
                     allowNull: true,
                 },
-                phonenum: {
+                phone_num: {
                     type: _sequelize.STRING(20),
                     allowNull: true,
                 },
@@ -52,7 +52,7 @@ module.exports = class User extends _sequelize.Model {
                     allowNull: false,
                     defaultValue: 'local',
                 },
-                snsId: {
+                sns_id: {
                     type: _sequelize.STRING(100),
                     allowNull: true,
                 },
@@ -73,14 +73,14 @@ module.exports = class User extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.User.belongsToMany(db.User, { through: 'follow', as: 'Follower', foreignKey: 'followerid' });
-        db.User.belongsToMany(db.User, { through: 'follow', as: 'Following', foreignKey: 'followingid' });
+        db.User.belongsToMany(db.User, { through: 'follow', as: 'Follower', foreignKey: 'follower_id' });
+        db.User.belongsToMany(db.User, { through: 'follow', as: 'Following', foreignKey: 'following_id' });
         db.User.belongsToMany(db.Job, { through: 'user_job' });
         db.User.belongsToMany(db.Characteristic, { through: 'user_characteristic' });
-        db.User.hasOne(db.Career, { foreignKey: 'userkey', sourceKey: 'id' });
-        db.User.hasOne(db.Education, { foreignKey: 'userkey', sourceKey: 'id' });
-        db.User.hasOne(db.Mentorinfo, { foreignKey: 'userkey', sourceKey: 'id' });
-        db.User.hasMany(db.Mentorreview, { foreignKey: 'userkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-        db.User.hasMany(db.Reservation, { foreignKey: 'userkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.User.hasOne(db.Career, { foreignKey: 'user_id', sourceKey: 'id' });
+        db.User.hasOne(db.Education, { foreignKey: 'user_id', sourceKey: 'id' });
+        db.User.hasOne(db.Mentorinfo, { foreignKey: 'user_id', sourceKey: 'id' });
+        db.User.hasMany(db.Mentorreview, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.User.hasMany(db.Reservation, { foreignKey: 'user_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

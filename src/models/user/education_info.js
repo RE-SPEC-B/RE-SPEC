@@ -21,7 +21,7 @@ module.exports = class Educationinfo extends _sequelize.Model {
                 sequelize,
                 timestamps: true,
                 modelName: 'Educationinfo',
-                tableName: 'educationinfo',
+                tableName: 'education_info',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -29,6 +29,6 @@ module.exports = class Educationinfo extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Educationinfo.hasMany(db.Education, { foreignKey: 'educationenum', sourceKey: 'enum', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Educationinfo.hasMany(db.Education, { foreignKey: 'education_enum', sourceKey: 'enum', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

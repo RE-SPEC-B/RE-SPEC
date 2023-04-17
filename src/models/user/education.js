@@ -17,7 +17,7 @@ module.exports = class Education extends _sequelize.Model {
                     type: _sequelize.STRING(20),
                     allowNull: false,
                 },
-                educationenum: {
+                education_enum: {
                     type: _sequelize.STRING(30),
                     allowNull: false,
                 },
@@ -34,7 +34,7 @@ module.exports = class Education extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Education.belongsTo(db.Educationinfo, { foreignKey: 'educationenum', targetKey: 'enum', onDelete: 'cascade', onUpdate: 'cascade'});
-        db.Education.belongsTo(db.User, { foreignKey: 'userkey', targetKey: 'id' });
+        db.Education.belongsTo(db.Educationinfo, { foreignKey: 'education_enum', targetKey: 'enum', onDelete: 'cascade', onUpdate: 'cascade'});
+        db.Education.belongsTo(db.User, { foreignKey: 'user_id', targetKey: 'id' });
     }
 };

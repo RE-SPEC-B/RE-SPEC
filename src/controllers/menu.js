@@ -30,7 +30,7 @@ exports.searchMentoT = async (req, res) => {
     if (id) for (let x = 0; x < id.length; x++) ids.push(id[x].UserId);
 
     id = await companyUserFind(word);
-    if (id) for (let x = 0; x < id.length; x++) ids.push(id[x].userkey);
+    if (id) for (let x = 0; x < id.length; x++) ids.push(id[x].user_id);
 
     // id = await mbtiUserFind(word);
     // if (id) for (let x = 0; x < id.length; x++) ids.push(id[x].id);
@@ -52,11 +52,11 @@ exports.searchMentoT = async (req, res) => {
 };
 
 exports.searchMentoB = async (req, res) => {
-    let { job_enum, university, education_enum, companysize_enum, career_enum, order } = req.query;
+    let { job_enum, university, education_enum, company_size_enum, career_enum, order } = req.query;
     let keywords = req.query;
     let keys = Object.keys(keywords);
     let value = parseValue(keywords, keys);
-    
+
     let id,
         ids = [];
     let where_education,
@@ -76,8 +76,9 @@ exports.searchMentoB = async (req, res) => {
         ids = parseIds(id);
     }
 
-    where_career = keySelectWhere('career_enum', 'companysize_enum', ids, value, keys);
-    if (ids.length !== 0 && (career_enum || companysize_enum)) {
+    where_career = keySelectWhere('career_enum', 'company_size_enum', ids, value, keys);
+    console.log(where_career);
+    if (ids.length !== 0 && (career_enum || company_size_enum)) {
         id = await careerUserFind(where_career);
         ids = parseIds(id);
     }

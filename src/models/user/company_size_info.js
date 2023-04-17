@@ -12,7 +12,7 @@ module.exports = class Companysizeinfo extends _sequelize.Model {
                     unique: true,
                     primaryKey: true,
                 },
-                companysize: {
+                company_size: {
                     type: _sequelize.STRING(20),
                     allowNull: false,
                 },
@@ -21,7 +21,7 @@ module.exports = class Companysizeinfo extends _sequelize.Model {
                 sequelize,
                 timestamps: true,
                 modelName: 'Companysizeinfo',
-                tableName: 'companysizeinfo',
+                tableName: 'company_size_info',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -29,6 +29,6 @@ module.exports = class Companysizeinfo extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Companysizeinfo.hasMany(db.Career, { foreignKey: 'companysizeenum', sourceKey: 'enum', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Companysizeinfo.hasMany(db.Career, { foreignKey: 'company_size_enum', sourceKey: 'enum', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

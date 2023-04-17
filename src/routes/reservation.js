@@ -18,16 +18,16 @@ _router.post('/', [
             .isIn(['MT', 'PT'])
             .withMessage('Type must be MT or PT.'),
         check('duration', 'Duration is required.').notEmpty(),
-        check('mentor_key', 'Mentor key is required.').notEmpty(),
+        check('mentor_id', 'Mentor id is required.').notEmpty(),
         validator,
     ],
     ctrl.createReservation,
 );
 
 // 멘토의 예약 확정
-_router.post('/confirm/:reservationkey', [
+_router.post('/confirm/:reservation_id', [
         isLoggedIn,
-        check('reservationkey', 'Reservation Key is required.').notEmpty(),
+        check('reservation_id', 'Reservation id is required.').notEmpty(),
         check('start')
             .notEmpty()
             .withMessage('Start is required.')
@@ -40,7 +40,7 @@ _router.post('/confirm/:reservationkey', [
 );
 
 // 멘토의 예약 거절
-_router.post('/reject/:reservationkey', [
+_router.post('/reject/:reservation_id', [
         isLoggedIn,
         check('is_reapply_available')
             .notEmpty()
@@ -53,10 +53,10 @@ _router.post('/reject/:reservationkey', [
 );
 
 // 멘토의 예약 목록 호출
-_router.get('/mentor/:mentorkey/:status/list', [
-        check('mentorkey')
+_router.get('/mentor/:mentor_id/:status/list', [
+        check('mentor_id')
             .isInt()
-            .withMessage('Mentorkey must be int.'),
+            .withMessage('Mentor_id must be int.'),
         check('status')
             .notEmpty()
             .withMessage('status is required.')

@@ -3,18 +3,18 @@
 const reservation = require('../services/reservation');
 const push = require('../services/push');
 
-const { 
-    reserve, 
+const {
+    reserve,
     confirm,
     reject,
     checkWaitingReservation,
-    validateMentor, 
-    getMentorKey, 
-    getReservationsByOption, 
+    validateMentor,
+    validateCoupon,
+    getMentorId,
+    getReservationsByOption,
     getReservationsForCheck,
     addUsernamesByReservation
 } = reservation;
-
 const { pushAlarm, findUserFcm } = push;
 
 const { checkDuplicateDates } = require('../functions/common');
@@ -31,8 +31,8 @@ const { success, fail } = require('../functions/responseStatus');
  * 4. 이상 없다면 해당 멘토에게 push 알람보낸뒤, 예약내용 저장
  */
 exports.createReservation = async (req, res) => {
-    let { mentor_key, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link } = req.body;
-    let user_key = req.session.passport.user;
+    let { mentor_id, proposed_start1, proposed_start2, proposed_start3, type, duration, question, link, user_coupon_id } = req.body;
+    let user_id = req.session.passport.user;
     let user_name = req.session.sid;
     let user_data;
 
@@ -44,12 +44,12 @@ exports.createReservation = async (req, res) => {
     }
 
     try {
-        const is_valid_mentor = await validateMentor(user_key, mentor_key);
+        const is_valid_mentor = await validateMentor(user_id, mentor_id);
         if (!is_valid_mentor) return fail(res, 400, 'User must be different from mentor.');
 
         // 해당 멘티에 한정하여, 중복 예약 신청 검사
-        const reservations = await getReservationsForCheck(user_key, mentor_key);
-        
+        const reservations = await getReservationsForCheck(user_id, mentor_id);
+
         const request_time = [proposed_start1, proposed_start2, proposed_start3]
             .filter(date => date !== undefined)
             .map(date => new Date(date).getTime());
@@ -64,9 +64,17 @@ exports.createReservation = async (req, res) => {
             }
         }
 
-        await reserve(user_key, mentor_key, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link)
+        // 유효한 쿠폰인지 확인
+        if (user_coupon_id) {
+            const isValidCoupon = await validateCoupon(user_id, user_coupon_id);
+            if (!isValidCoupon) return fail(res, 403, 'Invalid coupon');
+        } else {
+            user_coupon_id = 0;
+        }
+
+        await reserve(user_id, mentor_id, type, duration, proposed_start1, proposed_start2, proposed_start3, question, link, user_coupon_id)
             .then(async () => {
-                user_data = await findUserFcm(0, mentor_key);
+                user_data = await findUserFcm(0, mentor_id);
                 pushAlarm(user_data.fcm, `🍪 [RE:SPEC] 멘티 예약 신청!`, `${user_name}가 ${type == 'MT' ? '멘토링' : '포트폴리오 첨삭'}을 신청했습니다!`);
 
                 return success(res, 200, 'Mentoring Reservation success.');
@@ -88,21 +96,24 @@ exports.createReservation = async (req, res) => {
  * 3. 전부 통과 시, 해당 멘티에게 push alarm
  */
 exports.confirmReservation = async (req, res) => {
-    let { reservationkey: reservation_key } = req.params;
+    let { reservation_id } = req.params;
     let { duration, start } = req.body;
-    let user_key = req.session.passport.user;
+    let user_id = req.session.passport.user;
     let user_name = req.session.sid;
     let user_data;
 
+    //예약시간은 현 시간보다 미래여야함
+    if (start < new Date()) return fail(res, 403, 'Start time must be future.');
+
     try {
-        const mentor_key = await getMentorKey(user_key);
-        if (!mentor_key) return fail(res, 403, 'User is not a mentor.');
-        
-        const is_valid_reservation = await checkWaitingReservation(reservation_key, mentor_key);
+        const mentor_id = await getMentorId(user_id);
+        if (!mentor_id) return fail(res, 403, 'User is not a mentor.');
+
+        const is_valid_reservation = await checkWaitingReservation(reservation_id, mentor_id);
         if (!is_valid_reservation) return fail(res, 400, 'Invalid Reservation.');
 
-        const reservations = await getReservationsByOption(mentor_key, 'confirm');
-        
+        const reservations = await getReservationsByOption(mentor_id, 'confirm');
+
         const new_range = [new Date(start), new Date(start.getTime() + (duration * 60000))]; // 비교 대상 시간 배열 생성
         const range = reservations.map(data => [new Date(data.start), new Date(data.start.getTime() + (data.duration * 60000))]);
         range.sort((a, b) => a[0] - b[0]); // 시작 시간을 기준으로 정렬
@@ -117,11 +128,11 @@ exports.confirmReservation = async (req, res) => {
         }
 
         if(flag || !reservations[0]) {
-            await confirm(reservation_key, start)
+            await confirm(reservation_id, start)
                 .then(async (data) => {
-                    user_data = await findUserFcm(data.userkey);
+                    user_data = await findUserFcm(data.user_id);
                     pushAlarm(user_data.fcm, `🍪 [RE:SPEC] 멘토링 확정!`, `${user_name}멘토와의 예약이 확정되셨습니다!`);
-    
+
                     return success(res, 200, 'Reservation confirmed.');
                 })
                 .catch((err) => {
@@ -143,22 +154,22 @@ exports.confirmReservation = async (req, res) => {
  * 2. 검증이 이상 없다면 재신청 여부 고려하여 예약 거절
  */
 exports.rejectReservation = async (req, res) => {
-    let { reservationkey: reservation_key } = req.params;
+    let { reservation_id } = req.params;
     let { is_reapply_available } = req.body;
-    let user_key = req.session.passport.user;
+    let user_id = req.session.passport.user;
     let user_name = req.session.sid;
     let user_data;
 
     try {
-        const mentor_key = await getMentorKey(user_key);
-        if (!mentor_key) return fail(res, 403, 'User is not a mentor');
+        const mentor_id = await getMentorId(user_id);
+        if (!mentor_id) return fail(res, 403, 'User is not a mentor');
 
-        const is_valid_reservation = await checkWaitingReservation(reservation_key, mentor_key);
+        const is_valid_reservation = await checkWaitingReservation(reservation_id, mentor_id);
         if (!is_valid_reservation) return fail(res, 403, 'Invalid Reservation');
 
-        await reject(reservation_key, is_reapply_available)
+        await reject(reservation_id, is_reapply_available)
             .then(async (data) => {
-                user_data = await findUserFcm(data.userkey);
+                user_data = await findUserFcm(data.user_id);
                 if (is_reapply_available) {
                     pushAlarm(user_data.fcm, `🍪 [RE:SPEC] 멘토링 재신청 요청!`, `${user_name}멘토와의 예약이 해당 시간에 불가합니다! 다른 시간대로 재신청 해주세요!`);
                 } else {
@@ -184,10 +195,10 @@ exports.rejectReservation = async (req, res) => {
  * 2-2. 예약값이 confirm이라면, 순수값을 전달합니다.
  */
 exports.getListOfMentor = async (req, res) => {
-    let { mentorkey: mentor_key, status } = req.params;
+    let { mentor_id, status } = req.params;
 
     try {
-        await getReservationsByOption(mentor_key, status)
+        await getReservationsByOption(mentor_id, status)
             .then(async (data) => {
                 if(!data[0]) return fail(res, 404, 'There is no data.');
 

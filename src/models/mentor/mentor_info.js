@@ -45,7 +45,7 @@ module.exports = class Mentorinfo extends _sequelize.Model {
                 sequelize,
                 timestamps: true,
                 modelName: 'Mentorinfo',
-                tableName: 'mentorinfo',
+                tableName: 'mentor_info',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -53,11 +53,11 @@ module.exports = class Mentorinfo extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Mentorinfo.belongsTo(db.User, { foreignKey: 'userkey', targetKey: 'id' });
-        db.Mentorinfo.hasOne(db.Portfolio, { foreignKey: 'mentorkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-        db.Mentorinfo.hasMany(db.Mentorreview, { foreignKey: 'mentorkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-        db.Mentorinfo.hasMany(db.Mentorcareer, { foreignKey: 'mentorkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-        db.Mentorinfo.hasMany(db.Mentorstrength, { foreignKey: 'mentorkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
-        db.Mentorinfo.hasMany(db.Reservation, { foreignKey: 'mentorkey', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorinfo.belongsTo(db.User, { foreignKey: 'user_id', targetKey: 'id' });
+        db.Mentorinfo.hasOne(db.Portfolio, { foreignKey: 'mentor_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorinfo.hasMany(db.Mentorreview, { foreignKey: 'mentor_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorinfo.hasMany(db.Mentorcareer, { foreignKey: 'mentor_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorinfo.hasMany(db.Mentorstrength, { foreignKey: 'mentor_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Mentorinfo.hasMany(db.Reservation, { foreignKey: 'mentor_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

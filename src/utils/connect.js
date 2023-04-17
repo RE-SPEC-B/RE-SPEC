@@ -12,10 +12,33 @@ const sequelize = new _sequelize(
     {
         host: _config.get('mysql_local.host'),
         dialect: _config.get('mysql_local.dialect'),
-        logging: _config.get('server.state') === 'production' ? false : console.log,
+        logging: (message) => {
+            console.log(message);
+            // 사이즈가 작은 프로젝트이기때문에 파일시스템이 아닌 DB에 로깅 결정. 프로젝트가 발전하면 추후에 로깅 방식 변경 고려
+            // 로깅을 위한 로깅이 안되도록 예외처리
+            if (!message.includes('INSERT INTO `logs`')) {
+                logToDatabase(message);
+            }
+        },
         timezone: _config.get('mysql_local.timezone'), // Asia/Seoul
     },
 );
+
+// DB 스키마 Sync
+// sequelize.sync({force: true})
+
+// 로그 테이블 생성
+const Log = sequelize.define('log', {
+    message: {
+        type: _sequelize.TEXT,
+        allowNull: false,
+    },
+});
+
+// DB에 로그 저장
+const logToDatabase = (message) => {
+    Log.create({ message });
+};
 
 Object.values(models).forEach((model) => model.init(sequelize));
 Object.values(models)

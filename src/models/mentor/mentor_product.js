@@ -22,7 +22,7 @@ module.exports = class Mentorproduct extends _sequelize.Model {
                 sequelize,
                 timestamps: true,
                 modelName: 'Mentorproduct',
-                tableName: 'mentorproduct',
+                tableName: 'mentor_product',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -30,6 +30,6 @@ module.exports = class Mentorproduct extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Mentorproduct.hasOne(db.Mentorreview, { foreignKey: 'productkey', sourceKey: 'id' });
+        db.Mentorproduct.hasOne(db.Mentorreview, { foreignKey: 'product_id', sourceKey: 'id' });
     }
 };

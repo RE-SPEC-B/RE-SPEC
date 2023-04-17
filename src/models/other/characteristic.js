@@ -17,7 +17,7 @@ module.exports = class Characteristic extends _sequelize.Model {
                     type: _sequelize.STRING(20),
                     allowNull: false,
                 },
-                characteristicenum: {
+                characteristic_enum: {
                     type: _sequelize.STRING(30),
                     allowNull: false,
                 },

@@ -22,7 +22,7 @@ module.exports = class Portfolioprogress extends _sequelize.Model {
                 sequelize,
                 timestamps: true,
                 modelName: 'Portfolioprogress',
-                tableName: 'portfolioprogress',
+                tableName: 'portfolio_progress',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -30,6 +30,6 @@ module.exports = class Portfolioprogress extends _sequelize.Model {
     }
 
     static associate(db) {
-        db.Portfolioprogress.belongsTo(db.Portfolio, { foreignKey: 'portfoliokey', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
+        db.Portfolioprogress.belongsTo(db.Portfolio, { foreignKey: 'portfolio_id', targetKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };

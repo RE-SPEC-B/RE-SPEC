@@ -16,11 +16,11 @@ module.exports = () => {
                     const is_user = await User.findOne({ 
                         attributes: ['id', 
                         'profile', 
-                        'username', 
+                        'user_name', 
                         'email', 
                         'password', 
                         'introduction', 
-                        'phonenum', 
+                        'phone_num', 
                         'position'],
                         where: { email } 
                     });

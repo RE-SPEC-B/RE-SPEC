@@ -2,7 +2,7 @@
 
 const _sequelize = require('sequelize');
 
-module.exports = class Job extends _sequelize.Model {
+module.exports = class Coupon extends _sequelize.Model {
     static init(sequelize) {
         return super.init(
             {
@@ -13,25 +13,30 @@ module.exports = class Job extends _sequelize.Model {
                     unique: true,
                     primaryKey: true,
                 },
-                job: {
-                    type: _sequelize.STRING(20),
+                type: {
+                    type: _sequelize.ENUM('MT', 'PT', 'ALL'),
                     allowNull: false,
+                    defaultValue: 'ALL',
                 },
-                job_enum: {
-                    type: _sequelize.STRING(30),
-                    allowNull: false,
-                },
-                popularity: {
+                duration: {
                     type: _sequelize.INTEGER,
                     allowNull: false,
                     defaultValue: 0,
+                },
+                start_date: {
+                    type: _sequelize.DATE,
+                    allowNull: true,
+                },
+                end_date: {
+                    type: _sequelize.DATE,
+                    allowNull: true,
                 },
             },
             {
                 sequelize,
                 timestamps: true,
-                modelName: 'Job',
-                tableName: 'job',
+                modelName: 'Coupon',
+                tableName: 'coupon',
                 charset: 'utf8',
                 collate: 'utf8_general_ci',
             },
@@ -40,12 +45,6 @@ module.exports = class Job extends _sequelize.Model {
 
     // 다른 모델과의 관계
     static associate(db) {
-        db.Job.belongsTo(db.Jobcategory, {
-            foreignKey: 'category_id',
-            targetKey: 'id',
-            onDelete: 'cascade',
-            onUpdate: 'cascade',
-        });
-        db.Job.belongsToMany(db.User, { through: 'user_job' });
+        db.Coupon.hasMany(db.UserCoupon, { foreignKey: 'coupon_id', sourceKey: 'id', onDelete: 'cascade', onUpdate: 'cascade' });
     }
 };
